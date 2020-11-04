@@ -1,0 +1,30 @@
+{
+  "name": "bouncy",
+  "version": "0.0.1",
+  "description": "Bouncy Front End and Server",
+  "main": "server/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/circle-free/bouncy.git"
+  },
+  "keywords": [
+    "optimistic-roll-in",
+    "optimism",
+    "ethereum",
+    "merkle-tree",
+    "merkle-trees",
+    "solidity",
+    "0.0.1",
+    "pokemon"
+  ],
+  "author": "Circle-Free",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/circle-free/bouncy/issues"
+  },
+  "homepage": "https://github.com/circle-free/bouncy#readme",
+  "private": false,
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
