@@ -2,69 +2,79 @@ import Phaser from 'phaser';
 import DialogBox from '../game-objects/dialog-box';
 import HealthBar from '../game-objects/health-bar';
 
-// TODO add switch action
-// stats bar
+// TODO
+// add stats bar
+// add back button
 // add other attack types and dialog
 // add other dialog for non wild battle
 
-const useMonDialog = (battleScene, monData, isPlayerSide) => {
-  if (isPlayerSide) {
-    return [`Go ${monData.name}!`];
-  }
+const sendOutAnimation = (scene, useMonEvent) => {
+  const { partyIndex, enemyIndex, battle, dialogBox } = scene;
 
-  if (battleScene.battleClient.battleType === 'wild') {
-    return [`A wild ${monData.type} has appeared!`];
-  }
-};
-const useMonImageAnimation = (battleScene, monData, isPlayerSide) =>
-  new Promise((resolve) => {
-    const healthBarX = isPlayerSide ? 350 : 50;
-    const healthBarY = isPlayerSide ? 250 : 0;
-    const healthBar = new HealthBar(
-      battleScene,
-      healthBarX,
-      healthBarY,
-      monData
-    );
+  const { side, monBattleState } = useMonEvent;
 
-    battleScene[
-      isPlayerSide ? 'playerHealthBar' : 'enemyHealthBar'
-    ] = healthBar;
+  const isMySide = partyIndex === side;
 
-    const x = isPlayerSide ? battleScene.scale.width : 0;
-    const y = isPlayerSide ? battleScene.scale.height * 0.33 : 10;
+  const {
+    healthBarX,
+    healthBarY,
+    monData,
+    monImageX,
+    monImageY,
+    targetX,
+  } = isMySide
+    ? {
+        healthBarX: 350,
+        healthBarY: 250,
+        monData: battle.parties[partyIndex].mons[monBattleState.monIndex],
+        monImageX: scene.scale.width,
+        monImageY: scene.scale.height * 0.33,
+        targetX: 50,
+      }
+    : {
+        healthBarX: 50,
+        healthBarY: 0,
+        monData: battle.parties[enemyIndex].mons[monBattleState.monIndex],
+        monImageX: 0,
+        monImageY: 10,
+        targetX: 600,
+      };
 
-    const mon = battleScene.add.image(x, y, monData.type, 3);
-    mon.setOrigin(0, 0);
-    mon.setScale(0.66);
+  const healthBar = new HealthBar(scene, healthBarX, healthBarY, monData);
 
-    if (isPlayerSide) {
-      battleScene.playerMon = mon;
-    } else {
-      battleScene.enemyMon = mon;
-    }
+  scene[isMySide ? 'myHealthBar' : 'enemyHealthBar'] = healthBar;
 
-    const targetX = isPlayerSide ? 50 : 600;
+  const monImage = scene.add.image(monImageX, monImageY, monData.species.name);
 
-    if (battleScene.battleClient.battleType === 'wild' && !isPlayerSide) {
-      battleScene.tweens.add({
-        targets: mon,
+  monImage.setOrigin(0, 0);
+  monImage.setScale(0.66);
+
+  scene[isMySide ? 'myMon' : 'enemyMon'] = {
+    image: monImage,
+    index: monBattleState.monIndex,
+    name: monData.species.name,
+  };
+
+  const imageAnimation = new Promise((resolve) => {
+    if (!isMySide) {
+      scene.tweens.add({
+        targets: monImage,
         x: targetX,
         duration: 1500,
         ease: 'linear',
         onComplete: resolve,
       });
     } else {
-      const smokeAnimation = battleScene.add
+      const smokeAnimation = scene.add
         .sprite(
-          targetX + mon.displayWidth * 0.5,
-          mon.y + mon.displayHeight * 0.25,
+          targetX + monImage.displayWidth * 0.5,
+          monImage.y + monImage.displayHeight * 0.25,
           'smoke'
         )
         .setScale(0.25)
         .play('smoke');
 
-      mon.setX(targetX);
+      monImage.setX(targetX);
 
       smokeAnimation.once('animationcomplete', () => {
         smokeAnimation.destroy();
@@ -72,196 +82,229 @@ const useMonImageAnimation = (battleScene, monData, isPlayerSide) =>
       });
     }
   });
-const returnMonAnimation = (battleScene, mon, isPlayerSide) => {
-  const originalScale = mon.scale;
 
-  battleScene[isPlayerSide ? 'playerHealthBar' : 'enemyHealthBar'].destroy();
+  const dialog = isMySide
+    ? [`Go ${monData.species.name.toUpperCase()}!`]
+    : [`A wild ${monData.species.name.toUpperCase()} has appeared!`];
+  const displayDialog = dialogBox.displayDialog(dialog);
 
-  return new Promise((resolve) => {
-    battleScene.tweens.add({
-      targets: mon,
-      y: mon.y + 150,
+  return Promise.all([imageAnimation, displayDialog]);
+};
+const returnMonAnimation = (scene, useMonEvent) => {
+  // dependencies
+  const {
+    dialogBox,
+    myMon,
+    myHealthBar,
+    enemyMon,
+    enemyHealthBar,
+    partyIndex,
+  } = scene;
+
+  const { side } = useMonEvent;
+
+  const isMySide = partyIndex === side;
+
+  const { currentMon, currentHealthBar, dialog } = isMySide
+    ? {
+        currentMon: myMon,
+        currentHealthBar: myHealthBar,
+        dialog: [`${myMon.name.toUpperCase()}, thats enough! Come back!`],
+      }
+    : {
+        currentMon: enemyMon,
+        currentHealthBar: enemyHealthBar,
+        dialog: [[`Opponent withdrew ${myMon.name.toUpperCase()}`]],
+      };
+
+  const originalScale = currentMon.image.scale;
+
+  currentHealthBar.destroy();
+
+  const displayReturnMonDialog = dialogBox.displayDialog(dialog);
+
+  const tween = new Promise((resolve) => {
+    scene.tweens.add({
+      targets: currentMon.image,
+      y: currentMon.image.y + 150,
       duration: 150,
       ease: 'linear',
-      onComplete: resolve,
+      onComplete: () => {
+        currentMon.image.destroy();
+        resolve();
+      },
       onUpdate: (tween) => {
-        mon.setScale(originalScale * (1 - tween.progress));
+        currentMon.image.setScale(originalScale * (1 - tween.progress));
       },
     });
   });
-};
-const useMonAnimation = async (battleScene, useMonEvent) => {
-  const { monIndex, side } = useMonEvent;
-  const isPlayerSide = side === battleScene.battleClient.player.id;
-  const monData =
-    battleScene.battleClient[isPlayerSide ? 'player' : 'enemy'].mons[monIndex];
-  const currentMon = isPlayerSide
-    ? battleScene.playerMon
-    : battleScene.enemyMon;
 
-  if (currentMon) {
-    await Promise.all([
-      battleScene.dialogBox.displayDialog(
-        isPlayerSide
-          ? [`${monData.name}, thats enough! Come back!`]
-          : [
-              `${battleScene.battleClient.enemy.name} is sending out ${
-                monData.name || monData.type
-              }`,
-            ]
-      ),
-      returnMonAnimation(battleScene, currentMon, isPlayerSide),
-    ]);
+  return Promise.all([displayReturnMonDialog, tween]).then(
+    () => (scene[isMySide ? 'myMon' : 'enemyMon'] = {})
+  );
+};
+const useMonAnimation = async (scene, useMonEvent) => {
+  // dependencies
+  const { myMon, enemyMon, partyIndex } = scene;
+  const { side } = useMonEvent;
+
+  const currentMon = side === partyIndex ? myMon : enemyMon;
+
+  if (currentMon.image) {
+    await returnMonAnimation(scene, useMonEvent);
   }
 
-  return Promise.all([
-    battleScene.dialogBox.displayDialog(
-      useMonDialog(battleScene, monData, isPlayerSide)
-    ),
-    useMonImageAnimation(battleScene, monData, isPlayerSide),
-  ]);
+  return sendOutAnimation(scene, useMonEvent);
 };
 
-const switchAction = (battleScene) => {
-  const monIndex = battleScene.battleClient.playerMonState.monIndex;
-  const mons = battleScene.battleClient.player.mons;
+const switchAction = (scene) => {
+  // dependencies
+  const { battle, partyIndex, dialogBox, myMon } = scene;
 
-  const elegibleMons = mons.filter((_value, i) => i !== monIndex);
+  const currentMonIndex = myMon?.index;
+
+  const mons = battle.parties[partyIndex].mons;
+
+  const elegibleMons = mons.filter((_value, i) => i !== currentMonIndex);
 
   return new Promise((resolve) => {
-    battleScene.dialogBox.displayButtons(
-      elegibleMons.map(({ name, type }, i) => ({
-        name: `${name} (${type})`,
+    dialogBox.displayButtons(
+      elegibleMons.map((mon, i) => ({
+        name: `${mon.species.name.toUpperCase()}`,
         action: () => {
-          battleScene.battleClient.use(i);
+          battle.use(partyIndex, i);
           resolve();
         },
       }))
     );
   });
 };
-const attackAction = (battleScene) => {
-  const monIndex = battleScene.battleClient.playerMonState.monIndex;
-  const monData = battleScene.battleClient.player.mons[monIndex];
+const attackAction = (scene) => {
+  // dependencies
+  const { partyIndex, dialogBox, battle, myMon } = scene;
+
+  const monData = battle.parties[partyIndex].mons[myMon.index];
 
   return new Promise((resolve) => {
-    battleScene.dialogBox.displayButtons(
+    dialogBox.displayButtons(
       monData.moves.map(({ name }, i) => ({
-        name,
+        name: name.toUpperCase(),
         action: () => {
-          battleScene.battleClient.attack(i);
+          battle.attack(partyIndex, i);
           resolve();
         },
       }))
     );
   });
 };
-const newTurnAnimation = (battleScene, newTurnEvent) =>
-  new Promise((resolve) => {
-    if (newTurnEvent.side !== battleScene.battleClient.player.id) {
+const newTurnAnimation = (scene, newTurnEvent) => {
+  // dependencies
+  const { partyIndex, dialogBox } = scene;
+
+  const { side } = newTurnEvent;
+
+  return new Promise((resolve) => {
+    if (side !== partyIndex) {
       resolve();
+    } else {
+      dialogBox.displayButtons([
+        {
+          name: 'FIGHT',
+          action: () => attackAction(scene).then(resolve),
+        },
+        {
+          name: 'SWITCH',
+          action: () => switchAction(scene).then(resolve),
+        },
+        {
+          name: 'BAG',
+          action: resolve,
+        },
+        {
+          name: 'RUN',
+          action: resolve,
+        },
+      ]);
     }
-
-    battleScene.dialogBox.displayButtons([
-      {
-        name: 'FIGHT',
-        action: () => attackAction(battleScene).then(resolve),
-      },
-      {
-        name: 'SWITCH',
-        action: () => switchAction(battleScene).then(resolve),
-      },
-      {
-        name: 'BAG',
-        action: resolve,
-      },
-      {
-        name: 'RUN',
-        action: resolve,
-      },
-    ]);
   });
+};
 
-const attackerAnimation = (battleScene, attackingMon) =>
+const firstTurnAnimation = switchAction;
+
+const attackerAnimation = (scene, attackingMon) =>
   new Promise((resolve) => {
-    battleScene.tweens.add({
-      targets: attackingMon,
-      x: attackingMon.x + 25,
-      y: attackingMon.y - 25,
+    scene.tweens.add({
+      targets: attackingMon.image,
+      x: attackingMon.image.x + 25,
+      y: attackingMon.image.y - 25,
       duration: 100,
       ease: 'linear',
       yoyo: 'true',
       onComplete: resolve,
     });
   });
-const targetAnimation = (battleScene, targetMon, hitType) =>
-  new Promise((resolve) => {
-    const hitAnimation = battleScene.add
+const targetAnimation = (scene, targetMon) => {
+  return new Promise((resolve) => {
+    const hitAnimation = scene.add
       .sprite(
-        targetMon.x + targetMon.displayWidth * 0.5,
-        targetMon.y + targetMon.displayHeight * 0.75,
-        `${hitType}Hit`
+        targetMon.image.x + targetMon.image.displayWidth * 0.5,
+        targetMon.image.y + targetMon.image.displayHeight * 0.75,
+        'physicalHit'
       )
       .setScale(0.25)
-      .play(`${hitType}Hit`);
+      .play('physicalHit');
 
     hitAnimation.once('animationcomplete', () => {
       hitAnimation.destroy();
       resolve();
     });
   });
-const attackAnimation = (battleScene, attackEvent) => {
-  const { type: hitType, side, damage } = attackEvent;
+};
+const attackAnimation = (scene, attackEvent) => {
+  // dependencies
+  const { partyIndex, myMon, enemyMon, myHealthBar, enemyHealthBar } = scene;
 
-  const { targetMon, attackingMon, healthBar } =
-    side === battleScene.battleClient.player.id
+  const { side, damage } = attackEvent;
+
+  const { targetMon, attackingMon, affectedHealthBar } =
+    side === partyIndex
       ? {
-          targetMon: battleScene.enemyMon,
-          attackingMon: battleScene.playerMon,
-          healthBar: battleScene.enemyHealthBar,
+          targetMon: enemyMon,
+          attackingMon: myMon,
+          affectedHealthBar: enemyHealthBar,
         }
       : {
-          targetMon: battleScene.playerMon,
-          attackingMon: battleScene.enemyMon,
-          healthBar: battleScene.playerHealthBar,
+          targetMon: myMon,
+          attackingMon: enemyMon,
+          affectedHealthBar: myHealthBar,
         };
-  return attackerAnimation(battleScene, attackingMon).then(() =>
+  return attackerAnimation(scene, attackingMon).then(() =>
     Promise.all([
-      targetAnimation(battleScene, targetMon, hitType),
-      healthBar.updateHealth(-damage),
+      targetAnimation(scene, targetMon),
+      affectedHealthBar.updateHealth(-damage),
     ])
   );
 };
 
-const battleEndedAnimation = (battleScene, event) => {
-  const { winnerId } = event;
+const battleEndedAnimation = (scene, event) => {
+  // dependencies
+  const { partyIndex, dialogBox, battle } = scene;
 
-  const enemyMonIndex = battleScene.battleClient.enemyMonState.monIndex;
-  const enemyMonData = battleScene.battleClient.enemy.mons[enemyMonIndex];
+  const { winner } = event;
 
-  const enemyName =
-    battleScene.battleClient.battleType === 'wild'
-      ? enemyMonData.type
-      : battleScene.battleClient.enemy.name;
+  const dialog = winner === partyIndex ? ['YOU WON!!!!'] : [`YOU LOST :(`];
 
-  const { id: playerId, name: playerName } = battleScene.battleClient.player;
-
-  const dialog =
-    winnerId === playerId
-      ? [`${playerName} defeated ${enemyName}`]
-      : [`${enemyName} defeated ${playerName}`];
-
-  return battleScene.dialogBox.displayDialog([dialog]).then(() => {
-    battleScene.battleClient.removeAllListeners();
-    battleScene.scene.restart();
+  return dialogBox.displayDialog(dialog).then(() => {
+    battle.removeAllListeners();
+    scene.scene.restart();
   });
 };
 
-const shakeAnimation = (battleScene, mon) =>
+const shakeAnimation = (scene, mon) =>
   new Promise((resolve) => {
-    battleScene.tweens.add({
-      targets: mon,
-      x: mon.x + 10,
+    scene.tweens.add({
+      targets: mon.image,
+      x: mon.image.x + 10,
       duration: 25,
       ease: 'linear',
       yoyo: 'true',
@@ -269,66 +312,63 @@ const shakeAnimation = (battleScene, mon) =>
       onComplete: resolve,
     });
   });
-const dropDownAnimation = (battleScene, mon) =>
+const dropDownAnimation = (scene, mon) =>
   new Promise((resolve) => {
-    battleScene.tweens.add({
-      targets: mon,
-      y: mon.y + 150,
+    scene.tweens.add({
+      targets: mon.image,
+      y: mon.image.y + 150,
       duration: 500,
       ease: 'linear',
       onComplete: resolve,
       onUpdate: (tween, target) => {
-        mon.setCrop(
+        mon.image.setCrop(
           0,
           0,
-          mon.width,
+          mon.image.width,
           target.height - tween.progress * target.height
         );
       },
     });
   });
-const faintedAnimation = (battleScene, event) => {
+const faintedAnimation = (scene, event) => {
+  // dependencies
+  const { partyIndex, myMon, enemyMon, dialogBox } = scene;
+
   const { side } = event;
 
-  const mon =
-    side === battleScene.battleClient.player.id
-      ? battleScene.playerMon
-      : battleScene.enemyMon;
-
-  const monIndex = battleScene.battleClient.playerMonState.monIndex;
-  const monData = battleScene.battleClient.player.mons[monIndex];
+  const mon = side === partyIndex ? myMon : enemyMon;
 
   return Promise.all([
-    battleScene.dialogBox.displayDialog([
-      `${monData.name || monData.type} has fainted`,
-    ]),
-    shakeAnimation(battleScene, mon).then(() =>
-      dropDownAnimation(battleScene, mon)
-    ),
-  ]);
+    dialogBox.displayDialog([`${mon.name} has fainted`]),
+    shakeAnimation(scene, mon).then(() => dropDownAnimation(scene, mon)),
+  ]).then(() => {
+    scene[side === partyIndex ? 'myMon' : 'enemyMon'] = {};
+  });
 };
 
-const experienceGainedAnimation = (battleScene, event) => {
-  const { side, monIndex, experience } = event;
+const experienceGainedAnimation = async (scene, event) => {
+  // dependencies
+  const { dialogBox, partyIndex, myMon } = scene;
 
-  if (side !== battleScene.battleClient.player.id) {
+  const [{ side, experience }] = event;
+
+  if (side !== partyIndex) {
     return;
   }
 
-  const monData = battleScene.battleClient.player.mons[monIndex];
-
-  return battleScene.dialogBox.displayDialog([
-    `${monData.name || monData.type} gained ${experience} EXP. points!`,
+  return dialogBox.displayDialog([
+    `${myMon.name} gained ${experience} EXP. points!`,
   ]);
 };
 
 const ANIMATIONS_BY_EVENT = {
-  useMon: useMonAnimation,
+  use: useMonAnimation,
   newTurn: newTurnAnimation,
   attack: attackAnimation,
-  battleEnded: battleEndedAnimation,
+  ended: battleEndedAnimation,
   fainted: faintedAnimation,
   experienceGained: experienceGainedAnimation,
+  firstTurn: firstTurnAnimation,
 };
 
 export default class BattleScene extends Phaser.Scene {
@@ -337,31 +377,30 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   init(data) {
-    this.battleClient = data.battleClient;
+    this.battle = data.battle;
   }
 
   preload() {
-    this.temp = false;
-
     this.eventQueue = [];
     this.busy = false;
-    this.playerMon = null;
-    this.enemyMon = null;
-    this.playerHealthBar = null;
+
+    // TODO: replace default
+    this.partyIndex = 0;
+    this.enemyIndex = 1;
+
+    this.myMon = { image: null, index: null, name: null };
+    this.myHealthBar = null;
+
+    this.enemyMon = { image: null, index: null, name: null };
     this.enemyHealthBar = null;
 
-    const { enemy, player } = this.battleClient;
-
-    // load all player mons
-    const { mons: playerMons } = player;
-    playerMons.forEach(({ type }) => {
-      this.load.image(type, `src/assets/images/mon/${type}.png`);
-    });
-
-    // load all enemy mons
-    const { mons: enemyMons } = enemy;
-    enemyMons.forEach(({ type }) => {
-      this.load.image(type, `src/assets/images/mon/${type}.png`);
+    this.battle.parties.forEach(({ mons }) => {
+      mons.forEach(({ species }) => {
+        this.load.image(
+          `${species.name}`,
+          `src/assets/images/mon/${species.name}.png`
+        );
+      });
     });
 
     // load animations
@@ -380,7 +419,12 @@ export default class BattleScene extends Phaser.Scene {
     this.dialogBox = new DialogBox(this);
 
     Object.keys(ANIMATIONS_BY_EVENT).forEach((eventName) => {
-      this.battleClient.on(eventName, (event) => {
+      this.battle.on(eventName, (event) => {
+        console.log(
+          '🚀 ~ file: battle.js ~ line 392 ~ BattleScene ~ this.battle.on ~ event',
+          eventName,
+          event
+        );
         this.eventQueue.push({ name: eventName, event });
       });
     });
@@ -391,60 +435,31 @@ export default class BattleScene extends Phaser.Scene {
       frames: 'physicalHit',
       frameRate: 128,
     });
-
     this.anims.create({
       key: 'smoke',
       frames: 'smoke',
       frameRate: 6,
     });
+
+    // add first choose event
+    this.eventQueue.push({
+      name: 'firstTurn',
+      event: {},
+    });
   }
 
   update() {
-    if (!this.temp) {
-      this.temp = true;
-      this.battleClient._triggerEvent('useMon', {
-        monIndex: 0,
-        side: 1,
-      });
-      this.battleClient._triggerEvent('useMon', {
-        monIndex: 0,
-        side: 0,
-      });
-      this.battleClient._triggerEvent('useMon', {
-        monIndex: 1,
-        side: 0,
-      });
-      this.battleClient._triggerEvent('newTurn', {
-        type: 'caterpie',
-        name: 'Yucky',
-        side: 0,
-      });
-      this.battleClient._triggerEvent('attack', {
-        type: 'physical',
-        side: 0,
-        damage: 23,
-      });
-      this.battleClient._triggerEvent('fainted', {
-        side: 1,
-      });
-      this.battleClient._triggerEvent('experienceGained', {
-        side: 0,
-        monIndex: 0,
-        experience: 500,
-      });
-      this.battleClient._triggerEvent('battleEnded', {
-        winnerId: 0,
-      });
-      return;
-    }
-
     if (!this.busy && this.eventQueue.length > 0) {
       this.busy = true;
 
       const { name, event } = this.eventQueue.shift();
+      console.log(name);
 
       return ANIMATIONS_BY_EVENT[name](this, event).then(() => {
+        console.log('after ', name);
         this.busy = false;
+
+        return;
       });
     }
   }

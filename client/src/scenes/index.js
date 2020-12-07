@@ -1,4 +1,4 @@
 import BattleScene from './battle';
-import TempScene from './temp';
+import PreloadScene from './preload';
 
-export default [TempScene, BattleScene];
+export default [PreloadScene, BattleScene];
