@@ -122,6 +122,24 @@ const useMonAnimation = async (battleScene, useMonEvent) => {
   ]);
 };
 
+const switchAction = (battleScene) => {
+  const monIndex = battleScene.battleClient.playerMonState.monIndex;
+  const mons = battleScene.battleClient.player.mons;
+
+  const elegibleMons = mons.filter((_value, i) => i !== monIndex);
+
+  return new Promise((resolve) => {
+    battleScene.dialogBox.displayButtons(
+      elegibleMons.map(({ name, type }, i) => ({
+        name: `${name} (${type})`,
+        action: () => {
+          battleScene.battleClient.use(i);
+          resolve();
+        },
+      }))
+    );
+  });
+};
 const attackAction = (battleScene) => {
   const monIndex = battleScene.battleClient.playerMonState.monIndex;
   const monData = battleScene.battleClient.player.mons[monIndex];
@@ -151,7 +169,7 @@ const newTurnAnimation = (battleScene, newTurnEvent) =>
       },
       {
         name: 'SWITCH',
-        action: resolve,
+        action: () => switchAction(battleScene).then(resolve),
       },
       {
         name: 'BAG',
