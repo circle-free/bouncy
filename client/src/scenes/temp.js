@@ -52,8 +52,6 @@ export default class TempScene extends Phaser.Scene {
       },
       battleType: 'wild',
 
-      on: (eventName, listener) => eventEmitter.on(eventName, listener),
-
       attack: () => {
         console.log('attacked');
       },
@@ -62,6 +60,11 @@ export default class TempScene extends Phaser.Scene {
         console.log('forfeited');
       },
 
+      use: () => {
+        console.log('use');
+      },
+
+      on: (eventName, listener) => eventEmitter.on(eventName, listener),
       removeAllListeners: () => eventEmitter.removeAllListeners(),
 
       _triggerEvent: (eventName, event) => eventEmitter.emit(eventName, event),
