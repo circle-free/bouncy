@@ -41,34 +41,27 @@ export default class HealthBar extends Phaser.GameObjects.Container {
     Phaser.Display.Align.To.LeftCenter(barLabel, this.bar);
     this.add(barLabel);
 
-    const lvlLabel = this.scene.add.text(0, 0, `Lv${monData.lvl}`, {
+    const lvlLabel = this.scene.add.text(0, 0, `Lv${monData.level}`, {
       fontSize: '30px',
       fill: '#ffffff',
     });
     Phaser.Display.Align.To.TopRight(lvlLabel, this.bar, 0, 25);
     this.add(lvlLabel);
 
-    const monName = this.scene.add.text(0, 0, monData.name || monData.type, {
-      fontSize: '30px',
-      fill: '#ffffff',
-    });
-    Phaser.Display.Align.To.TopLeft(monName, this.bar, 125, 25);
-    this.add(monName);
-
-    const genderLabel = this.scene.add.text(
+    const monName = this.scene.add.text(
       0,
       0,
-      monData.gender === 'male' ? '♂' : '♀',
+      monData.species.name.toUpperCase(),
       {
         fontSize: '30px',
         fill: '#ffffff',
       }
     );
-    Phaser.Display.Align.To.LeftCenter(genderLabel, lvlLabel, 5);
-    this.add(genderLabel);
+    Phaser.Display.Align.To.TopLeft(monName, this.bar, 125, 25);
+    this.add(monName);
 
-    this.maxHp = monData.maxHp;
-    this.hp = monData.hp;
+    this.maxHp = monData.maxHealth;
+    this.hp = monData.currentHealth;
     const hpLabel = this.scene.add.text(0, 0, `${this.hp}/${this.maxHp}`, {
       fontSize: '20px',
       fill: '#ffffff',
@@ -100,7 +93,8 @@ export default class HealthBar extends Phaser.GameObjects.Container {
           resolve();
         },
         onUpdate: (tween) => {
-          const currentHp = Math.floor(this.hp + delta * tween.progress);
+          const currentHp = getNewHp(this, Math.floor(delta * tween.progress));
+
           this.hpLabel.setText(`${currentHp}/${this.maxHp}`);
 
           if (currentHp / this.maxHp < RED_PERCENTAGE) {

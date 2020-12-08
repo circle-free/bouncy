@@ -7,6 +7,11 @@ module.exports = {
   resolve: {
     fallback: {
       assert: require.resolve('assert/'),
+      http: require.resolve('stream-http'),
+      stream: require.resolve('stream-browserify'),
+      os: require.resolve('os-browserify/browser'),
+      https: require.resolve('https-browserify'),
+      crypto: require.resolve('crypto-browserify'),
     },
   },
   mode: 'development',
