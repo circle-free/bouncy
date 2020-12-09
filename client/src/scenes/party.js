@@ -2,6 +2,9 @@ import Phaser from 'phaser';
 
 const NAME_Y = 50;
 const MON_Y = 170;
+const MON_SCALE = 0.5;
+const LEFT_COLUMN_X = 100;
+const LEFT_COLUMN_Y = 240;
 
 
 
@@ -33,6 +36,8 @@ const getHighlightColor = (speciesId) => {
       return 0x000000;
   }
 };
+
+const getSpeciesImageName = (speciesId) => `species-${speciesId}`;
 
 export default class PartyScene extends Phaser.Scene {
   constructor() {
@@ -81,7 +86,13 @@ export default class PartyScene extends Phaser.Scene {
     const currentMonImage = this.add.image(screenCenterX, MON_Y, getSpeciesImageName(speciesId));
     currentMonImage.setScale(MON_SCALE);
 
+    const textOptions = { fontSize: '28px', fill: '#ffffff' };
+
     // Current Health
+    const monStatsButton = this.add.text(LEFT_COLUMN_X, LEFT_COLUMN_Y, 'Health', textOptions).setOrigin(0.5);
+    // monStatsButton.setInteractive();
+    // monStatsButton.on('pointerdown', () => this.showMonStats());
+
     // Nature
     // Types
     // Level (with evolve indicator/button)
@@ -97,27 +108,27 @@ export default class PartyScene extends Phaser.Scene {
 
     // replenish button
 
-    const textOptions = { fontSize: '28px', fill: '#ffffff' };
+    
 
-    const monStatsButton = this.add.text(screenCenterX, MON_STATS_Y, 'MON STATS', textOptions).setOrigin(0.5);
-    monStatsButton.setInteractive();
-    monStatsButton.on('pointerdown', () => this.showMonStats());
+    // const monStatsButton = this.add.text(screenCenterX, MON_STATS_Y, 'MON STATS', textOptions).setOrigin(0.5);
+    // monStatsButton.setInteractive();
+    // monStatsButton.on('pointerdown', () => this.showMonStats());
 
-    const levelUpButton = this.add.text(screenCenterX, MON_STATS_Y + (2 * SELECTION_GAP), 'LEVEL UP MON', textOptions).setOrigin(0.5);
-    levelUpButton.setInteractive();
-    levelUpButton.on('pointerdown', () => this.levelUp());
+    // const levelUpButton = this.add.text(screenCenterX, MON_STATS_Y + (2 * SELECTION_GAP), 'LEVEL UP MON', textOptions).setOrigin(0.5);
+    // levelUpButton.setInteractive();
+    // levelUpButton.on('pointerdown', () => this.levelUp());
 
-    const levelUpAndTeachButton = this.add.text(screenCenterX, MON_STATS_Y + (3 * SELECTION_GAP), 'LEVEL UP AND TEACH MON', textOptions).setOrigin(0.5);
-    levelUpAndTeachButton.setInteractive();
-    levelUpAndTeachButton.on('pointerdown', () => this.levelUpAndTeach());
+    // const levelUpAndTeachButton = this.add.text(screenCenterX, MON_STATS_Y + (3 * SELECTION_GAP), 'LEVEL UP AND TEACH MON', textOptions).setOrigin(0.5);
+    // levelUpAndTeachButton.setInteractive();
+    // levelUpAndTeachButton.on('pointerdown', () => this.levelUpAndTeach());
 
-    const evolveButton = this.add.text(screenCenterX, MON_STATS_Y + (4 * SELECTION_GAP), 'EVOLVE MON', textOptions).setOrigin(0.5);
-    evolveButton.setInteractive();
-    evolveButton.on('pointerdown', () => this.evolve());
+    // const evolveButton = this.add.text(screenCenterX, MON_STATS_Y + (4 * SELECTION_GAP), 'EVOLVE MON', textOptions).setOrigin(0.5);
+    // evolveButton.setInteractive();
+    // evolveButton.on('pointerdown', () => this.evolve());
 
-    const evolveAndTeachButton = this.add.text(screenCenterX, MON_STATS_Y + (5 * SELECTION_GAP), 'EVOLVE AND TEACH MON', textOptions).setOrigin(0.5);
-    evolveAndTeachButton.setInteractive();
-    evolveAndTeachButton.on('pointerdown', () => this.evolveAndTeach());
+    // const evolveAndTeachButton = this.add.text(screenCenterX, MON_STATS_Y + (5 * SELECTION_GAP), 'EVOLVE AND TEACH MON', textOptions).setOrigin(0.5);
+    // evolveAndTeachButton.setInteractive();
+    // evolveAndTeachButton.on('pointerdown', () => this.evolveAndTeach());
   }
 
   showMonStats() {
