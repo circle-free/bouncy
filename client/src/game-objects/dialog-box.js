@@ -12,6 +12,7 @@ const createDialogRect = (scene) => {
     height - PADDING,
     0x004040
   );
+
   dialogRect.setOrigin(0, 0);
   dialogRect.setStrokeStyle(4, 0xff0000);
   dialogRect.setInteractive();
@@ -48,6 +49,7 @@ const createButtonsBox = (scene, dialogRect) => {
     dialogRect.height,
     0x004040
   );
+
   buttonsBox.setOrigin(0, 0);
   buttonsBox.setStrokeStyle(4, 0xff0000);
   buttonsBox.setVisible(false);
@@ -68,10 +70,9 @@ export default class DialogBox extends Phaser.GameObjects.Container {
     this.add(dialogRect);
     this.dialogRect = dialogRect;
 
-    const dialog = this.scene.add.text(0, 0, '', {
-      fontSize: '20px',
-      fill: '#ffffff',
-    });
+    const dialogOptions = { fontSize: '20px', fill: '#ffffff' };
+    const dialog = this.scene.add.text(0, 0, '', dialogOptions);
+
     Phaser.Display.Align.In.TopLeft(dialog, dialogRect, -PADDING, -PADDING);
     this.add(dialog);
     this.dialog = dialog;
@@ -89,9 +90,7 @@ export default class DialogBox extends Phaser.GameObjects.Container {
 
   displayDialog(dialogArray) {
     return new Promise((resolve, reject) => {
-      if (this.queue.length > 0) {
-        reject('Queue should be empty');
-      }
+      if (this.queue.length > 0) return reject('Queue should be empty');
 
       this.queue.push(...dialogArray);
 
@@ -107,7 +106,7 @@ export default class DialogBox extends Phaser.GameObjects.Container {
           this.dialog.setText('');
           this.nextIcon.setVisible(false);
           this.dialogRect.removeAllListeners('pointerdown');
-          resolve();
+          return resolve();
         }
 
         this.dialog.setText(nextText);
@@ -121,11 +120,9 @@ export default class DialogBox extends Phaser.GameObjects.Container {
     const x = this.buttonsBox.x + this.buttonsBox.width / 2 + PADDING;
 
     const buttons = buttonActions.map(({ name, action }, i) => {
+      const buttonTextOptions = { fontSize: '20px', fill: '#ffffff' };
       const button = this.scene.add
-        .text(x, this.y + 30 + i * 40, name, {
-          fontSize: '20px',
-          fill: '#ffffff',
-        })
+        .text(x, this.y + 30 + i * 40, name, buttonTextOptions)
         .setOrigin(0.5);
 
       button.setInteractive();

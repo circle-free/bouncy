@@ -1,3 +1,4 @@
+import Phaser from 'phaser';
 import LineSlider from '../game-objects/line-slider';
 
 const NAME_Y = 50;
@@ -77,16 +78,16 @@ export default class StarterSelectionScene extends Phaser.Scene {
   }
 
   create() {
-    const screenCenterX = this.scale.width / 2;
+    const screenCenterX = this.scale.width >> 1;
 
     const { id, name } = this.starterSpecies[this.currentMonIndex];
     this.cameras.main.setBackgroundColor(getBackgroundColor(id));
-    
-    this.currentMonImage = this.add.image(this.scale.width * 0.5, MON_Y, getSpeciesImageName(id));
-    this.currentMonImage.setScale(MON_SCALE);
-    
+
     const nameTextOptions = { fontSize: '36px', fill: '#ffffff' };
     this.nameLabel = this.add.text(screenCenterX, NAME_Y, name.toUpperCase(), nameTextOptions).setOrigin(0.5);
+    
+    this.currentMonImage = this.add.image(screenCenterX, MON_Y, getSpeciesImageName(id));
+    this.currentMonImage.setScale(MON_SCALE);
 
     const previousMonButton = this.add.triangle(0, 0, 0, 15, 30, 0, 30, 30, 0xffffff);
     previousMonButton.setInteractive();
@@ -148,7 +149,7 @@ export default class StarterSelectionScene extends Phaser.Scene {
     
     return Promise.all([
       moveAnimation(this, this.currentMonImage, targetX, this.currentMonImage.y), 
-      moveAnimation(this, newMonImage, this.scale.width * 0.5, MON_Y)
+      moveAnimation(this, newMonImage, this.scale.width >> 1, MON_Y)
     ])
     .then(() => {
       this.updateElements(newMonIndex, newMonImage);
@@ -168,7 +169,7 @@ export default class StarterSelectionScene extends Phaser.Scene {
     
     return Promise.all([
       moveAnimation(this, this.currentMonImage, targetX, this.currentMonImage.y), 
-      moveAnimation(this, newMonImage, this.scale.width * 0.5, MON_Y)
+      moveAnimation(this, newMonImage, this.scale.width >> 1, MON_Y)
     ])
     .then(() => {
       this.updateElements(newMonIndex, newMonImage);

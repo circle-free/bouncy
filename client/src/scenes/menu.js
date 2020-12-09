@@ -1,8 +1,7 @@
-// This scene is a menu for the following tasks
-// - Syncing Optimistic State
+import Phaser from 'phaser';
 
-const MON_STATS_Y = 60;
-const SELECTION_GAP = 80;
+const PARTY_Y = 200;
+const SELECTION_GAP = 100;
 
 export default class MenuScene extends Phaser.Scene {
   constructor() {
@@ -14,68 +13,41 @@ export default class MenuScene extends Phaser.Scene {
 
   create() {
     const screenCenterX = this.scale.width / 2;
-    const textOptions = { fontSize: '28px', fill: '#ffffff' };
+    const textOptions = { fontSize: '36px', fill: '#ffffff' };
 
-    const monStatsButton = this.add.text(screenCenterX, MON_STATS_Y, 'MON STATS', textOptions).setOrigin(0.5);
-    monStatsButton.setInteractive();
-    monStatsButton.on('pointerdown', () => this.showMonStats());
+    const partyButton = this.add.text(screenCenterX, PARTY_Y, 'MY MON', textOptions).setOrigin(0.5);
+    partyButton.setInteractive();
+    partyButton.on('pointerdown', () => this.party());
 
-    const battleWildButton = this.add.text(screenCenterX, MON_STATS_Y + SELECTION_GAP, 'BATTLE WILD MON', textOptions).setOrigin(0.5);
+    const battleWildButton = this.add.text(screenCenterX, PARTY_Y + SELECTION_GAP, 'BATTLE WILD MON', textOptions).setOrigin(0.5);
     battleWildButton.setInteractive();
     battleWildButton.on('pointerdown', () => this.battleWild());
 
-    const levelUpButton = this.add.text(screenCenterX, MON_STATS_Y + (2 * SELECTION_GAP), 'LEVEL UP MON', textOptions).setOrigin(0.5);
-    levelUpButton.setInteractive();
-    levelUpButton.on('pointerdown', () => this.levelUp());
-
-    const levelUpAndTeachButton = this.add.text(screenCenterX, MON_STATS_Y + (3 * SELECTION_GAP), 'LEVEL UP AND TEACH MON', textOptions).setOrigin(0.5);
-    levelUpAndTeachButton.setInteractive();
-    levelUpAndTeachButton.on('pointerdown', () => this.levelUpAndTeach());
-
-    const evolveButton = this.add.text(screenCenterX, MON_STATS_Y + (4 * SELECTION_GAP), 'EVOLVE MON', textOptions).setOrigin(0.5);
-    evolveButton.setInteractive();
-    evolveButton.on('pointerdown', () => this.evolve());
-
-    const evolveAndTeachButton = this.add.text(screenCenterX, MON_STATS_Y + (5 * SELECTION_GAP), 'EVOLVE AND TEACH MON', textOptions).setOrigin(0.5);
-    evolveAndTeachButton.setInteractive();
-    evolveAndTeachButton.on('pointerdown', () => this.evolveAndTeach());
-
-    const syncButton = this.add.text(screenCenterX, MON_STATS_Y + (6 * SELECTION_GAP), 'SYNC TO CHAIN', textOptions).setOrigin(0.5);
+    const syncButton = this.add.text(screenCenterX, PARTY_Y + (2 * SELECTION_GAP), 'SYNC TO CHAIN', textOptions).setOrigin(0.5);
     syncButton.setInteractive();
     syncButton.on('pointerdown', () => this.sync());
   }
 
-  showMonStats() {
-    console.log('showMonStats');
+  party() {
+    this.scene.start('Party');
   }
 
   battleWild() {
-    console.log('battleWild');
-
     const wildProperties = { level: window.optimisticMonMon.party.mons[0].level };
     const battle = window.optimisticMonMon.startWildBattle(wildProperties);
-
     this.scene.start('Battle', { battle });
   }
 
-  levelUp() {
-    console.log('levelUp');
-  }
+  async sync() {
+    const { receipt, syncComplete } = await window.optimisticMonMon.sync({ gas: 1000000 });
 
-  levelUpAndTeach() {
-    console.log('levelUpAndTeach');
-  }
+    console.log('Sync receipt:', receipt);
 
-  evolve() {
-    console.log('evolve');
-  }
+    if (syncComplete) return;
 
-  evolveAndTeach() {
-    console.log('evolveAndTeach');
-  }
+    console.log('Pending optimistic transitions remaining...');
 
-  sync() {
-    console.log('sync');
+    await this.sync();
   }
 
   update() {

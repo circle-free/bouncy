@@ -1,3 +1,4 @@
+import Phaser from 'phaser';
 import Slider from 'phaser3-rex-plugins/plugins/slider.js';
 
 export default class LineSlider extends Phaser.GameObjects.Container {
