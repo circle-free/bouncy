@@ -144,12 +144,15 @@ const useMonAnimation = async (scene, useMonEvent) => {
 
 const switchAction = (scene) => {
   // dependencies
-  const { battle, partyIndex, dialogBox, myMon } = scene;
-  const currentMonIndex = myMon?.index;
+  const { battle, partyIndex, dialogBox } = scene;
+
   const mons = battle.parties[partyIndex].mons;
 
-  // TODO: and have currentHealth
-  const eligibleMons = mons.filter((_value, i) => i !== currentMonIndex);
+  const monIndex = battle.monBattleStates[partyIndex]?.monIndex;
+
+  const eligibleMons = mons.filter(({ currentHealth }, i) => {
+    return i !== monIndex && currentHealth > 0;
+  });
 
   return new Promise((resolve) => {
     dialogBox.displayButtons(
@@ -184,7 +187,7 @@ const attackAction = (scene) => {
 
 const newTurnAnimation = (scene, newTurnEvent) => {
   // dependencies
-  const { partyIndex, dialogBox } = scene;
+  const { partyIndex, dialogBox, battle } = scene;
   const { side } = newTurnEvent;
 
   return new Promise((resolve) => {
@@ -205,7 +208,10 @@ const newTurnAnimation = (scene, newTurnEvent) => {
       },
       {
         name: 'RUN',
-        action: resolve,
+        action: () => {
+          battle.runFromWildBattle();
+          resolve();
+        },
       },
     ]);
   });
@@ -435,6 +441,7 @@ export default class BattleScene extends Phaser.Scene {
 
       if (name !== 'ended') return;
 
+      window.optimisticMonMon.processWildBattle();
       this.scene.start('Menu');
     });
   }

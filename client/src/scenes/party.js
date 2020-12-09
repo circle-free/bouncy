@@ -58,10 +58,16 @@ const TYPES = {
 };
 
 const LEVELING_RATE = {
-  0: 'fast',
-  1: 'medium fast',
-  2: 'medium slow',
-  3: 'slow',
+  0: 'Fast',
+  1: 'Medium Fast',
+  2: 'Medium Slow',
+  3: 'Slow',
+};
+
+const MOVE_CATEGORY = {
+  0: 'Physical',
+  1: 'Special',
+  2: 'Status',
 };
 
 // const MON_STATS_Y = 60;
@@ -121,7 +127,7 @@ export default class PartyScene extends Phaser.Scene {
       this.load.image('mon', `src/assets/images/species/${speciesId}.png`);
     });
 
-    this.dataIndex = 0;
+    this.tableIndex = 0;
   }
 
   create() {
@@ -131,17 +137,6 @@ export default class PartyScene extends Phaser.Scene {
       speciesId: id,
       species: { name },
     } = mon;
-
-    const data = [
-      [
-        `Health: ${mon.currentHealth}/${mon.maxHealth}`,
-        `Nature: ${NATURE[mon.nature]}`,
-        `Types: ${TYPES[mon.species.type1]}, ${TYPES[mon.species.type2]}`,
-        `Lvl: ${mon.level}`,
-        `Lvling Rate: ${LEVELING_RATE[mon.species.levelingRate]}`,
-        `Experience: ${mon.experience}`,
-      ],
-    ];
 
     this.cameras.main.setBackgroundColor(getBackgroundColor(id));
 
@@ -164,12 +159,151 @@ export default class PartyScene extends Phaser.Scene {
     const dataBox = this.add.rectangle(
       0,
       0,
-      this.scale.width * 0.66,
-      this.scale.height * 0.45,
+      this.scale.width * 0.75,
+      this.scale.height * 0.5,
       hightlightColor
     );
     // dataBox.setStrokeStyle(4, 0x000000);
-    Phaser.Display.Align.To.BottomCenter(dataBox, monImage);
+    Phaser.Display.Align.To.BottomCenter(dataBox, monImage, 0, -20);
+
+    const {
+      IVs,
+      EVs,
+      stats,
+      species,
+      currentHealth,
+      maxHealth,
+      nature,
+      experience,
+      level,
+      moves,
+      canLevel,
+      eligibleLevel,
+      eligibleEvolutions,
+      canEvolve,
+    } = mon;
+
+    const {
+      type1,
+      type2,
+      levelingRate,
+      baseAttack,
+      baseDefense,
+      baseSpeed,
+      baseSpecialAttack,
+      baseSpecialDefense,
+      baseHealth,
+    } = species;
+
+    const tables = [
+      new GridTable(this, dataBox.x, dataBox.y, dataBox.width, dataBox.height, {
+        columns: 2,
+        cellsCount: 6,
+        cellWidth: dataBox.width / 2,
+        cellHeight: dataBox.height / 3,
+        cellVisibleCallback: onCellVisibleWith(this, [
+          `Health: ${currentHealth}/${maxHealth}`,
+          `Nature: ${NATURE[nature]}`,
+          `Types: ${TYPES[type1]}, ${TYPES[type2]}`,
+          `Lvl: ${level}`,
+          `Lvling Rate: ${LEVELING_RATE[levelingRate]}`,
+          `Experience: ${experience}`,
+        ]),
+        mask: {
+          padding: 2,
+        },
+      }),
+
+      new GridTable(this, dataBox.x, dataBox.y, dataBox.width, dataBox.height, {
+        columns: 5,
+        cellsCount: 35,
+        cellWidth: dataBox.width / 5,
+        cellHeight: dataBox.height / 7,
+        cellVisibleCallback: onCellVisibleWith(this, [
+          '',
+          'Base',
+          'IV',
+          'EV',
+          'Stat',
+          'Attk',
+          baseAttack,
+          IVs.attack,
+          EVs.attack,
+          stats.attack,
+          'Def',
+          baseDefense,
+          IVs.defense,
+          EVs.defense,
+          stats.defense,
+          'Speed',
+          baseSpeed,
+          IVs.speed,
+          EVs.speed,
+          stats.speed,
+          'Sp. Attk',
+          baseSpecialAttack,
+          IVs.specialAttack,
+          EVs.specialAttack,
+          stats.specialAttack,
+          'Sp. Def',
+          baseSpecialDefense,
+          IVs.specialDefense,
+          EVs.specialDefense,
+          stats.specialDefense,
+          'Health',
+          baseHealth,
+          IVs.health,
+          EVs.health,
+          stats.health,
+        ]),
+        mask: {
+          padding: 2,
+        },
+      }),
+
+      new GridTable(this, dataBox.x, dataBox.y, dataBox.width, dataBox.height, {
+        columns: 7,
+        cellsCount: 7 * (1 + moves.length),
+        cellWidth: dataBox.width / 7,
+        cellHeight: dataBox.height / (1 + moves.length),
+        cellVisibleCallback: onCellVisibleWith(
+          this,
+          ['MOVE', 'CAT', 'TYPE', 'POW', 'ACC', 'PP', 'MAX PP'].concat(
+            moves
+              .map(
+                ({
+                  name,
+                  category,
+                  type,
+                  power,
+                  accuracy,
+                  powerPoints,
+                  maxPowerPoints,
+                }) => [
+                  name.toUpperCase(),
+                  MOVE_CATEGORY[category],
+                  TYPES[type],
+                  power,
+                  accuracy,
+                  powerPoints,
+                  maxPowerPoints,
+                ]
+              )
+              .flat()
+          )
+        ),
+        mask: {
+          padding: 2,
+        },
+      }),
+    ];
+
+    tables.forEach((table) => {
+      table.setVisible(false);
+      this.add.existing(table);
+    });
+
+    tables[0].setVisible(true);
 
     this.switchingBusy = false;
 
@@ -188,170 +322,146 @@ export default class PartyScene extends Phaser.Scene {
     previousButton.setInteractive();
 
     previousButton.on('pointerdown', () => {
-      const newIndex = this.dataIndex - 1;
+      if (this.switchingBusy) {
+        return;
+      }
 
-      if (newIndex <  0) 
+      this.switchingBusy = true;
+
+      const oldIndex = this.tableIndex;
+
+      const newIndex = this.tableIndex - 1;
+
+      this.tableIndex = newIndex < 0 ? tables.length - 1 : newIndex;
+
+      tables[oldIndex].setVisible(false);
+
+      tables[this.tableIndex].setVisible(true);
+
+      this.switchingBusy = false;
     });
 
     const nextButton = this.add.triangle(0, 0, 0, 0, 0, 30, 30, 15, 0xffffff);
     Phaser.Display.Align.To.RightCenter(nextButton, dataBox, ARROW_GAP);
     nextButton.setInteractive();
 
-    const table = new GridTable(
-      this,
-      dataBox.x,
-      dataBox.y,
-      dataBox.width,
-      dataBox.height,
-      {
-        columns: 2,
-        cellsCount: 6,
-        cellWidth: dataBox.width / 2,
-        cellHeight: dataBox.height / 3,
-        cellVisibleCallback: onCellVisibleWith(this, [
-          `Health: ${mon.currentHealth}/${mon.maxHealth}`,
-          `Nature: ${NATURE[mon.nature]}`,
-          `Types: ${TYPES[mon.species.type1]}, ${TYPES[mon.species.type2]}`,
-          `Lvl: ${mon.level}`,
-          `Lvling Rate: ${LEVELING_RATE[mon.species.levelingRate]}`,
-          `Experience: ${mon.experience}`,
-        ]),
-        mask: {
-          padding: 2,
-        },
+    nextButton.on('pointerdown', () => {
+      if (this.switchingBusy) {
+        return;
       }
-    );
 
-    this.add.existing(table);
+      this.switchingBusy = true;
+
+      const oldIndex = this.tableIndex;
+
+      const newIndex = this.tableIndex + 1;
+
+      this.tableIndex = newIndex >= tables.length ? 0 : newIndex;
+
+      tables[oldIndex].setVisible(false);
+
+      tables[this.tableIndex].setVisible(true);
+
+      this.switchingBusy = false;
+    });
+
+    const backButton = this.add
+      .rectangle(10, 10, 100, 25, 0xffffff)
+      .setOrigin(0);
+    backButton.setInteractive();
+
+    const backTextOptions = { fontSize: '15px', fill: '#000000' };
+    const backText = this.add
+      .text(0, 0, 'BACK', backTextOptions)
+      .setOrigin(0.5);
+    Phaser.Display.Align.In.Center(backText, backButton);
+
+    backButton.once('pointerdown', () => {
+      nextButton.removeAllListeners();
+      previousButton.removeAllListeners();
+      this.scene.start('Menu');
+    });
+
+    const replenishOptions = { fontSize: '15px', fill: '#000000' };
+    const replenishText = this.add
+      .text(0, 0, 'Replenish', replenishOptions)
+      .setOrigin(0.5)
+      .setDepth(1);
+
+    const replenishButton = this.add
+      .rectangle(
+        0,
+        0,
+        replenishText.width + 10,
+        replenishText.height + 10,
+        0xffffff
+      )
+      .setOrigin(0);
+    replenishButton.setInteractive();
+
+    Phaser.Display.Align.To.RightCenter(replenishButton, monImage);
+    Phaser.Display.Align.In.Center(replenishText, replenishButton);
+
+    replenishButton.once('pointerdown', () => {
+      console.log('replenish');
+      window.optimisticMonMon.replenish(0);
+      nextButton.removeAllListeners();
+      previousButton.removeAllListeners();
+      this.scene.restart();
+    });
+
+    if (canLevel) {
+      const levelTextOptions = { fontSize: '15px', fill: '#000000' };
+      const levelText = this.add
+        .text(0, 0, `Level up to ${eligibleLevel}`, levelTextOptions)
+        .setOrigin(0.5)
+        .setDepth(1);
+
+      const levelButton = this.add
+        .rectangle(0, 0, levelText.width + 10, levelText.height + 10, 0xffffff)
+        .setOrigin(0);
+      levelButton.setInteractive();
+
+      Phaser.Display.Align.To.RightCenter(levelButton, monImage, 0, -40);
+      Phaser.Display.Align.In.Center(levelText, levelButton);
+
+      levelButton.once('pointerdown', () => {
+        console.log('level');
+        nextButton.removeAllListeners();
+        previousButton.removeAllListeners();
+        window.optimisticMonMon.levelUp(0);
+        this.scene.restart();
+      });
+    }
+
+    if (canEvolve) {
+      const evolveTextOptions = { fontSize: '15px', fill: '#000000' };
+      const evolveText = this.add
+        .text(0, 0, `Evolve to ${eligibleEvolutions[0]}`, evolveTextOptions)
+        .setOrigin(0.5)
+        .setDepth(1);
+
+      const evolveButton = this.add
+        .rectangle(
+          0,
+          0,
+          evolveText.width + 10,
+          evolveText.height + 10,
+          0xffffff
+        )
+        .setOrigin(0);
+      evolveButton.setInteractive();
+
+      Phaser.Display.Align.To.RightCenter(evolveButton, monImage, 0, 40);
+      Phaser.Display.Align.In.Center(evolveText, evolveButton);
+
+      evolveButton.once('pointerdown', () => {
+        console.log('evolve');
+        nextButton.removeAllListeners();
+        previousButton.removeAllListeners();
+        window.optimisticMonMon.evolve(0);
+        this.scene.restart();
+      });
+    }
   }
-  // const screenCenterX = this.scale.width >> 1;
-
-  // const {
-  //   species,
-  //   level,
-  //   nature,
-  //   experience,
-  //   IVs,
-  //   EVs,
-  //   currentHealth,
-  //   maxHealth,
-  //   moves,
-  // } = this.mon;
-
-  // const {
-  //   id: speciesId,
-  //   name: speciesName,
-  //   levelingRate,
-  //   type1,
-  //   type2,
-  //   baseAttack,
-  //   baseDefense,
-  //   baseSpeed,
-  //   baseSpecialAttack,
-  //   baseSpecialDefense,
-  //   baseHealth,
-  // } = species;
-
-  // this.cameras.main.setBackgroundColor(getBackgroundColor(speciesId));
-
-  // const nameTextOptions = { fontSize: '36px', fill: '#ffffff' };
-  // this.nameLabel = this.add
-  //   .text(screenCenterX, NAME_Y, speciesName.toUpperCase(), nameTextOptions)
-  //   .setOrigin(0.5);
-
-  // const currentMonImage = this.add.image(
-  //   screenCenterX,
-  //   MON_Y,
-  //   getSpeciesImageName(speciesId)
-  // );
-  // currentMonImage.setScale(MON_SCALE);
-
-  // Current Health
-  // Nature
-  // Types
-  // Level (with evolve indicator/button)
-  // Leveling Rate
-  // Experience (with level up indicator/button)
-  // Bases
-  // IVs
-  // EVs
-  // Stats
-  // Moves (with learn indicator)
-
-  // replenish button
-
-  //   const textOptions = { fontSize: '28px', fill: '#ffffff' };
-
-  //   const monStatsButton = this.add
-  //     .text(screenCenterX, MON_STATS_Y, 'MON STATS', textOptions)
-  //     .setOrigin(0.5);
-  //   monStatsButton.setInteractive();
-  //   monStatsButton.on('pointerdown', () => this.showMonStats());
-
-  //   const levelUpButton = this.add
-  //     .text(
-  //       screenCenterX,
-  //       MON_STATS_Y + 2 * SELECTION_GAP,
-  //       'LEVEL UP MON',
-  //       textOptions
-  //     )
-  //     .setOrigin(0.5);
-  //   levelUpButton.setInteractive();
-  //   levelUpButton.on('pointerdown', () => this.levelUp());
-
-  //   const levelUpAndTeachButton = this.add
-  //     .text(
-  //       screenCenterX,
-  //       MON_STATS_Y + 3 * SELECTION_GAP,
-  //       'LEVEL UP AND TEACH MON',
-  //       textOptions
-  //     )
-  //     .setOrigin(0.5);
-  //   levelUpAndTeachButton.setInteractive();
-  //   levelUpAndTeachButton.on('pointerdown', () => this.levelUpAndTeach());
-
-  //   const evolveButton = this.add
-  //     .text(
-  //       screenCenterX,
-  //       MON_STATS_Y + 4 * SELECTION_GAP,
-  //       'EVOLVE MON',
-  //       textOptions
-  //     )
-  //     .setOrigin(0.5);
-  //   evolveButton.setInteractive();
-  //   evolveButton.on('pointerdown', () => this.evolve());
-
-  //   const evolveAndTeachButton = this.add
-  //     .text(
-  //       screenCenterX,
-  //       MON_STATS_Y + 5 * SELECTION_GAP,
-  //       'EVOLVE AND TEACH MON',
-  //       textOptions
-  //     )
-  //     .setOrigin(0.5);
-  //   evolveAndTeachButton.setInteractive();
-  //   evolveAndTeachButton.on('pointerdown', () => this.evolveAndTeach());
-  // }
-
-  // showMonStats() {
-  //   console.log('showMonStats');
-  // }
-
-  // levelUp() {
-  //   console.log('levelUp');
-  // }
-
-  // levelUpAndTeach() {
-  //   console.log('levelUpAndTeach');
-  // }
-
-  // evolve() {
-  //   console.log('evolve');
-  // }
-
-  // evolveAndTeach() {
-  //   console.log('evolveAndTeach');
-  // }
-
-  // update() {}
 }
