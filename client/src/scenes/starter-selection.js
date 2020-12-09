@@ -32,6 +32,8 @@ const getBackgroundColor = (speciesId) => {
       return 0x795842; // from 0xf3b084
     case 7:
       return 0x42636b; // from 0x84C6D6
+    case 25:
+      return 0x7b7242; // from 0xF6E484
     default:
       return 0x000000;
   }
@@ -45,6 +47,8 @@ const getHighlightColor = (speciesId) => {
       return 0xf9d7c1; // from 0xf3b084
     case 7:
       return 0xc1e2ea; // from 0x84C6D6
+    case 25:
+      return 0xfaf1c1; // from 0xF6E484
     default:
       return 0x000000;
   }

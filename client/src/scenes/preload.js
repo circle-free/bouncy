@@ -58,11 +58,10 @@ const setUpOptimisticMonMon = async () => {
   return optimisticMonMon;
 };
 
-const ethEnabled = () => {
+const ethEnabled = async () => {
   if (window.ethereum) {
     window.web3 = new Web3(window.ethereum);
-    window.ethereum.enable();
-    return true;
+    return window.ethereum.enable();
   }
 
   return false;
@@ -76,7 +75,7 @@ export default class PreloadScene extends Phaser.Scene {
   preload() {}
 
   async create() {
-    if (!ethEnabled()) {
+    if (!await ethEnabled()) {
       alert(
         'Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!'
       );
