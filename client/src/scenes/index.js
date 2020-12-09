@@ -9,5 +9,5 @@ export default [
   StarterSelectionScene,
   BattleScene,
   MenuScene,
-  PartyScene
+  PartyScene,
 ];

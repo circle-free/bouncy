@@ -17,28 +17,39 @@ const setUpOptimisticMonMon = async () => {
   const user = await getAccount();
 
   const gameOptions = {
-    address: '0x81b2959683257b0b7b02f38F28644f559ad2648A',
+    address: '0x67F15d8b002c0A4F099Ec46b5C7f9bC3b496b1F1',
   };
 
   const oriOptions = {
-    address: '0x1d0B8df14aB40cdd6fF4939734040F847Ab87653',
+    address: '0xa5E63867E188C9a06F774311BB309b257b915Ffd',
     web3: window.web3,
     requiredBond: '1000000000000000000',
     lockTime: '600',
   };
 
-  const exportedStateString = localStorage.getItem('exported-optimistic-mon-mon-state');
-  const exportedState = exportedStateString ? JSON.parse(exportedStateString) : {};
-  const optimisticMonMon = new OptimisticMonMon(user, gameOptions, oriOptions, exportedState);
+  const exportedStateString = localStorage.getItem(
+    'exported-optimistic-mon-mon-state'
+  );
+  const exportedState = exportedStateString
+    ? JSON.parse(exportedStateString)
+    : {};
+  const optimisticMonMon = new OptimisticMonMon(
+    user,
+    gameOptions,
+    oriOptions,
+    exportedState
+  );
 
   if (await optimisticMonMon.isInitialized()) {
     console.log('ORI account already initialized.');
     return optimisticMonMon;
   }
-
   try {
     const { receipt: initializeReceipt } = await optimisticMonMon.initialize();
-    localStorage.setItem('exported-optimistic-mon-mon-state', JSON.stringify(optimisticMonMon.export()));
+    localStorage.setItem(
+      'exported-optimistic-mon-mon-state',
+      JSON.stringify(optimisticMonMon.export())
+    );
     console.log('ORI account initialized: ', initializeReceipt);
   } catch (_err) {
     console.error('ORI account initialization Failed.');

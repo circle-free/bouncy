@@ -1,14 +1,13 @@
 import Phaser from 'phaser';
 import DialogBox from '../game-objects/dialog-box';
 import HealthBar from '../game-objects/health-bar';
+import { getSpeciesImageName } from '../utils';
 
 // TODO
 // add stats bar
 // add back button
 // add other attack types and dialog
 // add other dialog for non wild battle
-
-const getSpeciesImageName = (speciesId) => `species-${speciesId}`;
 
 const sendOutAnimation = (scene, useMonEvent) => {
   const { partyIndex, enemyIndex, battle, dialogBox } = scene;
@@ -29,7 +28,11 @@ const sendOutAnimation = (scene, useMonEvent) => {
   const healthBar = new HealthBar(scene, healthBarX, healthBarY, monData);
 
   scene[isMySide ? 'myHealthBar' : 'enemyHealthBar'] = healthBar;
-  const monImage = scene.add.image(monImageX, monImageY, getSpeciesImageName(monData.species.id));
+  const monImage = scene.add.image(
+    monImageX,
+    monImageY,
+    getSpeciesImageName(monData.species.id)
+  );
 
   monImage.setOrigin(0, 0);
   monImage.setScale(0.66);
@@ -81,7 +84,14 @@ const sendOutAnimation = (scene, useMonEvent) => {
 
 const returnMonAnimation = (scene, useMonEvent) => {
   // dependencies
-  const { dialogBox, myMon, myHealthBar, enemyMon, enemyHealthBar, partyIndex } = scene;
+  const {
+    dialogBox,
+    myMon,
+    myHealthBar,
+    enemyMon,
+    enemyHealthBar,
+    partyIndex,
+  } = scene;
   const { side } = useMonEvent;
   const isMySide = partyIndex === side;
 

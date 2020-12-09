@@ -1,18 +1,18 @@
 import Phaser from 'phaser';
 import LineSlider from '../game-objects/line-slider';
+import { getSpeciesImageName } from '../utils';
 
 const NAME_Y = 50;
 const MON_Y = 170;
 const MON_SCALE = 0.5;
 const ARROW_GAP = 30;
-const OFF_SCREEN_DISTANCE = 200;
 const NATURE_Y = 260;
 const LEFT_COLUMN_X = 250;
 const RIGHT_COLUMN_X = 550;
 const SLIDER_GAP = 60;
 const CONFIRM_Y = 550;
 
-const moveAnimation = (scene, image, targetX, targetY) => 
+const moveAnimation = (scene, image, targetX, targetY) =>
   new Promise((resolve) => {
     scene.tweens.add({
       targets: image,
@@ -25,7 +25,7 @@ const moveAnimation = (scene, image, targetX, targetY) =>
   });
 
 const getBackgroundColor = (speciesId) => {
-  switch(speciesId) {
+  switch (speciesId) {
     case 1:
       return 0x48685a; // from 0x91d1b4
     case 4:
@@ -38,7 +38,7 @@ const getBackgroundColor = (speciesId) => {
 };
 
 const getHighlightColor = (speciesId) => {
-  switch(speciesId) {
+  switch (speciesId) {
     case 1:
       return 0xc8e8d9; // from 0x91d1b4
     case 4:
@@ -50,7 +50,84 @@ const getHighlightColor = (speciesId) => {
   }
 };
 
-const getSpeciesImageName = (speciesId) => `species-${speciesId}`;
+const getNewMonIndex = (scene, direction) => {
+  const newMonIndex =
+    direction === 'previous'
+      ? scene.currentMonIndex - 1
+      : scene.currentMonIndex + 1;
+
+  if (newMonIndex < 0) {
+    return scene.starterSpecies.length - 1;
+  }
+
+  if (newMonIndex >= scene.starterSpecies.length) {
+    return 0;
+  }
+
+  return newMonIndex;
+};
+
+const setColors = (scene, id) => {
+  scene.cameras.main.setBackgroundColor(getBackgroundColor(id));
+
+  const cursorColor = getHighlightColor(id);
+  scene.natureSlider.setCursorColor(cursorColor);
+  scene.attackSlider.setCursorColor(cursorColor);
+  scene.defenseSlider.setCursorColor(cursorColor);
+  scene.speedSlider.setCursorColor(cursorColor);
+  scene.specialAttackSlider.setCursorColor(cursorColor);
+  scene.specialDefenseSlider.setCursorColor(cursorColor);
+  scene.healthSlider.setCursorColor(cursorColor);
+
+  scene.confirmButton.setFillStyle(cursorColor);
+};
+
+const switchMonAnimation = (scene, direction) => {
+  if (scene.switchingMonBusy) return;
+
+  scene.switchingMonBusy = true;
+
+  const targetX =
+    direction === 'previous'
+      ? scene.currentMonImage.x - scene.scale.width
+      : scene.currentMonImage.x + scene.scale.width;
+
+  const newMonIndex = getNewMonIndex(scene, direction);
+
+  const { id, name } = scene.starterSpecies[newMonIndex];
+
+  const newMonStartingX =
+    direction === 'previous'
+      ? scene.scale.width + scene.currentMonImage.width
+      : 0 - scene.currentMonImage.width;
+
+  const newMonImage = scene.add.image(
+    newMonStartingX,
+    MON_Y,
+    getSpeciesImageName(id)
+  );
+  newMonImage.setScale(MON_SCALE);
+
+  return Promise.all([
+    moveAnimation(
+      scene,
+      scene.currentMonImage,
+      targetX,
+      scene.currentMonImage.y
+    ),
+    moveAnimation(scene, newMonImage, scene.scale.width >> 1, MON_Y),
+  ]).then(() => {
+    scene.nameLabel.setText(name.toUpperCase());
+
+    scene.currentMonImage.destroy();
+    scene.currentMonIndex = newMonIndex;
+    scene.currentMonImage = newMonImage;
+
+    setColors(scene, id);
+
+    scene.switchingMonBusy = false;
+  });
+};
 
 export default class StarterSelectionScene extends Phaser.Scene {
   constructor() {
@@ -73,7 +150,10 @@ export default class StarterSelectionScene extends Phaser.Scene {
     this.starterSpecies = window.optimisticMonMon.starterSpecies;
 
     this.starterSpecies.forEach(({ id }) => {
-      this.load.image(getSpeciesImageName(id), `src/assets/images/species/${id}.png`)
+      this.load.image(
+        getSpeciesImageName(id),
+        `src/assets/images/species/${id}.png`
+      );
     });
   }
 
@@ -81,100 +161,130 @@ export default class StarterSelectionScene extends Phaser.Scene {
     const screenCenterX = this.scale.width >> 1;
 
     const { id, name } = this.starterSpecies[this.currentMonIndex];
-    this.cameras.main.setBackgroundColor(getBackgroundColor(id));
 
     const nameTextOptions = { fontSize: '36px', fill: '#ffffff' };
-    this.nameLabel = this.add.text(screenCenterX, NAME_Y, name.toUpperCase(), nameTextOptions).setOrigin(0.5);
-    
-    this.currentMonImage = this.add.image(screenCenterX, MON_Y, getSpeciesImageName(id));
+    this.nameLabel = this.add
+      .text(screenCenterX, NAME_Y, name.toUpperCase(), nameTextOptions)
+      .setOrigin(0.5);
+
+    this.currentMonImage = this.add.image(
+      screenCenterX,
+      MON_Y,
+      getSpeciesImageName(id)
+    );
     this.currentMonImage.setScale(MON_SCALE);
 
-    const previousMonButton = this.add.triangle(0, 0, 0, 15, 30, 0, 30, 30, 0xffffff);
+    const previousMonButton = this.add.triangle(
+      0,
+      0,
+      0,
+      15,
+      30,
+      0,
+      30,
+      30,
+      0xffffff
+    );
     previousMonButton.setInteractive();
-    previousMonButton.on('pointerdown', () => this.previousSpecies());
-    Phaser.Display.Align.To.LeftCenter(previousMonButton, this.nameLabel, ARROW_GAP);
+    previousMonButton.on('pointerdown', () =>
+      switchMonAnimation(this, 'previous')
+    );
+    Phaser.Display.Align.To.LeftCenter(
+      previousMonButton,
+      this.nameLabel,
+      ARROW_GAP
+    );
 
-    const nextMonButton = this.add.triangle(0, 0, 0, 0, 0, 30, 30, 15, 0xffffff);
+    const nextMonButton = this.add.triangle(
+      0,
+      0,
+      0,
+      0,
+      0,
+      30,
+      30,
+      15,
+      0xffffff
+    );
     nextMonButton.setInteractive();
-    nextMonButton.on('pointerdown', () => this.nextSpecies());
-    Phaser.Display.Align.To.RightCenter(nextMonButton, this.nameLabel, ARROW_GAP);
+    nextMonButton.on('pointerdown', () => switchMonAnimation(this, 'next'));
+    Phaser.Display.Align.To.RightCenter(
+      nextMonButton,
+      this.nameLabel,
+      ARROW_GAP
+    );
 
-    const highlightColor = getHighlightColor(id);
-    const natureOptions = { labelText: 'Nature', maxValue: 24, cursorColor: highlightColor };
-    this.natureSlider = new LineSlider(this, screenCenterX, NATURE_Y, natureOptions);
+    const natureOptions = {
+      labelText: 'Nature',
+      maxValue: 24,
+    };
+    this.natureSlider = new LineSlider(
+      this,
+      screenCenterX,
+      NATURE_Y,
+      natureOptions
+    );
 
-    const ivOptions = { maxValue: 31, defaultValue: 7, cursorColor: highlightColor };
-    this.attackSlider = new LineSlider(this, LEFT_COLUMN_X, NATURE_Y + SLIDER_GAP, Object.assign({ labelText: `Attack IV` }, ivOptions));
-    this.defenseSlider = new LineSlider(this, LEFT_COLUMN_X, NATURE_Y + 2 * SLIDER_GAP, Object.assign({ labelText: `Defense IV` }, ivOptions));
-    this.speedSlider = new LineSlider(this, LEFT_COLUMN_X, NATURE_Y + 3 * SLIDER_GAP, Object.assign({ labelText: `Speed IV` }, ivOptions));
-    this.specialAttackSlider = new LineSlider(this, RIGHT_COLUMN_X, NATURE_Y + SLIDER_GAP, Object.assign({ labelText: `Special Attack IV` }, ivOptions));
-    this.specialDefenseSlider = new LineSlider(this, RIGHT_COLUMN_X, NATURE_Y + 2 * SLIDER_GAP, Object.assign({ labelText: `Special Defense IV` }, ivOptions));
-    this.healthSlider = new LineSlider(this, RIGHT_COLUMN_X, NATURE_Y + 3 * SLIDER_GAP, Object.assign({ labelText: `Health IV` }, ivOptions));
+    const ivOptions = {
+      maxValue: 31,
+      defaultValue: 7,
+    };
+    this.attackSlider = new LineSlider(
+      this,
+      LEFT_COLUMN_X,
+      NATURE_Y + SLIDER_GAP,
+      Object.assign({ labelText: `Attack IV` }, ivOptions)
+    );
+    this.defenseSlider = new LineSlider(
+      this,
+      LEFT_COLUMN_X,
+      NATURE_Y + 2 * SLIDER_GAP,
+      Object.assign({ labelText: `Defense IV` }, ivOptions)
+    );
+    this.speedSlider = new LineSlider(
+      this,
+      LEFT_COLUMN_X,
+      NATURE_Y + 3 * SLIDER_GAP,
+      Object.assign({ labelText: `Speed IV` }, ivOptions)
+    );
+    this.specialAttackSlider = new LineSlider(
+      this,
+      RIGHT_COLUMN_X,
+      NATURE_Y + SLIDER_GAP,
+      Object.assign({ labelText: `Special Attack IV` }, ivOptions)
+    );
+    this.specialDefenseSlider = new LineSlider(
+      this,
+      RIGHT_COLUMN_X,
+      NATURE_Y + 2 * SLIDER_GAP,
+      Object.assign({ labelText: `Special Defense IV` }, ivOptions)
+    );
+    this.healthSlider = new LineSlider(
+      this,
+      RIGHT_COLUMN_X,
+      NATURE_Y + 3 * SLIDER_GAP,
+      Object.assign({ labelText: `Health IV` }, ivOptions)
+    );
 
-    const confirmTextOptions = { fontSize: '36px', fill: '#ffffff' };
-    const confirmButton = this.add.text(screenCenterX, CONFIRM_Y, 'CONFIRM STARTER', confirmTextOptions).setOrigin(0.5);
+    const confirmTextOptions = { fontSize: '36px', fill: '#000000' };
+    const confirmText = this.add
+      .text(screenCenterX, CONFIRM_Y, 'CONFIRM STARTER', confirmTextOptions)
+      .setOrigin(0.5);
+    confirmText.depth = 1;
+
+    const confirmButton = this.add.rectangle(
+      screenCenterX,
+      CONFIRM_Y,
+      confirmText.width + 20,
+      confirmText.height + 20
+    );
+    confirmButton.setStrokeStyle(4, 0x000000);
+    this.confirmButton = confirmButton;
+
+    setColors(this, id);
+
     confirmButton.setInteractive();
     confirmButton.on('pointerdown', () => this.confirmStarter());
-  }
-
-  updateElements(monIndex, monImage) {
-    const { id, name } = this.starterSpecies[monIndex];
-
-    this.cameras.main.setBackgroundColor(getBackgroundColor(id));
-    this.nameLabel.setText(name.toUpperCase());
-
-    const cursorColor = getHighlightColor(id);
-    this.natureSlider.setCursorColor(cursorColor);
-    this.attackSlider.setCursorColor(cursorColor);
-    this.defenseSlider.setCursorColor(cursorColor);
-    this.speedSlider.setCursorColor(cursorColor);
-    this.specialAttackSlider.setCursorColor(cursorColor);
-    this.specialDefenseSlider.setCursorColor(cursorColor);
-    this.healthSlider.setCursorColor(cursorColor);
-
-    this.currentMonImage.destroy();
-    this.currentMonIndex = monIndex;
-    this.currentMonImage = monImage;
-  }
-
-  previousSpecies() {
-    if (this.switchingMonBusy) return;
-    
-    this.switchingMonBusy = true;
-    const targetX = this.currentMonImage.x - this.scale.width - this.currentMonImage.width;
-    const newMonIndex = this.currentMonIndex - 1 < 0 ? this.starterSpecies.length - 1 : this.currentMonIndex - 1;
-    const { id } = this.starterSpecies[newMonIndex];
-    const newMonImage = this.add.image(this.scale.width + OFF_SCREEN_DISTANCE, MON_Y, getSpeciesImageName(id));
-    newMonImage.setScale(MON_SCALE);
-    
-    return Promise.all([
-      moveAnimation(this, this.currentMonImage, targetX, this.currentMonImage.y), 
-      moveAnimation(this, newMonImage, this.scale.width >> 1, MON_Y)
-    ])
-    .then(() => {
-      this.updateElements(newMonIndex, newMonImage);
-      this.switchingMonBusy = false;
-    });
-  }
-
-  nextSpecies() {
-    if (this.switchingMonBusy) return;
-    
-    this.switchingMonBusy = true;
-    const targetX = this.currentMonImage.x + this.scale.width + this.currentMonImage.width;
-    const newMonIndex = this.currentMonIndex + 1 >= this.starterSpecies.length ? 0 : this.currentMonIndex + 1;
-    const { id } = this.starterSpecies[newMonIndex];
-    const newMonImage = this.add.image(0 - OFF_SCREEN_DISTANCE, MON_Y, getSpeciesImageName(id));
-    newMonImage.setScale(MON_SCALE);
-    
-    return Promise.all([
-      moveAnimation(this, this.currentMonImage, targetX, this.currentMonImage.y), 
-      moveAnimation(this, newMonImage, this.scale.width >> 1, MON_Y)
-    ])
-    .then(() => {
-      this.updateElements(newMonIndex, newMonImage);
-      this.switchingMonBusy = false;
-    });
   }
 
   confirmStarter() {
@@ -187,8 +297,15 @@ export default class StarterSelectionScene extends Phaser.Scene {
     const { value: specialDefense } = this.specialDefenseSlider;
     const { value: health } = this.healthSlider;
 
-    const IVs = { attack, defense, speed, specialAttack, specialDefense, health };
-    
+    const IVs = {
+      attack,
+      defense,
+      speed,
+      specialAttack,
+      specialDefense,
+      health,
+    };
+
     try {
       window.optimisticMonMon.initializeParty({ speciesId, nature, IVs });
     } catch (err) {
@@ -198,7 +315,7 @@ export default class StarterSelectionScene extends Phaser.Scene {
       }
 
       console.error(err.message);
-      
+
       return;
     }
 

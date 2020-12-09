@@ -8,7 +8,7 @@ export default class LineSlider extends Phaser.GameObjects.Container {
       maxValue = 10,
       defaultValue = 0,
       labelText = '',
-      cursorColor = 0xffffff
+      cursorColor = 0xffffff,
     } = options;
 
     super(scene, x, y);
@@ -20,17 +20,17 @@ export default class LineSlider extends Phaser.GameObjects.Container {
     const valueText = this.scene.add.text(105, 35, '', valueTextOptions);
 
     this._value = defaultValue;
-    
+
     const slider = new Slider(this.cursor, {
       endPoints: [
         { x: this.cursor.x - 130, y: this.cursor.y },
-        { x: this.cursor.x + 130, y: this.cursor.y }
+        { x: this.cursor.x + 130, y: this.cursor.y },
       ],
-      value: (defaultValue - minValue)/(maxValue - minValue),
+      value: (defaultValue - minValue) / (maxValue - minValue),
       valuechangeCallback: (v) => {
         this._value = Math.floor(minValue + v * (maxValue - minValue));
         valueText.setText(this._value);
-      }
+      },
     });
 
     const line = scene.add
@@ -38,9 +38,9 @@ export default class LineSlider extends Phaser.GameObjects.Container {
       .lineStyle(5, 0xffffff, 1)
       .strokePoints(slider.endPoints);
 
-    const labelTextOptions = { fontSize: '20px', fill: '#ffffff' };
+    const labelTextOptions = { fontSize: '15px', fill: '#ffffff' };
     const label = this.scene.add.text(-125, 35, labelText, labelTextOptions);
-    
+
     this.add(line);
     this.add(this.cursor);
     this.add(label);
@@ -49,11 +49,11 @@ export default class LineSlider extends Phaser.GameObjects.Container {
     this.scene.add.existing(this);
   }
 
-  get value () {
-    return this._value
+  get value() {
+    return this._value;
   }
 
   setCursorColor(color) {
-    this.cursor.setFillStyle(color)
+    this.cursor.setFillStyle(color);
   }
 }
