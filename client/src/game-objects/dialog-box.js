@@ -130,7 +130,7 @@ export default class DialogBox extends Phaser.GameObjects.Container {
 
       button.setInteractive();
 
-      button.on('pointerdown', (t, y) => {
+      button.on('pointerdown', () => {
         buttons.forEach((button) => button.destroy());
         this.buttonsBox.setVisible(false);
         action();
