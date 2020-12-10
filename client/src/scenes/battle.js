@@ -28,11 +28,7 @@ const sendOutAnimation = (scene, useMonEvent) => {
   const healthBar = new HealthBar(scene, healthBarX, healthBarY, monData);
 
   scene[isMySide ? 'myHealthBar' : 'enemyHealthBar'] = healthBar;
-  const monImage = scene.add.image(
-    monImageX,
-    monImageY,
-    getSpeciesImageName(monData.species.id)
-  );
+  const monImage = scene.add.image(monImageX, monImageY, getSpeciesImageName(monData.species.id));
 
   monImage.setOrigin(0, 0);
   monImage.setScale(0.66);
@@ -57,11 +53,7 @@ const sendOutAnimation = (scene, useMonEvent) => {
     }
 
     const smokeAnimation = scene.add
-      .sprite(
-        targetX + monImage.displayWidth * 0.5,
-        monImage.y + monImage.displayHeight * 0.25,
-        'smoke'
-      )
+      .sprite(targetX + monImage.displayWidth * 0.5, monImage.y + monImage.displayHeight * 0.25, 'smoke')
       .setScale(0.25)
       .play('smoke');
 
@@ -84,14 +76,7 @@ const sendOutAnimation = (scene, useMonEvent) => {
 
 const returnMonAnimation = (scene, useMonEvent) => {
   // dependencies
-  const {
-    dialogBox,
-    myMon,
-    myHealthBar,
-    enemyMon,
-    enemyHealthBar,
-    partyIndex,
-  } = scene;
+  const { dialogBox, myMon, myHealthBar, enemyMon, enemyHealthBar, partyIndex } = scene;
   const { side } = useMonEvent;
   const isMySide = partyIndex === side;
 
@@ -124,9 +109,7 @@ const returnMonAnimation = (scene, useMonEvent) => {
     });
   });
 
-  return Promise.all([displayReturnMonDialog, tween]).then(
-    () => (scene[isMySide ? 'myMon' : 'enemyMon'] = {})
-  );
+  return Promise.all([displayReturnMonDialog, tween]).then(() => (scene[isMySide ? 'myMon' : 'enemyMon'] = {}));
 };
 
 const useMonAnimation = async (scene, useMonEvent) => {
@@ -191,6 +174,8 @@ const newTurnAnimation = (scene, newTurnEvent) => {
   const { side } = newTurnEvent;
 
   return new Promise((resolve) => {
+    if (scene.ended) return resolve();
+
     if (side !== partyIndex) return resolve();
 
     dialogBox.displayButtons([
@@ -200,7 +185,8 @@ const newTurnAnimation = (scene, newTurnEvent) => {
       },
       {
         name: 'SWITCH',
-        action: () => switchAction(scene).then(resolve),
+        // action: () => switchAction(scene).then(resolve),
+        action: resolve,
       },
       {
         name: 'BAG',
@@ -209,7 +195,8 @@ const newTurnAnimation = (scene, newTurnEvent) => {
       {
         name: 'RUN',
         action: () => {
-          battle.runFromWildBattle();
+          window.optimisticMonMon.runFromWildBattle();
+          scene.scene.start('Menu');
           resolve();
         },
       },
@@ -260,10 +247,7 @@ const attackAnimation = (scene, attackEvent) => {
   const affectedHealthBar = isMySide ? enemyHealthBar : myHealthBar;
 
   return attackerAnimation(scene, attackingMon).then(() =>
-    Promise.all([
-      targetAnimation(scene, targetMon),
-      affectedHealthBar.updateHealth(-damage),
-    ])
+    Promise.all([targetAnimation(scene, targetMon), affectedHealthBar.updateHealth(-damage)])
   );
 };
 
@@ -275,7 +259,6 @@ const battleEndedAnimation = (scene, event) => {
 
   return dialogBox.displayDialog(dialog).then(() => {
     battle.removeAllListeners();
-    scene.scene.restart();
   });
 };
 
@@ -301,12 +284,7 @@ const dropDownAnimation = (scene, mon) =>
       ease: 'linear',
       onComplete: resolve,
       onUpdate: (tween, target) => {
-        mon.image.setCrop(
-          0,
-          0,
-          mon.image.width,
-          target.height - tween.progress * target.height
-        );
+        mon.image.setCrop(0, 0, mon.image.width, target.height - tween.progress * target.height);
       },
     });
   });
@@ -332,9 +310,7 @@ const experienceGainedAnimation = async (scene, event) => {
 
   if (side !== partyIndex) return;
 
-  return dialogBox.displayDialog([
-    `${myMon.name} gained ${experience} EXP. points!`,
-  ]);
+  return dialogBox.displayDialog([`${myMon.name} gained ${experience} EXP. points!`]);
 };
 
 const ANIMATIONS_BY_EVENT = {
@@ -359,6 +335,7 @@ export default class BattleScene extends Phaser.Scene {
   preload() {
     this.eventQueue = [];
     this.busy = false;
+    this.ended = false;
 
     // TODO: replace default
     this.partyIndex = 0;
@@ -372,19 +349,15 @@ export default class BattleScene extends Phaser.Scene {
 
     this.battle.parties.forEach(({ mons }) => {
       mons.forEach(({ species }) => {
-        this.load.image(
-          getSpeciesImageName(species.id),
-          `src/assets/images/species/${species.id}.png`
-        );
+        this.load.image(getSpeciesImageName(species.id), `src/assets/images/species/${species.id}.png`);
       });
     });
 
     // load animations
-    this.load.spritesheet(
-      'physicalHit',
-      'src/assets/images/battle/physical-hit.png',
-      { frameWidth: 1024, frameHeight: 1024 }
-    );
+    this.load.spritesheet('physicalHit', 'src/assets/images/battle/physical-hit.png', {
+      frameWidth: 1024,
+      frameHeight: 1024,
+    });
 
     this.load.spritesheet('smoke', 'src/assets/images/battle/smoke.png', {
       frameWidth: 1024,
@@ -397,46 +370,29 @@ export default class BattleScene extends Phaser.Scene {
 
     Object.keys(ANIMATIONS_BY_EVENT).forEach((eventName) => {
       this.battle.on(eventName, (event) => {
-        console.log(
-          '🚀 ~ file: battle.js ~ line 392 ~ BattleScene ~ this.battle.on ~ event',
-          eventName,
-          event
-        );
+        if (eventName === 'ended') {
+          this.ended = true;
+        }
 
         this.eventQueue.push({ name: eventName, event });
       });
     });
 
     // create animations
-    this.anims.create({
-      key: 'physicalHit',
-      frames: 'physicalHit',
-      frameRate: 128,
-    });
-
-    this.anims.create({
-      key: 'smoke',
-      frames: 'smoke',
-      frameRate: 6,
-    });
+    this.anims.create({ key: 'physicalHit', frames: 'physicalHit', frameRate: 128 });
+    this.anims.create({ key: 'smoke', frames: 'smoke', frameRate: 6 });
 
     // add first choose event
-    this.eventQueue.push({
-      name: 'firstTurn',
-      event: {},
-    });
+    this.eventQueue.push({ name: 'firstTurn', event: {} });
   }
 
   update() {
     if (this.busy || this.eventQueue.length === 0) return;
 
     this.busy = true;
-
     const { name, event } = this.eventQueue.shift();
-    console.log(name);
 
     return ANIMATIONS_BY_EVENT[name](this, event).then(() => {
-      console.log('after ', name);
       this.busy = false;
 
       if (name !== 'ended') return;

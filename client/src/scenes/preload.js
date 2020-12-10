@@ -27,29 +27,22 @@ const setUpOptimisticMonMon = async () => {
     lockTime: '600',
   };
 
-  const exportedStateString = localStorage.getItem(
-    'exported-optimistic-mon-mon-state'
-  );
-  const exportedState = exportedStateString
-    ? JSON.parse(exportedStateString)
-    : {};
-  const optimisticMonMon = new OptimisticMonMon(
-    user,
-    gameOptions,
-    oriOptions,
-    exportedState
-  );
+  const exportedStateString = localStorage.getItem('exported-optimistic-mon-mon-state');
+
+  const exportedState = exportedStateString ? JSON.parse(exportedStateString) : {};
+
+  const optimisticMonMon = new OptimisticMonMon(user, gameOptions, oriOptions, exportedState);
 
   if (await optimisticMonMon.isInitialized()) {
     console.log('ORI account already initialized.');
     return optimisticMonMon;
   }
+
   try {
     const { receipt: initializeReceipt } = await optimisticMonMon.initialize();
-    localStorage.setItem(
-      'exported-optimistic-mon-mon-state',
-      JSON.stringify(optimisticMonMon.export())
-    );
+
+    localStorage.setItem('exported-optimistic-mon-mon-state', JSON.stringify(optimisticMonMon.export()));
+
     console.log('ORI account initialized: ', initializeReceipt);
   } catch (_err) {
     console.error('ORI account initialization Failed.');
@@ -75,15 +68,13 @@ export default class PreloadScene extends Phaser.Scene {
   preload() {}
 
   async create() {
-    if (!await ethEnabled()) {
-      alert(
-        'Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!'
-      );
+    if (!(await ethEnabled())) {
+      alert('Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!');
     }
 
     window.optimisticMonMon = await setUpOptimisticMonMon();
 
-    if (window.optimisticMonMon.party.length) {
+    if (window.optimisticMonMon.party.mons.length) {
       this.scene.start('Menu');
       return;
     }

@@ -14,29 +14,15 @@ export default class MenuScene extends Phaser.Scene {
     const screenCenterX = this.scale.width / 2;
     const textOptions = { fontSize: '36px', fill: '#000000' };
 
-    const partyText = this.add
-      .text(screenCenterX, PARTY_Y, 'MY MON', textOptions)
-      .setOrigin(0.5)
-      .setDepth(1);
+    const partyText = this.add.text(screenCenterX, PARTY_Y, 'MY MON', textOptions).setOrigin(0.5).setDepth(1);
     const partyButton = this.add
-      .rectangle(
-        screenCenterX,
-        PARTY_Y,
-        partyText.width + 20,
-        partyText.height + 20,
-        0xffffff
-      )
+      .rectangle(screenCenterX, PARTY_Y, partyText.width + 20, partyText.height + 20, 0xffffff)
       .setStrokeStyle(4, 0x000000);
     partyButton.setInteractive();
     partyButton.on('pointerdown', () => this.party());
 
     const battleWildText = this.add
-      .text(
-        screenCenterX,
-        PARTY_Y + SELECTION_GAP,
-        'BATTLE WILD MON',
-        textOptions
-      )
+      .text(screenCenterX, PARTY_Y + SELECTION_GAP, 'BATTLE WILD MON', textOptions)
       .setOrigin(0.5)
       .setDepth(1);
     const battleWildButton = this.add
@@ -52,22 +38,11 @@ export default class MenuScene extends Phaser.Scene {
     battleWildButton.on('pointerdown', () => this.battleWild());
 
     const syncText = this.add
-      .text(
-        screenCenterX,
-        PARTY_Y + 2 * SELECTION_GAP,
-        'SYNC TO CHAIN',
-        textOptions
-      )
+      .text(screenCenterX, PARTY_Y + 2 * SELECTION_GAP, 'SYNC TO CHAIN', textOptions)
       .setOrigin(0.5)
       .setDepth(1);
     const syncButton = this.add
-      .rectangle(
-        screenCenterX,
-        PARTY_Y + 2 * SELECTION_GAP,
-        syncText.width + 20,
-        syncText.height + 20,
-        0xffffff
-      )
+      .rectangle(screenCenterX, PARTY_Y + 2 * SELECTION_GAP, syncText.width + 20, syncText.height + 20, 0xffffff)
       .setStrokeStyle(4, 0x000000);
     syncButton.setInteractive();
     syncButton.on('pointerdown', () => this.sync());

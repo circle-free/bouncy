@@ -5,13 +5,7 @@ const PADDING = 10;
 const createDialogRect = (scene) => {
   const height = scene.scale.height * 0.33;
 
-  const dialogRect = scene.add.rectangle(
-    PADDING,
-    0,
-    scene.scale.width - PADDING - PADDING,
-    height - PADDING,
-    0x004040
-  );
+  const dialogRect = scene.add.rectangle(PADDING, 0, scene.scale.width - PADDING - PADDING, height - PADDING, 0x004040);
 
   dialogRect.setOrigin(0, 0);
   dialogRect.setStrokeStyle(4, 0xff0000);
@@ -42,13 +36,7 @@ const createNextIcon = (scene, dialogRect) => {
 const createButtonsBox = (scene, dialogRect) => {
   const width = scene.scale.width * 0.5;
 
-  const buttonsBox = scene.add.rectangle(
-    0,
-    0,
-    width,
-    dialogRect.height,
-    0x004040
-  );
+  const buttonsBox = scene.add.rectangle(0, 0, width, dialogRect.height, 0x004040);
 
   buttonsBox.setOrigin(0, 0);
   buttonsBox.setStrokeStyle(4, 0xff0000);
@@ -121,9 +109,7 @@ export default class DialogBox extends Phaser.GameObjects.Container {
 
     const buttons = buttonActions.map(({ name, action }, i) => {
       const buttonTextOptions = { fontSize: '20px', fill: '#ffffff' };
-      const button = this.scene.add
-        .text(x, this.y + 30 + i * 40, name, buttonTextOptions)
-        .setOrigin(0.5);
+      const button = this.scene.add.text(x, this.y + 30 + i * 40, name, buttonTextOptions).setOrigin(0.5);
 
       button.setInteractive();
 

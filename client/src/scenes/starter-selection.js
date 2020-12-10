@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import LineSlider from '../game-objects/line-slider';
-import { getSpeciesImageName } from '../utils';
+import { getSpeciesImageName, getBackgroundColor, getHighlightColor } from '../utils';
 
 const NAME_Y = 50;
 const MON_Y = 170;
@@ -24,41 +24,8 @@ const moveAnimation = (scene, image, targetX, targetY) =>
     });
   });
 
-const getBackgroundColor = (speciesId) => {
-  switch (speciesId) {
-    case 1:
-      return 0x48685a; // from 0x91d1b4
-    case 4:
-      return 0x795842; // from 0xf3b084
-    case 7:
-      return 0x42636b; // from 0x84C6D6
-    case 25:
-      return 0x7b7242; // from 0xF6E484
-    default:
-      return 0x000000;
-  }
-};
-
-const getHighlightColor = (speciesId) => {
-  switch (speciesId) {
-    case 1:
-      return 0xc8e8d9; // from 0x91d1b4
-    case 4:
-      return 0xf9d7c1; // from 0xf3b084
-    case 7:
-      return 0xc1e2ea; // from 0x84C6D6
-    case 25:
-      return 0xfaf1c1; // from 0xF6E484
-    default:
-      return 0x000000;
-  }
-};
-
 const getNewMonIndex = (scene, direction) => {
-  const newMonIndex =
-    direction === 'previous'
-      ? scene.currentMonIndex - 1
-      : scene.currentMonIndex + 1;
+  const newMonIndex = direction === 'previous' ? scene.currentMonIndex - 1 : scene.currentMonIndex + 1;
 
   if (newMonIndex < 0) {
     return scene.starterSpecies.length - 1;
@@ -101,24 +68,13 @@ const switchMonAnimation = (scene, direction) => {
   const { id, name } = scene.starterSpecies[newMonIndex];
 
   const newMonStartingX =
-    direction === 'previous'
-      ? scene.scale.width + scene.currentMonImage.width
-      : 0 - scene.currentMonImage.width;
+    direction === 'previous' ? scene.scale.width + scene.currentMonImage.width : 0 - scene.currentMonImage.width;
 
-  const newMonImage = scene.add.image(
-    newMonStartingX,
-    MON_Y,
-    getSpeciesImageName(id)
-  );
+  const newMonImage = scene.add.image(newMonStartingX, MON_Y, getSpeciesImageName(id));
   newMonImage.setScale(MON_SCALE);
 
   return Promise.all([
-    moveAnimation(
-      scene,
-      scene.currentMonImage,
-      targetX,
-      scene.currentMonImage.y
-    ),
+    moveAnimation(scene, scene.currentMonImage, targetX, scene.currentMonImage.y),
     moveAnimation(scene, newMonImage, scene.scale.width >> 1, MON_Y),
   ]).then(() => {
     scene.nameLabel.setText(name.toUpperCase());
@@ -154,10 +110,7 @@ export default class StarterSelectionScene extends Phaser.Scene {
     this.starterSpecies = window.optimisticMonMon.starterSpecies;
 
     this.starterSpecies.forEach(({ id }) => {
-      this.load.image(
-        getSpeciesImageName(id),
-        `src/assets/images/species/${id}.png`
-      );
+      this.load.image(getSpeciesImageName(id), `src/assets/images/species/${id}.png`);
     });
   }
 
@@ -167,102 +120,61 @@ export default class StarterSelectionScene extends Phaser.Scene {
     const { id, name } = this.starterSpecies[this.currentMonIndex];
 
     const nameTextOptions = { fontSize: '36px', fill: '#ffffff' };
-    this.nameLabel = this.add
-      .text(screenCenterX, NAME_Y, name.toUpperCase(), nameTextOptions)
-      .setOrigin(0.5);
+    this.nameLabel = this.add.text(screenCenterX, NAME_Y, name.toUpperCase(), nameTextOptions).setOrigin(0.5);
 
-    this.currentMonImage = this.add.image(
-      screenCenterX,
-      MON_Y,
-      getSpeciesImageName(id)
-    );
+    this.currentMonImage = this.add.image(screenCenterX, MON_Y, getSpeciesImageName(id));
     this.currentMonImage.setScale(MON_SCALE);
 
-    const previousMonButton = this.add.triangle(
-      0,
-      0,
-      0,
-      15,
-      30,
-      0,
-      30,
-      30,
-      0xffffff
-    );
+    const previousMonButton = this.add.triangle(0, 0, 0, 15, 30, 0, 30, 30, 0xffffff);
     previousMonButton.setInteractive();
-    previousMonButton.on('pointerdown', () =>
-      switchMonAnimation(this, 'previous')
-    );
-    Phaser.Display.Align.To.LeftCenter(
-      previousMonButton,
-      this.nameLabel,
-      ARROW_GAP
-    );
+    previousMonButton.on('pointerdown', () => switchMonAnimation(this, 'previous'));
+    Phaser.Display.Align.To.LeftCenter(previousMonButton, this.nameLabel, ARROW_GAP);
 
-    const nextMonButton = this.add.triangle(
-      0,
-      0,
-      0,
-      0,
-      0,
-      30,
-      30,
-      15,
-      0xffffff
-    );
+    const nextMonButton = this.add.triangle(0, 0, 0, 0, 0, 30, 30, 15, 0xffffff);
     nextMonButton.setInteractive();
     nextMonButton.on('pointerdown', () => switchMonAnimation(this, 'next'));
-    Phaser.Display.Align.To.RightCenter(
-      nextMonButton,
-      this.nameLabel,
-      ARROW_GAP
-    );
+    Phaser.Display.Align.To.RightCenter(nextMonButton, this.nameLabel, ARROW_GAP);
 
-    const natureOptions = {
-      labelText: 'Nature',
-      maxValue: 24,
-    };
-    this.natureSlider = new LineSlider(
-      this,
-      screenCenterX,
-      NATURE_Y,
-      natureOptions
-    );
+    const natureOptions = { labelText: 'Nature', maxValue: 24 };
+    this.natureSlider = new LineSlider(this, screenCenterX, NATURE_Y, natureOptions);
 
-    const ivOptions = {
-      maxValue: 31,
-      defaultValue: 7,
-    };
+    const ivOptions = { maxValue: 31, defaultValue: 7 };
+
     this.attackSlider = new LineSlider(
       this,
       LEFT_COLUMN_X,
       NATURE_Y + SLIDER_GAP,
       Object.assign({ labelText: `Attack IV` }, ivOptions)
     );
+
     this.defenseSlider = new LineSlider(
       this,
       LEFT_COLUMN_X,
       NATURE_Y + 2 * SLIDER_GAP,
       Object.assign({ labelText: `Defense IV` }, ivOptions)
     );
+
     this.speedSlider = new LineSlider(
       this,
       LEFT_COLUMN_X,
       NATURE_Y + 3 * SLIDER_GAP,
       Object.assign({ labelText: `Speed IV` }, ivOptions)
     );
+
     this.specialAttackSlider = new LineSlider(
       this,
       RIGHT_COLUMN_X,
       NATURE_Y + SLIDER_GAP,
       Object.assign({ labelText: `Special Attack IV` }, ivOptions)
     );
+
     this.specialDefenseSlider = new LineSlider(
       this,
       RIGHT_COLUMN_X,
       NATURE_Y + 2 * SLIDER_GAP,
       Object.assign({ labelText: `Special Defense IV` }, ivOptions)
     );
+    
     this.healthSlider = new LineSlider(
       this,
       RIGHT_COLUMN_X,
@@ -271,17 +183,10 @@ export default class StarterSelectionScene extends Phaser.Scene {
     );
 
     const confirmTextOptions = { fontSize: '36px', fill: '#000000' };
-    const confirmText = this.add
-      .text(screenCenterX, CONFIRM_Y, 'CONFIRM STARTER', confirmTextOptions)
-      .setOrigin(0.5);
+    const confirmText = this.add.text(screenCenterX, CONFIRM_Y, 'CONFIRM STARTER', confirmTextOptions).setOrigin(0.5);
     confirmText.depth = 1;
 
-    const confirmButton = this.add.rectangle(
-      screenCenterX,
-      CONFIRM_Y,
-      confirmText.width + 20,
-      confirmText.height + 20
-    );
+    const confirmButton = this.add.rectangle(screenCenterX, CONFIRM_Y, confirmText.width + 20, confirmText.height + 20);
     confirmButton.setStrokeStyle(4, 0x000000);
     this.confirmButton = confirmButton;
 

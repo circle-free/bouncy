@@ -3,13 +3,7 @@ import Slider from 'phaser3-rex-plugins/plugins/slider.js';
 
 export default class LineSlider extends Phaser.GameObjects.Container {
   constructor(scene, x, y, options = {}) {
-    const {
-      minValue = 0,
-      maxValue = 10,
-      defaultValue = 0,
-      labelText = '',
-      cursorColor = 0xffffff,
-    } = options;
+    const { minValue = 0, maxValue = 10, defaultValue = 0, labelText = '', cursorColor = 0xffffff } = options;
 
     super(scene, x, y);
     this.scene = scene;
@@ -33,10 +27,7 @@ export default class LineSlider extends Phaser.GameObjects.Container {
       },
     });
 
-    const line = scene.add
-      .graphics()
-      .lineStyle(5, 0xffffff, 1)
-      .strokePoints(slider.endPoints);
+    const line = scene.add.graphics().lineStyle(5, 0xffffff, 1).strokePoints(slider.endPoints);
 
     const labelTextOptions = { fontSize: '15px', fill: '#ffffff' };
     const label = this.scene.add.text(-125, 35, labelText, labelTextOptions);

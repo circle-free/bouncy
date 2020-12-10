@@ -11,16 +11,9 @@ const useMonImageAnimation = (battleScene, monData, isPlayerSide) =>
   new Promise((resolve) => {
     const healthBarX = isPlayerSide ? 350 : 50;
     const healthBarY = isPlayerSide ? 250 : 0;
-    const healthBar = new HealthBar(
-      battleScene,
-      healthBarX,
-      healthBarY,
-      monData
-    );
+    const healthBar = new HealthBar(battleScene, healthBarX, healthBarY, monData);
 
-    battleScene[
-      isPlayerSide ? 'playerHealthBar' : 'enemyHealthBar'
-    ] = healthBar;
+    battleScene[isPlayerSide ? 'playerHealthBar' : 'enemyHealthBar'] = healthBar;
 
     const x = isPlayerSide ? battleScene.scale.width : 0;
     const y = isPlayerSide ? battleScene.scale.height * 0.33 : 10;
@@ -47,11 +40,7 @@ const useMonImageAnimation = (battleScene, monData, isPlayerSide) =>
       });
     } else {
       const smokeAnimation = battleScene.add
-        .sprite(
-          targetX + mon.displayWidth * 0.5,
-          mon.y + mon.displayHeight * 0.25,
-          'smoke'
-        )
+        .sprite(targetX + mon.displayWidth * 0.5, mon.y + mon.displayHeight * 0.25, 'smoke')
         .setScale(0.25)
         .play('smoke');
 
@@ -91,31 +80,22 @@ export default async (scene, useMonEvent) => {
   const { monData };
 
   const isPlayerSide = side === battleScene.battleClient.player.id;
-  const monData =
-    battleScene.battleClient[isPlayerSide ? 'player' : 'enemy'].mons[monIndex];
-  const currentMon = isPlayerSide
-    ? battleScene.playerMon
-    : battleScene.enemyMon;
+  const monData = battleScene.battleClient[isPlayerSide ? 'player' : 'enemy'].mons[monIndex];
+  const currentMon = isPlayerSide ? battleScene.playerMon : battleScene.enemyMon;
 
   if (currentMon) {
     await Promise.all([
       battleScene.dialogBox.displayDialog(
         isPlayerSide
           ? [`${monData.name}, thats enough! Come back!`]
-          : [
-              `${battleScene.battleClient.enemy.name} is sending out ${
-                monData.name || monData.type
-              }`,
-            ]
+          : [`${battleScene.battleClient.enemy.name} is sending out ${monData.name || monData.type}`]
       ),
       returnMonAnimation(battleScene, currentMon, isPlayerSide),
     ]);
   }
 
   return Promise.all([
-    battleScene.dialogBox.displayDialog(
-      useMonDialog(battleScene, monData, isPlayerSide)
-    ),
+    battleScene.dialogBox.displayDialog(useMonDialog(battleScene, monData, isPlayerSide)),
     useMonImageAnimation(battleScene, monData, isPlayerSide),
   ]);
 };
