@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "build": "webpack --config webpack/prod.js ",
-    "start": "webpack serve --config webpack/base.js"
+    "start": "webpack serve --config webpack/base.js",
+    "prettier": "prettier --write 'src/**/*.js'"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
     "html-webpack-plugin": "^4.5.0",
     "https-browserify": "^1.0.0",
     "os-browserify": "^0.3.0",
+    "prettier": "^2.2.1",
     "process": "^0.11.10",
     "raw-loader": "^3.1.0",
     "stream-browserify": "^3.0.0",
@@ -37,8 +39,10 @@
     "webpack-merge": "^5.4.0"
   },
   "dependencies": {
+    "@babel/runtime": "^7.12.5",
     "crypto-browserify": "^3.12.0",
     "phaser": "^3.24.1",
+    "phaser3-rex-plugins": "^1.1.31",
     "web3": "^1.2.1"
   }
 }

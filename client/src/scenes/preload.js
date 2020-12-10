@@ -1,8 +1,6 @@
 import Phaser from 'phaser';
-import { EventEmitter } from 'events';
 import Web3 from 'web3';
 import OptimisticMonMon from 'mon-mon';
-import { rejects } from 'assert';
 
 const getAccount = () =>
   new Promise((resolve, reject) => {
@@ -19,73 +17,68 @@ const setUpOptimisticMonMon = async () => {
   const user = await getAccount();
 
   const gameOptions = {
-    address: '0x258828f956716BB308628dC33bE064FaDC20538d',
+    address: '0x85F97dA2D3938690aC5417FC10E2f4F2Cf82AC84',
   };
 
   const oriOptions = {
-    address: '0x6D28B2B9379634a368652a51523387020488A487',
+    address: '0x3509a39600a9ab1C43433898800C3A7628A462dc',
     web3: window.web3,
     requiredBond: '1000000000000000000',
     lockTime: '600',
   };
 
-  const optimisticMonMon = new OptimisticMonMon(user, gameOptions, oriOptions);
+  const exportedStateString = localStorage.getItem('exported-optimistic-mon-mon-state');
 
-  await optimisticMonMon.initialize().catch((_err) => {});
+  const exportedState = exportedStateString ? JSON.parse(exportedStateString) : {};
 
-  const starterProperties = {
-    speciesId: 1,
-    nature: 0,
-    IVs: {
-      attack: 5,
-      defense: 5,
-      speed: 5,
-      specialAttack: 5,
-      specialDefense: 5,
-      health: 5,
-    },
-    moves: [{ id: 1 }],
-  };
+  const optimisticMonMon = new OptimisticMonMon(user, gameOptions, oriOptions, exportedState);
 
-  optimisticMonMon.initializeParty(starterProperties);
+  if (await optimisticMonMon.isInitialized()) {
+    console.log('ORI account already initialized.');
+    return optimisticMonMon;
+  }
+
+  try {
+    const { receipt: initializeReceipt } = await optimisticMonMon.initialize();
+
+    localStorage.setItem('exported-optimistic-mon-mon-state', JSON.stringify(optimisticMonMon.export()));
+
+    console.log('ORI account initialized: ', initializeReceipt);
+  } catch (_err) {
+    console.error('ORI account initialization Failed.');
+  }
 
   return optimisticMonMon;
 };
 
-const ethEnabled = () => {
+const ethEnabled = async () => {
   if (window.ethereum) {
     window.web3 = new Web3(window.ethereum);
-    window.ethereum.enable();
-    return true;
+    return window.ethereum.enable();
   }
+
   return false;
 };
 
-export default class TempScene extends Phaser.Scene {
+export default class PreloadScene extends Phaser.Scene {
   constructor() {
-    super('Temp');
+    super('Preload');
   }
 
-  preload() {
-    if (!ethEnabled()) {
-      alert(
-        'Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!'
-      );
-    }
-  }
+  preload() {}
 
   async create() {
-    const optimisticMonMon = await setUpOptimisticMonMon();
+    if (!(await ethEnabled())) {
+      alert('Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!');
+    }
 
-    const wildProperties = {
-      level: optimisticMonMon.party.mons[0].level,
-      speciesId: 7,
-    };
+    window.optimisticMonMon = await setUpOptimisticMonMon();
 
-    const battle = optimisticMonMon.startWildBattle(wildProperties);
+    if (window.optimisticMonMon.party.mons.length) {
+      this.scene.start('Menu');
+      return;
+    }
 
-    this.scene.start('Battle', {
-      battle,
-    });
+    this.scene.start('StarterSelection');
   }
 }

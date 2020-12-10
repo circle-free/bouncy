@@ -1,10 +1,17 @@
 {
   "cSpell.words": [
     "Entrypoint",
+    "animationcomplete",
+    "anims",
     "bootstraping",
     "colyseus",
     "devtool",
+    "gridtable",
     "loadtest",
-    "merkle"
+    "merkle",
+    "spritesheet",
+    "tweens",
+    "valuechange",
+    "yoyo"
   ]
 }
