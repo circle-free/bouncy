@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-const PARTY_Y = 200;
+const PARTY_Y = 150;
 const SELECTION_GAP = 100;
 
 export default class MenuScene extends Phaser.Scene {
@@ -37,12 +37,22 @@ export default class MenuScene extends Phaser.Scene {
     battleWildButton.setInteractive();
     battleWildButton.on('pointerdown', () => this.battleWild());
 
+    const saveText = this.add
+      .text(screenCenterX, PARTY_Y + 2 * SELECTION_GAP, 'SAVE LOCALLY', textOptions)
+      .setOrigin(0.5)
+      .setDepth(1);
+    const saveButton = this.add
+      .rectangle(screenCenterX, PARTY_Y + 2 * SELECTION_GAP, saveText.width + 20, saveText.height + 20, 0xffffff)
+      .setStrokeStyle(4, 0x000000);
+    saveButton.setInteractive();
+    saveButton.on('pointerdown', () => this.save());
+
     const syncText = this.add
-      .text(screenCenterX, PARTY_Y + 2 * SELECTION_GAP, 'SYNC TO CHAIN', textOptions)
+      .text(screenCenterX, PARTY_Y + 3 * SELECTION_GAP, 'SYNC TO CHAIN', textOptions)
       .setOrigin(0.5)
       .setDepth(1);
     const syncButton = this.add
-      .rectangle(screenCenterX, PARTY_Y + 2 * SELECTION_GAP, syncText.width + 20, syncText.height + 20, 0xffffff)
+      .rectangle(screenCenterX, PARTY_Y + 3 * SELECTION_GAP, syncText.width + 20, syncText.height + 20, 0xffffff)
       .setStrokeStyle(4, 0x000000);
     syncButton.setInteractive();
     syncButton.on('pointerdown', () => this.sync());
@@ -60,6 +70,10 @@ export default class MenuScene extends Phaser.Scene {
     this.scene.start('Battle', { battle });
   }
 
+  save() {
+    localStorage.setItem('exported-optimistic-mon-mon-state', JSON.stringify(optimisticMonMon.export()));
+  }
+
   async sync() {
     const { receipt, syncComplete } = await window.optimisticMonMon.sync({
       gas: 1000000,
@@ -67,7 +81,11 @@ export default class MenuScene extends Phaser.Scene {
 
     console.log('Sync receipt:', receipt);
 
-    if (syncComplete) return;
+    if (syncComplete) {
+      this.save();
+
+      return;
+    }
 
     console.log('Pending optimistic transitions remaining...');
 

@@ -1,20 +1,15 @@
 import Phaser from 'phaser';
 import GridTable from 'phaser3-rex-plugins/plugins/gridtable.js';
 
-import {
-  getSpeciesImageName,
-  getBackgroundColor,
-  getHighlightColor,
-  NATURE,
-  TYPES,
-  LEVELING_RATE,
-  MOVE_CATEGORY
-} from '../utils';
+import { getSpeciesImageName } from '../utils';
+import { SPECIES_COLORS, NATURES, TYPES, LEVELING_RATES, MOVE_CATEGORIES } from '../enums';
 
 const NAME_Y = 50;
 const MON_Y = 170;
 const MON_SCALE = 0.5;
 const ARROW_GAP = 30;
+const GRID_WIDTH_SCALE = 0.75;
+const GRID_HEIGHT_SCALE = 0.5;
 
 const onCellVisibleWith = (scene, data) => (cell) => {
   const bg = scene.add.rectangle(0, 0, cell.width, cell.height).setStrokeStyle(2, 0x000000).setOrigin(0);
@@ -36,16 +31,16 @@ export default class PartyScene extends Phaser.Scene {
     this.mons = window.optimisticMonMon.party.mons;
 
     this.mons.forEach(({ speciesId }) => {
-      this.load.image('mon', `src/assets/images/species/${speciesId}.png`);
+      this.load.image(getSpeciesImageName(speciesId), `src/assets/images/species/${speciesId}.png`);
     });
 
     this.tableIndex = 0;
   }
 
-  create() {
+  async create() {
     const screenCenterX = this.scale.width >> 1;
 
-    const mon = this.mons[0];
+    this.mon = this.mons[0];
 
     const {
       IVs,
@@ -58,11 +53,11 @@ export default class PartyScene extends Phaser.Scene {
       experience,
       level,
       moves,
-      canLevel,
       eligibleLevel,
+      canLearnWithLevel,
       eligibleEvolutions,
-      canEvolve,
-    } = mon;
+      canLearnWithEvolve,
+    } = this.mon;
 
     const {
       id: speciesId,
@@ -78,7 +73,9 @@ export default class PartyScene extends Phaser.Scene {
       baseHealth,
     } = species;
 
-    this.cameras.main.setBackgroundColor(getBackgroundColor(speciesId));
+    const { lo, hi } = SPECIES_COLORS[speciesId];
+
+    this.cameras.main.setBackgroundColor(lo);
 
     const nameTextOptions = { fontSize: '36px', fill: '#ffffff' };
     this.nameLabel = this.add.text(screenCenterX, NAME_Y, speciesName.toUpperCase(), nameTextOptions).setOrigin(0.5);
@@ -86,8 +83,9 @@ export default class PartyScene extends Phaser.Scene {
     const monImage = this.add.image(screenCenterX, MON_Y, getSpeciesImageName(speciesId));
     monImage.setScale(MON_SCALE);
 
-    const highlightColor = getHighlightColor(speciesId);
-    const dataBox = this.add.rectangle(0, 0, this.scale.width * 0.75, this.scale.height * 0.5, highlightColor);
+    const dataBoxWidth = this.scale.width * GRID_WIDTH_SCALE;
+    const dataBoxHeight = this.scale.height * GRID_HEIGHT_SCALE;
+    const dataBox = this.add.rectangle(0, 0, dataBoxWidth, dataBoxHeight, Number('0x' + hi.slice(1)));
 
     // dataBox.setStrokeStyle(4, 0x000000);
     Phaser.Display.Align.To.BottomCenter(dataBox, monImage, 0, -20);
@@ -100,10 +98,10 @@ export default class PartyScene extends Phaser.Scene {
         cellHeight: dataBox.height / 3,
         cellVisibleCallback: onCellVisibleWith(this, [
           `Health: ${currentHealth}/${maxHealth}`,
-          `Nature: ${NATURE[nature]}`,
-          `Types: ${TYPES[type1]}, ${TYPES[type2]}`,
-          `Lvl: ${level}`,
-          `Leveling Rate: ${LEVELING_RATE[levelingRate]}`,
+          `Nature: ${NATURES[nature]}`,
+          `Types: ${TYPES[type1]}${type2 < 18 ? `, ${TYPES[type2]}` : ''}`,
+          `Level: ${level}`,
+          `Leveling Rate: ${LEVELING_RATES[levelingRate]}`,
           `Experience: ${experience}`,
         ]),
         mask: { padding: 2 },
@@ -165,7 +163,7 @@ export default class PartyScene extends Phaser.Scene {
             moves
               .map(({ name, category, type, power, accuracy, powerPoints, maxPowerPoints }) => [
                 name.toUpperCase(),
-                MOVE_CATEGORY[category],
+                MOVE_CATEGORIES[category],
                 TYPES[type],
                 power,
                 accuracy,
@@ -213,16 +211,16 @@ export default class PartyScene extends Phaser.Scene {
     const replenishButton = this.add
       .rectangle(0, 0, replenishText.width + 10, replenishText.height + 10, 0xffffff)
       .setOrigin(0);
-    
+
     replenishButton.setInteractive();
     replenishButton.once('pointerdown', () => this.replenish());
     Phaser.Display.Align.To.RightCenter(replenishButton, monImage);
     Phaser.Display.Align.In.Center(replenishText, replenishButton);
 
-    if (canLevel) {
+    if (eligibleLevel > level) {
       const levelTextOptions = { fontSize: '15px', fill: '#000000' };
       const levelText = this.add
-        .text(0, 0, `Level up to ${eligibleLevel}`, levelTextOptions)
+        .text(0, 0, `Level up to ${eligibleLevel}${canLearnWithLevel ? ' (new moves)' : ''}`, levelTextOptions)
         .setOrigin(0.5)
         .setDepth(1);
 
@@ -233,10 +231,15 @@ export default class PartyScene extends Phaser.Scene {
       Phaser.Display.Align.In.Center(levelText, levelButton);
     }
 
-    if (canEvolve) {
+    if (eligibleEvolutions.length) {
       const evolveTextOptions = { fontSize: '15px', fill: '#000000' };
       const evolveText = this.add
-        .text(0, 0, `Evolve to ${eligibleEvolutions[0].name}`, evolveTextOptions)
+        .text(
+          0,
+          0,
+          `Evolve to ${eligibleEvolutions[0].name}${canLearnWithEvolve ? ' (new moves)' : ''}`,
+          evolveTextOptions
+        )
         .setOrigin(0.5)
         .setDepth(1);
 
@@ -288,16 +291,18 @@ export default class PartyScene extends Phaser.Scene {
   }
 
   levelUp() {
-    this.nextButton.removeAllListeners();
-    this.previousButton.removeAllListeners();
-    window.optimisticMonMon.levelUp(0);
-    this.scene.restart();
+    const { canLevel } = this.mon;
+
+    if (!canLevel) return;
+
+    this.scene.start('MonGrow', { mode: 'level', monIndex: 0 });
   }
 
   evolve() {
-    this.nextButton.removeAllListeners();
-    this.previousButton.removeAllListeners();
-    window.optimisticMonMon.evolve(0);
-    this.scene.restart();
+    const { canEvolve, evolveLearnableMoves } = this.mon;
+
+    if (!canEvolve) return;
+
+    this.scene.start('MonGrow', { mode: 'evolve', monIndex: 0 });
   }
 }

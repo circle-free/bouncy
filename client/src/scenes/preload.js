@@ -17,11 +17,11 @@ const setUpOptimisticMonMon = async () => {
   const user = await getAccount();
 
   const gameOptions = {
-    address: '0x85F97dA2D3938690aC5417FC10E2f4F2Cf82AC84',
+    address: '0x0c486b94E926D4c979b04772FF7491FAC2869A7A',
   };
 
   const oriOptions = {
-    address: '0x3509a39600a9ab1C43433898800C3A7628A462dc',
+    address: '0xD87492D4A007C6Bb037060493a571E2cB07ee48D',
     web3: window.web3,
     requiredBond: '1000000000000000000',
     lockTime: '600',

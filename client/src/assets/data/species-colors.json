@@ -1,0 +1,757 @@
+{
+ "1": {
+  "average": "#7cae96",
+  "hi": "#bed7cb",
+  "lo": "#3e574b"
+ },
+ "2": {
+  "average": "#749493",
+  "hi": "#bacac9",
+  "lo": "#3a4a4a"
+ },
+ "3": {
+  "average": "#848986",
+  "hi": "#c2c4c3",
+  "lo": "#424543"
+ },
+ "4": {
+  "average": "#d8ac8e",
+  "hi": "#ecd6c7",
+  "lo": "#6c5647"
+ },
+ "5": {
+  "average": "#d79282",
+  "hi": "#ebc9c1",
+  "lo": "#6c4941"
+ },
+ "6": {
+  "average": "#ba9d7e",
+  "hi": "#ddcebf",
+  "lo": "#5d4f3f"
+ },
+ "7": {
+  "average": "#8eb0b7",
+  "hi": "#c7d8db",
+  "lo": "#47585c"
+ },
+ "8": {
+  "average": "#b6c8d2",
+  "hi": "#dbe4e9",
+  "lo": "#5b6469"
+ },
+ "9": {
+  "average": "#9496a0",
+  "hi": "#cacbd0",
+  "lo": "#4a4b50"
+ },
+ "10": {
+  "average": "#a5b073",
+  "hi": "#d2d8b9",
+  "lo": "#53583a"
+ },
+ "11": {
+  "average": "#87b351",
+  "hi": "#c3d9a8",
+  "lo": "#445a29"
+ },
+ "12": {
+  "average": "#c3c5cd",
+  "hi": "#e1e2e6",
+  "lo": "#626367"
+ },
+ "13": {
+  "average": "#b39177",
+  "hi": "#d9c8bb",
+  "lo": "#5a493c"
+ },
+ "14": {
+  "average": "#c2ac66",
+  "hi": "#e1d6b3",
+  "lo": "#615633"
+ },
+ "15": {
+  "average": "#bebab2",
+  "hi": "#dfddd9",
+  "lo": "#5f5d59"
+ },
+ "16": {
+  "average": "#b8a380",
+  "hi": "#dcd1c0",
+  "lo": "#5c5240"
+ },
+ "17": {
+  "average": "#c7af8f",
+  "hi": "#e3d7c7",
+  "lo": "#645848"
+ },
+ "18": {
+  "average": "#cbb18f",
+  "hi": "#e5d8c7",
+  "lo": "#665948"
+ },
+ "19": {
+  "average": "#a6909f",
+  "hi": "#d3c8cf",
+  "lo": "#534850"
+ },
+ "20": {
+  "average": "#b29677",
+  "hi": "#d9cbbb",
+  "lo": "#594b3c"
+ },
+ "21": {
+  "average": "#b2857a",
+  "hi": "#d9c2bd",
+  "lo": "#59433d"
+ },
+ "22": {
+  "average": "#aa8469",
+  "hi": "#d5c2b4",
+  "lo": "#554235"
+ },
+ "23": {
+  "average": "#9b7a8a",
+  "hi": "#cdbdc5",
+  "lo": "#4e3d45"
+ },
+ "24": {
+  "average": "#867a87",
+  "hi": "#c3bdc3",
+  "lo": "#433d44"
+ },
+ "25": {
+  "average": "#deca79",
+  "hi": "#efe5bc",
+  "lo": "#6f653d"
+ },
+ "26": {
+  "average": "#d1ba87",
+  "hi": "#e8ddc3",
+  "lo": "#695d44"
+ },
+ "27": {
+  "average": "#c1ba7d",
+  "hi": "#e0ddbe",
+  "lo": "#615d3f"
+ },
+ "28": {
+  "average": "#aa9969",
+  "hi": "#d5ccb4",
+  "lo": "#554d35"
+ },
+ "29": {
+  "average": "#adb9d0",
+  "hi": "#d6dce8",
+  "lo": "#575d68"
+ },
+ "30": {
+  "average": "#8fafbc",
+  "hi": "#c7d7de",
+  "lo": "#48585e"
+ },
+ "31": {
+  "average": "#8898a4",
+  "hi": "#c4ccd2",
+  "lo": "#444c52"
+ },
+ "32": {
+  "average": "#8f7796",
+  "hi": "#c7bbcb",
+  "lo": "#483c4b"
+ },
+ "33": {
+  "average": "#9c82a1",
+  "hi": "#cec1d0",
+  "lo": "#4e4151"
+ },
+ "34": {
+  "average": "#9f87a0",
+  "hi": "#cfc3d0",
+  "lo": "#504450"
+ },
+ "35": {
+  "average": "#e3bfc5",
+  "hi": "#f1dfe2",
+  "lo": "#726063"
+ },
+ "36": {
+  "average": "#dfc7c1",
+  "hi": "#efe3e0",
+  "lo": "#706461"
+ },
+ "37": {
+  "average": "#b9775c",
+  "hi": "#dcbbae",
+  "lo": "#5d3c2e"
+ },
+ "38": {
+  "average": "#e5e0a9",
+  "hi": "#f2f0d4",
+  "lo": "#737055"
+ },
+ "39": {
+  "average": "#d8bac3",
+  "hi": "#ecdde1",
+  "lo": "#6c5d62"
+ },
+ "40": {
+  "average": "#dbc9cf",
+  "hi": "#ede4e7",
+  "lo": "#6e6568"
+ },
+ "41": {
+  "average": "#7d6394",
+  "hi": "#beb1ca",
+  "lo": "#3f324a"
+ },
+ "42": {
+  "average": "#836e95",
+  "hi": "#c1b7ca",
+  "lo": "#42374b"
+ },
+ "43": {
+  "average": "#4c8c6a",
+  "hi": "#a6c6b5",
+  "lo": "#264635"
+ },
+ "44": {
+  "average": "#8f7477",
+  "hi": "#c7babb",
+  "lo": "#483a3c"
+ },
+ "45": {
+  "average": "#b37388",
+  "hi": "#d9b9c4",
+  "lo": "#5a3a44"
+ },
+ "46": {
+  "average": "#c69079",
+  "hi": "#e3c8bc",
+  "lo": "#63483d"
+ },
+ "47": {
+  "average": "#c3877a",
+  "hi": "#e1c3bd",
+  "lo": "#62443d"
+ },
+ "48": {
+  "average": "#8e7a9e",
+  "hi": "#c7bdcf",
+  "lo": "#473d4f"
+ },
+ "49": {
+  "average": "#c9bfd2",
+  "hi": "#e4dfe9",
+  "lo": "#656069"
+ },
+ "50": {
+  "average": "#a48d85",
+  "hi": "#d2c6c2",
+  "lo": "#524743"
+ },
+ "51": {
+  "average": "#99857d",
+  "hi": "#ccc2be",
+  "lo": "#4d433f"
+ },
+ "52": {
+  "average": "#c8b9a1",
+  "hi": "#e4dcd0",
+  "lo": "#645d51"
+ },
+ "53": {
+  "average": "#d4c4a4",
+  "hi": "#eae2d2",
+  "lo": "#6a6252"
+ },
+ "54": {
+  "average": "#e0c69b",
+  "hi": "#f0e3cd",
+  "lo": "#70634e"
+ },
+ "55": {
+  "average": "#7f9fba",
+  "hi": "#bfcfdd",
+  "lo": "#40505d"
+ },
+ "56": {
+  "average": "#cdbcb0",
+  "hi": "#e6ded8",
+  "lo": "#675e58"
+ },
+ "57": {
+  "average": "#b39f95",
+  "hi": "#d9cfca",
+  "lo": "#5a504b"
+ },
+ "58": {
+  "average": "#c8aa8f",
+  "hi": "#e4d5c7",
+  "lo": "#645548"
+ },
+ "59": {
+  "average": "#c3a384",
+  "hi": "#e1d1c2",
+  "lo": "#625242"
+ },
+ "60": {
+  "average": "#94a5bb",
+  "hi": "#cad2dd",
+  "lo": "#4a535e"
+ },
+ "61": {
+  "average": "#97a5bc",
+  "hi": "#cbd2de",
+  "lo": "#4c535e"
+ },
+ "62": {
+  "average": "#93a4bc",
+  "hi": "#c9d2de",
+  "lo": "#4a525e"
+ },
+ "63": {
+  "average": "#c8b75e",
+  "hi": "#e4dbaf",
+  "lo": "#645c2f"
+ },
+ "64": {
+  "average": "#baa762",
+  "hi": "#ddd3b1",
+  "lo": "#5d5431"
+ },
+ "65": {
+  "average": "#bfae6f",
+  "hi": "#dfd7b7",
+  "lo": "#605738"
+ },
+ "66": {
+  "average": "#9cb4bb",
+  "hi": "#cedadd",
+  "lo": "#4e5a5e"
+ },
+ "67": {
+  "average": "#a1a3b1",
+  "hi": "#d0d1d8",
+  "lo": "#515259"
+ },
+ "68": {
+  "average": "#95a1a9",
+  "hi": "#cad0d4",
+  "lo": "#4b5155"
+ },
+ "69": {
+  "average": "#b1c183",
+  "hi": "#d8e0c1",
+  "lo": "#596142"
+ },
+ "70": {
+  "average": "#b3bf89",
+  "hi": "#d9dfc4",
+  "lo": "#5a6045"
+ },
+ "71": {
+  "average": "#a7be7e",
+  "hi": "#d3dfbf",
+  "lo": "#545f3f"
+ },
+ "72": {
+  "average": "#808fa9",
+  "hi": "#c0c7d4",
+  "lo": "#404855"
+ },
+ "73": {
+  "average": "#848ea5",
+  "hi": "#c2c7d2",
+  "lo": "#424753"
+ },
+ "74": {
+  "average": "#9d9d98",
+  "hi": "#cececc",
+  "lo": "#4f4f4c"
+ },
+ "75": {
+  "average": "#9fa297",
+  "hi": "#cfd1cb",
+  "lo": "#50514c"
+ },
+ "76": {
+  "average": "#857f7c",
+  "hi": "#c2bfbe",
+  "lo": "#43403e"
+ },
+ "77": {
+  "average": "#e4bf94",
+  "hi": "#f2dfca",
+  "lo": "#72604a"
+ },
+ "78": {
+  "average": "#e4b991",
+  "hi": "#f2dcc8",
+  "lo": "#725d49"
+ },
+ "79": {
+  "average": "#d5a8b2",
+  "hi": "#ead4d9",
+  "lo": "#6b5459"
+ },
+ "80": {
+  "average": "#cba6b0",
+  "hi": "#e5d3d8",
+  "lo": "#665358"
+ },
+ "81": {
+  "average": "#a6b0b5",
+  "hi": "#d3d8da",
+  "lo": "#53585b"
+ },
+ "82": {
+  "average": "#a0a8b2",
+  "hi": "#d0d4d9",
+  "lo": "#505459"
+ },
+ "83": {
+  "average": "#ab9d8a",
+  "hi": "#d5cec5",
+  "lo": "#564f45"
+ },
+ "84": {
+  "average": "#a88b75",
+  "hi": "#d4c5ba",
+  "lo": "#54463b"
+ },
+ "85": {
+  "average": "#a5887c",
+  "hi": "#d2c4be",
+  "lo": "#53443e"
+ },
+ "86": {
+  "average": "#d0d6de",
+  "hi": "#e8ebef",
+  "lo": "#686b6f"
+ },
+ "87": {
+  "average": "#d9dfe7",
+  "hi": "#eceff3",
+  "lo": "#6d7074"
+ },
+ "88": {
+  "average": "#95839f",
+  "hi": "#cac1cf",
+  "lo": "#4b4250"
+ },
+ "89": {
+  "average": "#8e8192",
+  "hi": "#c7c0c9",
+  "lo": "#474149"
+ },
+ "90": {
+  "average": "#8f86a2",
+  "hi": "#c7c3d1",
+  "lo": "#484351"
+ },
+ "91": {
+  "average": "#807d92",
+  "hi": "#c0bec9",
+  "lo": "#403f49"
+ },
+ "92": {
+  "average": "#8b7d89",
+  "hi": "#c5bec4",
+  "lo": "#463f45"
+ },
+ "93": {
+  "average": "#766c80",
+  "hi": "#bbb6c0",
+  "lo": "#3b3640"
+ },
+ "94": {
+  "average": "#7b7090",
+  "hi": "#bdb8c8",
+  "lo": "#3e3848"
+ },
+ "95": {
+  "average": "#85848f",
+  "hi": "#c2c2c7",
+  "lo": "#434248"
+ },
+ "96": {
+  "average": "#baa05e",
+  "hi": "#ddd0af",
+  "lo": "#5d502f"
+ },
+ "97": {
+  "average": "#d6c172",
+  "hi": "#ebe0b9",
+  "lo": "#6b6139"
+ },
+ "98": {
+  "average": "#c89e8d",
+  "hi": "#e4cfc6",
+  "lo": "#644f47"
+ },
+ "99": {
+  "average": "#c29685",
+  "hi": "#e1cbc2",
+  "lo": "#614b43"
+ },
+ "100": {
+  "average": "#d0a9b3",
+  "hi": "#e8d4d9",
+  "lo": "#68555a"
+ },
+ "101": {
+  "average": "#cecad2",
+  "hi": "#e7e5e9",
+  "lo": "#676569"
+ },
+ "102": {
+  "average": "#ddc6c8",
+  "hi": "#eee3e4",
+  "lo": "#6f6364"
+ },
+ "103": {
+  "average": "#96a787",
+  "hi": "#cbd3c3",
+  "lo": "#4b5444"
+ },
+ "104": {
+  "average": "#c0b9ad",
+  "hi": "#e0dcd6",
+  "lo": "#605d57"
+ },
+ "105": {
+  "average": "#bbb1a8",
+  "hi": "#ddd8d4",
+  "lo": "#5e5954"
+ },
+ "106": {
+  "average": "#aea099",
+  "hi": "#d7d0cc",
+  "lo": "#57504d"
+ },
+ "107": {
+  "average": "#ac9695",
+  "hi": "#d6cbca",
+  "lo": "#564b4b"
+ },
+ "108": {
+  "average": "#d4aaad",
+  "hi": "#ead5d6",
+  "lo": "#6a5557"
+ },
+ "109": {
+  "average": "#a5a1a6",
+  "hi": "#d2d0d3",
+  "lo": "#535153"
+ },
+ "110": {
+  "average": "#9a95a1",
+  "hi": "#cdcad0",
+  "lo": "#4d4b51"
+ },
+ "111": {
+  "average": "#849198",
+  "hi": "#c2c8cc",
+  "lo": "#42494c"
+ },
+ "112": {
+  "average": "#979aa3",
+  "hi": "#cbcdd1",
+  "lo": "#4c4d52"
+ },
+ "113": {
+  "average": "#debac8",
+  "hi": "#efdde4",
+  "lo": "#6f5d64"
+ },
+ "114": {
+  "average": "#798396",
+  "hi": "#bcc1cb",
+  "lo": "#3d424b"
+ },
+ "115": {
+  "average": "#af9f90",
+  "hi": "#d7cfc8",
+  "lo": "#585048"
+ },
+ "116": {
+  "average": "#a2c7ce",
+  "hi": "#d1e3e7",
+  "lo": "#516467"
+ },
+ "117": {
+  "average": "#8ebec5",
+  "hi": "#c7dfe2",
+  "lo": "#475f63"
+ },
+ "118": {
+  "average": "#d6ccd0",
+  "hi": "#ebe6e8",
+  "lo": "#6b6668"
+ },
+ "119": {
+  "average": "#c9c0c1",
+  "hi": "#e4e0e0",
+  "lo": "#656061"
+ },
+ "120": {
+  "average": "#a49069",
+  "hi": "#d2c8b4",
+  "lo": "#524835"
+ },
+ "121": {
+  "average": "#a2959c",
+  "hi": "#d1cace",
+  "lo": "#514b4e"
+ },
+ "122": {
+  "average": "#baa3ad",
+  "hi": "#ddd1d6",
+  "lo": "#5d5257"
+ },
+ "123": {
+  "average": "#a9bea4",
+  "hi": "#d4dfd2",
+  "lo": "#555f52"
+ },
+ "124": {
+  "average": "#c0968d",
+  "hi": "#e0cbc6",
+  "lo": "#604b47"
+ },
+ "125": {
+  "average": "#b2a16c",
+  "hi": "#d9d0b6",
+  "lo": "#595136"
+ },
+ "126": {
+  "average": "#c69161",
+  "hi": "#e3c8b0",
+  "lo": "#634931"
+ },
+ "127": {
+  "average": "#9c9395",
+  "hi": "#cec9ca",
+  "lo": "#4e4a4b"
+ },
+ "128": {
+  "average": "#9e826c",
+  "hi": "#cfc1b6",
+  "lo": "#4f4136"
+ },
+ "129": {
+  "average": "#d29e8a",
+  "hi": "#e9cfc5",
+  "lo": "#694f45"
+ },
+ "130": {
+  "average": "#8693a6",
+  "hi": "#c3c9d3",
+  "lo": "#434a53"
+ },
+ "131": {
+  "average": "#84a6bc",
+  "hi": "#c2d3de",
+  "lo": "#42535e"
+ },
+ "132": {
+  "average": "#b7a6c8",
+  "hi": "#dbd3e4",
+  "lo": "#5c5364"
+ },
+ "133": {
+  "average": "#ac8d6b",
+  "hi": "#d6c6b5",
+  "lo": "#564736"
+ },
+ "134": {
+  "average": "#89b2bb",
+  "hi": "#c4d9dd",
+  "lo": "#45595e"
+ },
+ "135": {
+  "average": "#d5bd85",
+  "hi": "#eadec2",
+  "lo": "#6b5f43"
+ },
+ "136": {
+  "average": "#c99e70",
+  "hi": "#e4cfb8",
+  "lo": "#654f38"
+ },
+ "137": {
+  "average": "#a19ca2",
+  "hi": "#d0ced1",
+  "lo": "#514e51"
+ },
+ "138": {
+  "average": "#b4bdaf",
+  "hi": "#daded7",
+  "lo": "#5a5f58"
+ },
+ "139": {
+  "average": "#a0aea7",
+  "hi": "#d0d7d3",
+  "lo": "#505754"
+ },
+ "140": {
+  "average": "#967358",
+  "hi": "#cbb9ac",
+  "lo": "#4b3a2c"
+ },
+ "141": {
+  "average": "#9c8879",
+  "hi": "#cec4bc",
+  "lo": "#4e443d"
+ },
+ "142": {
+  "average": "#9e94a9",
+  "hi": "#cfcad4",
+  "lo": "#4f4a55"
+ },
+ "143": {
+  "average": "#b3b5b3",
+  "hi": "#d9dad9",
+  "lo": "#5a5b5a"
+ },
+ "144": {
+  "average": "#80a1be",
+  "hi": "#c0d0df",
+  "lo": "#40515f"
+ },
+ "145": {
+  "average": "#cab470",
+  "hi": "#e5dab8",
+  "lo": "#655a38"
+ },
+ "146": {
+  "average": "#e3ae70",
+  "hi": "#f1d7b8",
+  "lo": "#725738"
+ },
+ "147": {
+  "average": "#b9becc",
+  "hi": "#dcdfe6",
+  "lo": "#5d5f66"
+ },
+ "148": {
+  "average": "#abbed2",
+  "hi": "#d5dfe9",
+  "lo": "#565f69"
+ },
+ "149": {
+  "average": "#ceb187",
+  "hi": "#e7d8c3",
+  "lo": "#675944"
+ },
+ "150": {
+  "average": "#b7acb9",
+  "hi": "#dbd6dc",
+  "lo": "#5c565d"
+ },
+ "151": {
+  "average": "#d5b1bf",
+  "hi": "#ead8df",
+  "lo": "#6b5960"
+ }
+}

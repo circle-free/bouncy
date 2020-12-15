@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import LineSlider from '../game-objects/line-slider';
-import { getSpeciesImageName, getBackgroundColor, getHighlightColor } from '../utils';
+import { getSpeciesImageName } from '../utils';
+import { SPECIES_COLORS } from '../enums';
 
 const NAME_Y = 50;
 const MON_Y = 170;
@@ -39,18 +40,18 @@ const getNewMonIndex = (scene, direction) => {
 };
 
 const setColors = (scene, id) => {
-  scene.cameras.main.setBackgroundColor(getBackgroundColor(id));
+  const { lo, hi } = SPECIES_COLORS[id];
+  const hiColor = Number('0x' + hi.slice(1));
 
-  const cursorColor = getHighlightColor(id);
-  scene.natureSlider.setCursorColor(cursorColor);
-  scene.attackSlider.setCursorColor(cursorColor);
-  scene.defenseSlider.setCursorColor(cursorColor);
-  scene.speedSlider.setCursorColor(cursorColor);
-  scene.specialAttackSlider.setCursorColor(cursorColor);
-  scene.specialDefenseSlider.setCursorColor(cursorColor);
-  scene.healthSlider.setCursorColor(cursorColor);
-
-  scene.confirmButton.setFillStyle(cursorColor);
+  scene.cameras.main.setBackgroundColor(lo);
+  scene.natureSlider.setCursorColor(hiColor);
+  scene.attackSlider.setCursorColor(hiColor);
+  scene.defenseSlider.setCursorColor(hiColor);
+  scene.speedSlider.setCursorColor(hiColor);
+  scene.specialAttackSlider.setCursorColor(hiColor);
+  scene.specialDefenseSlider.setCursorColor(hiColor);
+  scene.healthSlider.setCursorColor(hiColor);
+  scene.confirmButton.setFillStyle(hiColor);
 };
 
 const switchMonAnimation = (scene, direction) => {
@@ -174,7 +175,7 @@ export default class StarterSelectionScene extends Phaser.Scene {
       NATURE_Y + 2 * SLIDER_GAP,
       Object.assign({ labelText: `Special Defense IV` }, ivOptions)
     );
-    
+
     this.healthSlider = new LineSlider(
       this,
       RIGHT_COLUMN_X,
@@ -186,14 +187,12 @@ export default class StarterSelectionScene extends Phaser.Scene {
     const confirmText = this.add.text(screenCenterX, CONFIRM_Y, 'CONFIRM STARTER', confirmTextOptions).setOrigin(0.5);
     confirmText.depth = 1;
 
-    const confirmButton = this.add.rectangle(screenCenterX, CONFIRM_Y, confirmText.width + 20, confirmText.height + 20);
-    confirmButton.setStrokeStyle(4, 0x000000);
-    this.confirmButton = confirmButton;
+    this.confirmButton = this.add.rectangle(screenCenterX, CONFIRM_Y, confirmText.width + 20, confirmText.height + 20);
+    this.confirmButton.setStrokeStyle(4, 0x000000);
+    this.confirmButton.setInteractive();
+    this.confirmButton.on('pointerdown', () => this.confirmStarter());
 
     setColors(this, id);
-
-    confirmButton.setInteractive();
-    confirmButton.on('pointerdown', () => this.confirmStarter());
   }
 
   confirmStarter() {
