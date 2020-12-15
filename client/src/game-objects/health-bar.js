@@ -32,10 +32,10 @@ export default class HealthBar extends Phaser.GameObjects.Container {
     Phaser.Display.Align.To.LeftCenter(barLabel, this.bar);
     this.add(barLabel);
 
-    const lvlLabelOptions = { fontSize: '30px', fill: '#ffffff' };
-    const lvlLabel = this.scene.add.text(0, 0, `Lv${monData.level}`, lvlLabelOptions);
-    Phaser.Display.Align.To.TopRight(lvlLabel, this.bar, 0, 25);
-    this.add(lvlLabel);
+    const levelLabelOptions = { fontSize: '30px', fill: '#ffffff' };
+    const levelLabel = this.scene.add.text(0, 0, `Lv${monData.level}`, levelLabelOptions);
+    Phaser.Display.Align.To.TopRight(levelLabel, this.bar, 0, 25);
+    this.add(levelLabel);
 
     const monNameOptions = { fontSize: '30px', fill: '#ffffff' };
     const monName = this.scene.add.text(0, 0, monData.species.name.toUpperCase(), monNameOptions);

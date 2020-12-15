@@ -138,15 +138,16 @@ const switchAction = (scene) => {
   });
 
   return new Promise((resolve) => {
-    dialogBox.displayButtons(
-      eligibleMons.map((mon, i) => ({
-        name: `${mon.species.name.toUpperCase()}`,
-        action: () => {
-          battle.use(partyIndex, i);
-          resolve();
-        },
-      }))
-    );
+    const buttonActions = eligibleMons.map((mon, i) => ({
+      name: `${mon.species.name.toUpperCase()}`,
+      action: () => {
+        battle.use(partyIndex, i);
+        resolve();
+      },
+    }));
+
+    const infoText = 'Choose a mon.';
+    dialogBox.displayButtons(buttonActions, infoText);
   });
 };
 
@@ -156,15 +157,16 @@ const attackAction = (scene) => {
   const monData = battle.parties[partyIndex].mons[myMon.index];
 
   return new Promise((resolve) => {
-    dialogBox.displayButtons(
-      monData.moves.map(({ name }, i) => ({
-        name: name.toUpperCase(),
-        action: () => {
-          battle.attack(partyIndex, i);
-          resolve();
-        },
-      }))
-    );
+    const buttonActions = monData.moves.map(({ name }, i) => ({
+      name: name.toUpperCase(),
+      action: () => {
+        battle.attack(partyIndex, i);
+        resolve();
+      },
+    }));
+
+    const infoText = 'Choose an attack.';
+    dialogBox.displayButtons(buttonActions, infoText);
   });
 };
 
@@ -178,7 +180,7 @@ const newTurnAnimation = (scene, newTurnEvent) => {
 
     if (side !== partyIndex) return resolve();
 
-    dialogBox.displayButtons([
+    const buttonActions = [
       {
         name: 'FIGHT',
         action: () => attackAction(scene).then(resolve),
@@ -200,7 +202,10 @@ const newTurnAnimation = (scene, newTurnEvent) => {
           resolve();
         },
       },
-    ]);
+    ];
+
+    const infoText = 'Select an action.';
+    dialogBox.displayButtons(buttonActions, infoText);
   });
 };
 
