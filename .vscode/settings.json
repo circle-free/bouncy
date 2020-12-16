@@ -13,5 +13,7 @@
     "tweens",
     "valuechange",
     "yoyo"
-  ]
+  ],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
