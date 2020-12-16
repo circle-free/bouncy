@@ -73,11 +73,10 @@ export default class PartyScene extends Phaser.Scene {
       baseHealth,
     } = species;
 
-    const { lo, hi } = SPECIES_COLORS[speciesId];
+    const { hiHex, hi } = SPECIES_COLORS[speciesId];
+    this.cameras.main.setBackgroundColor(hiHex);
 
-    this.cameras.main.setBackgroundColor(lo);
-
-    const nameTextOptions = { fontSize: '36px', fill: '#ffffff' };
+    const nameTextOptions = { fontSize: '36px', fill: '#000000' };
     this.nameLabel = this.add.text(screenCenterX, NAME_Y, speciesName.toUpperCase(), nameTextOptions).setOrigin(0.5);
 
     const monImage = this.add.image(screenCenterX, MON_Y, getSpeciesImageName(speciesId));
@@ -85,7 +84,7 @@ export default class PartyScene extends Phaser.Scene {
 
     const dataBoxWidth = this.scale.width * GRID_WIDTH_SCALE;
     const dataBoxHeight = this.scale.height * GRID_HEIGHT_SCALE;
-    const dataBox = this.add.rectangle(0, 0, dataBoxWidth, dataBoxHeight, Number('0x' + hi.slice(1)));
+    const dataBox = this.add.rectangle(0, 0, dataBoxWidth, dataBoxHeight, hi);
 
     // dataBox.setStrokeStyle(4, 0x000000);
     Phaser.Display.Align.To.BottomCenter(dataBox, monImage, 0, -20);
@@ -188,12 +187,12 @@ export default class PartyScene extends Phaser.Scene {
 
     this.switchingBusy = false;
 
-    this.previousButton = this.add.triangle(0, 0, 0, 15, 30, 0, 30, 30, 0xffffff);
+    this.previousButton = this.add.triangle(0, 0, 0, 15, 30, 0, 30, 30, 0x000000);
     this.previousButton.setInteractive();
     this.previousButton.on('pointerdown', () => this.prevInfo());
     Phaser.Display.Align.To.LeftCenter(this.previousButton, dataBox, ARROW_GAP);
 
-    this.nextButton = this.add.triangle(0, 0, 0, 0, 0, 30, 30, 15, 0xffffff);
+    this.nextButton = this.add.triangle(0, 0, 0, 0, 0, 30, 30, 15, 0x000000);
     this.nextButton.setInteractive();
     this.nextButton.on('pointerdown', () => this.nextInfo());
     Phaser.Display.Align.To.RightCenter(this.nextButton, dataBox, ARROW_GAP);
@@ -278,15 +277,11 @@ export default class PartyScene extends Phaser.Scene {
   }
 
   exit() {
-    this.nextButton.removeAllListeners();
-    this.previousButton.removeAllListeners();
     this.scene.start('Menu');
   }
 
   replenish() {
     window.optimisticMonMon.replenish(0);
-    this.nextButton.removeAllListeners();
-    this.previousButton.removeAllListeners();
     this.scene.restart();
   }
 

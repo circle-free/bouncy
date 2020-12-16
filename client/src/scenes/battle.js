@@ -2,236 +2,92 @@ import Phaser from 'phaser';
 import DialogBox from '../game-objects/dialog-box';
 import HealthBar from '../game-objects/health-bar';
 import { getSpeciesImageName } from '../utils';
+import { SPECIES_COLORS } from '../enums';
 
 // TODO
 // add stats bar
 // add back button
-// add other attack types and dialog
-// add other dialog for non wild battle
 
-const sendOutAnimation = (scene, useMonEvent) => {
-  const { partyIndex, enemyIndex, battle, dialogBox } = scene;
-  const { side, monBattleState } = useMonEvent;
-  const isMySide = partyIndex === side;
+const PHYSICAL_HIT_FRAMERATE = 128;
+const SMOKE_FRAMERATE = 30;
+const PLAYER_MON_X = 50;
+const OTHER_MON_X = 600;
+const MON_SCALE = 0.66;
+const ENEMY_SLIDE_IN_DURATION = 750;
+const BATTLE_HEIGHT_RATIO = 0.66;
 
-  const healthBarX = isMySide ? 350 : 50;
-  const healthBarY = isMySide ? 250 : 0;
+const HEALTH_BARS = [
+  { x: 340, y: 280 },
+  { x: 200, y: 25 },
+];
 
-  const monData = isMySide
-    ? battle.parties[partyIndex].mons[monBattleState.monIndex]
-    : battle.parties[enemyIndex].mons[monBattleState.monIndex];
+// Animations
+const animateMonAppears = async (scene, { image }) => {
+  return new Promise((resolve) => {
+    scene.tweens.add({
+      targets: image,
+      x: OTHER_MON_X,
+      duration: ENEMY_SLIDE_IN_DURATION,
+      ease: 'linear',
+      onComplete: resolve,
+    });
+  });
+};
 
-  const monImageX = isMySide ? scene.scale.width : 0;
-  const monImageY = isMySide ? scene.scale.height * 0.33 : 10;
-  const targetX = isMySide ? 50 : 600;
-
-  const healthBar = new HealthBar(scene, healthBarX, healthBarY, monData);
-
-  scene[isMySide ? 'myHealthBar' : 'enemyHealthBar'] = healthBar;
-  const monImage = scene.add.image(monImageX, monImageY, getSpeciesImageName(monData.species.id));
-
-  monImage.setOrigin(0, 0);
-  monImage.setScale(0.66);
-
-  scene[isMySide ? 'myMon' : 'enemyMon'] = {
-    image: monImage,
-    index: monBattleState.monIndex,
-    name: monData.species.name,
-  };
-
-  const imageAnimation = new Promise((resolve) => {
-    if (!isMySide) {
-      scene.tweens.add({
-        targets: monImage,
-        x: targetX,
-        duration: 1500,
-        ease: 'linear',
-        onComplete: resolve,
-      });
-
-      return;
-    }
-
+const animateSendMonOut = async (scene, { image }) => {
+  return new Promise((resolve) => {
     const smokeAnimation = scene.add
-      .sprite(targetX + monImage.displayWidth * 0.5, monImage.y + monImage.displayHeight * 0.25, 'smoke')
+      .sprite(PLAYER_MON_X + image.displayWidth * 0.5, image.y + image.displayHeight * 0.25, 'smoke')
       .setScale(0.25)
       .play('smoke');
 
-    monImage.setX(targetX);
+    image.setX(PLAYER_MON_X);
 
     smokeAnimation.once('animationcomplete', () => {
       smokeAnimation.destroy();
       resolve();
     });
   });
-
-  const dialog = isMySide
-    ? [`Go ${monData.species.name.toUpperCase()}!`]
-    : [`A wild ${monData.species.name.toUpperCase()} has appeared!`];
-
-  const displayDialog = dialogBox.displayDialog(dialog);
-
-  return Promise.all([imageAnimation, displayDialog]);
 };
 
-const returnMonAnimation = (scene, useMonEvent) => {
-  // dependencies
-  const { dialogBox, myMon, myHealthBar, enemyMon, enemyHealthBar, partyIndex } = scene;
-  const { side } = useMonEvent;
-  const isMySide = partyIndex === side;
+const animateBringMonIn = async (scene, { image }) => {
+  const originalScale = image.scale;
 
-  const currentMon = isMySide ? myMon : enemyMon;
-  const currentHealthBar = isMySide ? myHealthBar : enemyHealthBar;
-
-  const dialog = isMySide
-    ? [`${myMon.name.toUpperCase()}, thats enough! Come back!`]
-    : [[`Opponent withdrew ${myMon.name.toUpperCase()}`]];
-
-  const originalScale = currentMon.image.scale;
-
-  currentHealthBar.destroy();
-
-  const displayReturnMonDialog = dialogBox.displayDialog(dialog);
-
-  const tween = new Promise((resolve) => {
+  return new Promise((resolve) => {
     scene.tweens.add({
-      targets: currentMon.image,
-      y: currentMon.image.y + 150,
+      targets: image,
+      y: image.y + 150,
       duration: 150,
       ease: 'linear',
       onComplete: () => {
-        currentMon.image.destroy();
+        image.destroy();
         resolve();
       },
       onUpdate: (tween) => {
-        currentMon.image.setScale(originalScale * (1 - tween.progress));
+        image.setScale(originalScale * (1 - tween.progress));
       },
     });
   });
-
-  return Promise.all([displayReturnMonDialog, tween]).then(() => (scene[isMySide ? 'myMon' : 'enemyMon'] = {}));
 };
 
-const useMonAnimation = async (scene, useMonEvent) => {
-  // dependencies
-  const { myMon, enemyMon, partyIndex } = scene;
-  const { side } = useMonEvent;
-  const { image } = side === partyIndex ? myMon : enemyMon;
-
-  if (image) {
-    await returnMonAnimation(scene, useMonEvent);
-  }
-
-  return sendOutAnimation(scene, useMonEvent);
-};
-
-const switchAction = (scene) => {
-  // dependencies
-  const { battle, partyIndex, dialogBox } = scene;
-
-  const mons = battle.parties[partyIndex].mons;
-
-  const monIndex = battle.monBattleStates[partyIndex]?.monIndex;
-
-  const eligibleMons = mons.filter(({ currentHealth }, i) => {
-    return i !== monIndex && currentHealth > 0;
-  });
-
+const animateAttacker = (scene, { image }) => {
   return new Promise((resolve) => {
-    const buttonActions = eligibleMons.map((mon, i) => ({
-      name: `${mon.species.name.toUpperCase()}`,
-      action: () => {
-        battle.use(partyIndex, i);
-        resolve();
-      },
-    }));
-
-    const infoText = 'Choose a mon.';
-    dialogBox.displayButtons(buttonActions, infoText);
-  });
-};
-
-const attackAction = (scene) => {
-  // dependencies
-  const { partyIndex, dialogBox, battle, myMon } = scene;
-  const monData = battle.parties[partyIndex].mons[myMon.index];
-
-  return new Promise((resolve) => {
-    const buttonActions = monData.moves.map(({ name }, i) => ({
-      name: name.toUpperCase(),
-      action: () => {
-        battle.attack(partyIndex, i);
-        resolve();
-      },
-    }));
-
-    const infoText = 'Choose an attack.';
-    dialogBox.displayButtons(buttonActions, infoText);
-  });
-};
-
-const newTurnAnimation = (scene, newTurnEvent) => {
-  // dependencies
-  const { partyIndex, dialogBox, battle } = scene;
-  const { side } = newTurnEvent;
-
-  return new Promise((resolve) => {
-    if (scene.ended) return resolve();
-
-    if (side !== partyIndex) return resolve();
-
-    const buttonActions = [
-      {
-        name: 'FIGHT',
-        action: () => attackAction(scene).then(resolve),
-      },
-      {
-        name: 'SWITCH',
-        // action: () => switchAction(scene).then(resolve),
-        action: resolve,
-      },
-      {
-        name: 'BAG',
-        action: resolve,
-      },
-      {
-        name: 'RUN',
-        action: () => {
-          window.optimisticMonMon.runFromWildBattle();
-          scene.scene.start('Menu');
-          resolve();
-        },
-      },
-    ];
-
-    const infoText = 'Select an action.';
-    dialogBox.displayButtons(buttonActions, infoText);
-  });
-};
-
-const firstTurnAnimation = switchAction;
-
-const attackerAnimation = (scene, attackingMon) =>
-  new Promise((resolve) => {
     scene.tweens.add({
-      targets: attackingMon.image,
-      x: attackingMon.image.x + 25,
-      y: attackingMon.image.y - 25,
+      targets: image,
+      x: image.x + 25,
+      y: image.y - 25,
       duration: 100,
       ease: 'linear',
       yoyo: 'true',
       onComplete: resolve,
     });
   });
+};
 
-const targetAnimation = (scene, targetMon) => {
+const animateDefender = (scene, { image }) => {
   return new Promise((resolve) => {
     const hitAnimation = scene.add
-      .sprite(
-        targetMon.image.x + targetMon.image.displayWidth * 0.5,
-        targetMon.image.y + targetMon.image.displayHeight * 0.75,
-        'physicalHit'
-      )
+      .sprite(image.x + image.displayWidth * 0.5, image.y + image.displayHeight * 0.75, 'physicalHit')
       .setScale(0.25)
       .play('physicalHit');
 
@@ -242,36 +98,11 @@ const targetAnimation = (scene, targetMon) => {
   });
 };
 
-const attackAnimation = (scene, attackEvent) => {
-  // dependencies
-  const { partyIndex, myMon, enemyMon, myHealthBar, enemyHealthBar } = scene;
-  const { side, damage } = attackEvent;
-  const isMySide = partyIndex === side;
-  const targetMon = isMySide ? enemyMon : myMon;
-  const attackingMon = isMySide ? myMon : enemyMon;
-  const affectedHealthBar = isMySide ? enemyHealthBar : myHealthBar;
-
-  return attackerAnimation(scene, attackingMon).then(() =>
-    Promise.all([targetAnimation(scene, targetMon), affectedHealthBar.updateHealth(-damage)])
-  );
-};
-
-const battleEndedAnimation = (scene, event) => {
-  // dependencies
-  const { partyIndex, dialogBox, battle } = scene;
-  const { winner } = event;
-  const dialog = winner === partyIndex ? ['YOU WON!!!!'] : [`YOU LOST :(`];
-
-  return dialogBox.displayDialog(dialog).then(() => {
-    battle.removeAllListeners();
-  });
-};
-
-const shakeAnimation = (scene, mon) =>
-  new Promise((resolve) => {
+const animateMonShake = (scene, { image }) => {
+  return new Promise((resolve) => {
     scene.tweens.add({
-      targets: mon.image,
-      x: mon.image.x + 10,
+      targets: image,
+      x: image.x + 10,
       duration: 25,
       ease: 'linear',
       yoyo: 'true',
@@ -279,53 +110,212 @@ const shakeAnimation = (scene, mon) =>
       onComplete: resolve,
     });
   });
+};
 
-const dropDownAnimation = (scene, mon) =>
-  new Promise((resolve) => {
+const animateMonFaint = (scene, { image }) => {
+  return new Promise((resolve) => {
     scene.tweens.add({
-      targets: mon.image,
-      y: mon.image.y + 150,
+      targets: image,
+      y: image.y + 150,
       duration: 500,
       ease: 'linear',
       onComplete: resolve,
       onUpdate: (tween, target) => {
-        mon.image.setCrop(0, 0, mon.image.width, target.height - tween.progress * target.height);
+        image.setCrop(0, 0, image.width, target.height - tween.progress * target.height);
       },
     });
   });
+};
 
-const faintedAnimation = (scene, event) => {
-  // dependencies
-  const { partyIndex, myMon, enemyMon, dialogBox } = scene;
-  const { side } = event;
-  const mon = side === partyIndex ? myMon : enemyMon;
+// Click Event Handlers
+const handleSwitchClicked = (scene) => {
+  const { battle, partyIndex, dialogBox } = scene;
 
-  return Promise.all([
-    dialogBox.displayDialog([`${mon.name} has fainted`]),
-    shakeAnimation(scene, mon).then(() => dropDownAnimation(scene, mon)),
-  ]).then(() => {
-    scene[side === partyIndex ? 'myMon' : 'enemyMon'] = {};
+  const mons = battle.parties[partyIndex].mons;
+  const monIndex = battle.monBattleStates[partyIndex]?.monIndex;
+  const eligibleMons = mons.filter(({ currentHealth }, i) => i !== monIndex && currentHealth > 0);
+
+  return new Promise((resolve) => {
+    const buttonActions = eligibleMons.map((mon, i) => ({
+      name: `${mon.species.name.toUpperCase()}`,
+      action: () => {
+        battle.use(partyIndex, i);
+        resolve();
+      },
+    }));
+
+    const promptText = 'Choose a mon.';
+    dialogBox.displayButtons(promptText, buttonActions);
   });
 };
 
-const experienceGainedAnimation = async (scene, event) => {
+const handleAttackClicked = (scene) => {
+  const { partyIndex, dialogBox, battle, myMon } = scene;
+  const monData = battle.parties[partyIndex].mons[myMon.battleState.monIndex];
+
+  return new Promise((resolve) => {
+    const buttonActions = monData.moves.map(({ name, maxPowerPoints }, i) => ({
+      name: `${name.toUpperCase()} (PP: ${myMon.battleState.powerPoints[i]}/${maxPowerPoints})`,
+      action: () => {
+        battle.attack(partyIndex, i);
+        resolve();
+      },
+    }));
+
+    const promptText = 'Choose an attack.';
+    dialogBox.displayButtons(promptText, buttonActions);
+  });
+};
+
+// Battle Event Handlers
+const handleNewTurn = (scene, event) => {
   // dependencies
+  const { partyIndex, dialogBox, battle } = scene;
+  const { side } = event;
+
+  return new Promise((resolve) => {
+    // if (scene.ended) return resolve();
+
+    if (side !== partyIndex) return resolve();
+
+    const buttonActions = [
+      {
+        name: 'ATTACK',
+        action: () => handleAttackClicked(scene).then(resolve),
+      },
+      // {
+      //   name: 'SWITCH',
+      //   action: resolve,
+      // },
+      // {
+      //   name: 'BAG',
+      //   action: resolve,
+      // },
+      {
+        name: 'RUN',
+        action: () => {
+          window.optimisticMonMon.runFromWildBattle();
+          scene.scene.start('Menu');
+          resolve();
+        },
+      },
+    ];
+
+    const promptText = 'Select an action.';
+    dialogBox.displayButtons(promptText, buttonActions);
+  });
+};
+
+const handleMonUsed = async (scene, event) => {
+  const { dialogBox, partyIndex } = scene;
+  const { side, monBattleState } = event;
+  const isMySide = partyIndex === side;
+  const currentMon = event.side === partyIndex ? scene.myMon : scene.enemyMon;
+
+  if (currentMon) {
+    const monInDialog = isMySide
+      ? `${mon.battleState.species.name.toUpperCase()}, thats enough! Come back!`
+      : `Opponent withdrew ${mon.battleState.species.name.toUpperCase()}`;
+
+    (isMySide ? scene.myHealthBar : scene.enemyHealthBar).destroy();
+
+    await Promise.all([dialogBox.displayDialog(monInDialog), animateBringMonIn(scene, mon)]);
+  }
+
+  const { hi } = SPECIES_COLORS[monBattleState.species.id];
+
+  const { x: healthBarX, y: healthBarY } = HEALTH_BARS[isMySide ? 0 : 1];
+  const healthBarOptions = { fillColor: hi };
+  const healthBar = new HealthBar(scene, healthBarX, healthBarY, monBattleState, healthBarOptions);
+
+  const monImageX = isMySide ? scene.scale.width : 0;
+  const monImageY = isMySide ? scene.scale.height * 0.33 : 10;
+  const monImage = scene.add.image(monImageX, monImageY, getSpeciesImageName(monBattleState.species.id));
+
+  monImage.setOrigin(0, 0);
+  monImage.setScale(MON_SCALE);
+  monImage.setFlipX(isMySide);
+
+  const monObject = { image: monImage, battleState: monBattleState };
+  const imageAnimation = isMySide ? animateSendMonOut(scene, monObject) : animateMonAppears(scene, monObject);
+
+  if (isMySide) {
+    scene.myHealthBar = healthBar;
+    scene.myMon = monObject;
+  } else {
+    scene.enemyHealthBar = healthBar;
+    scene.enemyMon = monObject;
+  }
+
+  const monOutDialog = isMySide
+    ? `Go ${monBattleState.species.name.toUpperCase()}!`
+    : `A wild ${monBattleState.species.name.toUpperCase()} has appeared!`;
+
+  return Promise.all([dialogBox.displayDialog(monOutDialog), imageAnimation]);
+};
+
+const handleMonAttacked = async (scene, event) => {
+  const { myMon, enemyMon, dialogBox } = scene;
+  const { side, move, damage } = event;
+  const isMySide = scene.partyIndex === side;
+  const defendingMon = isMySide ? enemyMon : myMon;
+  const attackingMon = isMySide ? myMon : enemyMon;
+  const affectedHealthBar = isMySide ? scene.enemyHealthBar : scene.myHealthBar;
+
+  await Promise.all([
+    dialogBox.displayDialog(`${attackingMon.battleState.species.name.toUpperCase()} used ${move.name.toUpperCase()}.`),
+    animateAttacker(scene, attackingMon),
+    animateDefender(scene, defendingMon).then(() => affectedHealthBar.updateHealth(-damage)),
+  ]);
+
+  return dialogBox.displayDialog(
+    `${defendingMon.battleState.species.name.toUpperCase()} took ${damage || 'no'} damage.`
+  );
+};
+
+const handleFainted = async (scene, event) => {
+  const { dialogBox } = scene;
+  const isMySide = scene.partyIndex === event.side;
+  const mon = isMySide ? scene.myMon : scene.enemyMon;
+
+  if (isMySide) {
+    scene.myMon = null;
+  } else {
+    scene.enemyMon = null;
+  }
+
+  await Promise.all([
+    dialogBox.displayDialog(`${mon.battleState.species.name.toUpperCase()} has fainted`),
+    animateMonShake(scene, mon).then(() => animateMonFaint(scene, mon)),
+  ]);
+};
+
+const handleExperienceGained = (scene, event) => {
   const { dialogBox, partyIndex, myMon } = scene;
   const [{ side, experience }] = event;
 
   if (side !== partyIndex) return;
 
-  return dialogBox.displayDialog([`${myMon.name} gained ${experience} EXP. points!`]);
+  return dialogBox.displayDialog(`${myMon.battleState.species.name.toUpperCase()} gained ${experience} EXP. points!`);
 };
 
-const ANIMATIONS_BY_EVENT = {
-  use: useMonAnimation,
-  newTurn: newTurnAnimation,
-  attack: attackAnimation,
-  ended: battleEndedAnimation,
-  fainted: faintedAnimation,
-  experienceGained: experienceGainedAnimation,
-  firstTurn: firstTurnAnimation,
+const handleBattleEnded = async (scene, event) => {
+  const { partyIndex, dialogBox, battle } = scene;
+  const { winner } = event;
+  const dialog = winner === partyIndex ? 'You won the battle!' : `You lost the battle!`;
+
+  await dialogBox.displayDialog(dialog);
+
+  battle.removeAllListeners();
+};
+
+const eventHandlers = {
+  use: handleMonUsed,
+  newTurn: handleNewTurn,
+  attack: handleMonAttacked,
+  ended: handleBattleEnded,
+  fainted: handleFainted,
+  experienceGained: handleExperienceGained,
 };
 
 export default class BattleScene extends Phaser.Scene {
@@ -333,77 +323,68 @@ export default class BattleScene extends Phaser.Scene {
     super('Battle');
   }
 
-  init(data) {
-    this.battle = data.battle;
-  }
-
-  preload() {
+  init({ battle }) {
+    this.battle = battle;
     this.eventQueue = [];
     this.busy = false;
-    this.ended = false;
+    // this.ended = false;
 
     // TODO: replace default
     this.partyIndex = 0;
     this.enemyIndex = 1;
 
-    this.myMon = { image: null, index: null, name: null };
+    this.myMon = null;
     this.myHealthBar = null;
 
-    this.enemyMon = { image: null, index: null, name: null };
+    this.enemyMon = null;
     this.enemyHealthBar = null;
+  }
 
+  preload() {
     this.battle.parties.forEach(({ mons }) => {
       mons.forEach(({ species }) => {
         this.load.image(getSpeciesImageName(species.id), `src/assets/images/species/${species.id}.png`);
       });
     });
 
-    // load animations
-    this.load.spritesheet('physicalHit', 'src/assets/images/battle/physical-hit.png', {
-      frameWidth: 1024,
-      frameHeight: 1024,
-    });
-
-    this.load.spritesheet('smoke', 'src/assets/images/battle/smoke.png', {
-      frameWidth: 1024,
-      frameHeight: 1024,
-    });
+    // Load animations
+    const spritesheetOptions = { frameWidth: 1024, frameHeight: 1024 };
+    this.load.spritesheet('physicalHit', 'src/assets/images/battle/physical-hit.png', spritesheetOptions);
+    this.load.spritesheet('smoke', 'src/assets/images/battle/smoke.png', spritesheetOptions);
   }
 
   create() {
-    this.dialogBox = new DialogBox(this);
-
-    Object.keys(ANIMATIONS_BY_EVENT).forEach((eventName) => {
+    Object.keys(eventHandlers).forEach((eventName) => {
       this.battle.on(eventName, (event) => {
-        if (eventName === 'ended') {
-          this.ended = true;
-        }
-
+        // this.ended = eventName === 'ended';
         this.eventQueue.push({ name: eventName, event });
       });
     });
 
     // create animations
-    this.anims.create({ key: 'physicalHit', frames: 'physicalHit', frameRate: 128 });
-    this.anims.create({ key: 'smoke', frames: 'smoke', frameRate: 6 });
+    this.anims.create({ key: 'physicalHit', frames: 'physicalHit', frameRate: PHYSICAL_HIT_FRAMERATE });
+    this.anims.create({ key: 'smoke', frames: 'smoke', frameRate: SMOKE_FRAMERATE });
 
-    // add first choose event
-    this.eventQueue.push({ name: 'firstTurn', event: {} });
+    this.battle.use(this.partyIndex, 0);
+
+    this.cameras.main.setBackgroundColor('#ffffff');
+
+    this.dialogBox = new DialogBox(this);
   }
 
-  update() {
+  async update() {
     if (this.busy || this.eventQueue.length === 0) return;
 
     this.busy = true;
     const { name, event } = this.eventQueue.shift();
 
-    return ANIMATIONS_BY_EVENT[name](this, event).then(() => {
-      this.busy = false;
+    await eventHandlers[name](this, event);
 
-      if (name !== 'ended') return;
+    this.busy = false;
 
-      window.optimisticMonMon.processWildBattle();
-      this.scene.start('Menu');
-    });
+    if (name !== 'ended') return;
+
+    window.optimisticMonMon.processWildBattle();
+    this.scene.start('Menu');
   }
 }
