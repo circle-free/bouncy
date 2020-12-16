@@ -46,17 +46,7 @@ const createButtonBoxes = (scene, dialogRect) => {
   buttonsBox.setStrokeStyle(4, 0xff0000);
   Phaser.Display.Align.In.BottomRight(buttonsBox, dialogRect);
 
-  const infoBox = scene.add.rectangle(0, 0, width, dialogRect.height, 0x004040);
-  infoBox.setOrigin(0, 0);
-  infoBox.setStrokeStyle(4, 0xff0000);
-  Phaser.Display.Align.In.BottomLeft(infoBox, dialogRect);
-
-  const infoOptions = { fontSize: '20px', fill: '#ffffff' };
-  const info = scene.add.text(0, 0, '', infoOptions);
-  info.setWordWrapWidth(width, true);
-  Phaser.Display.Align.In.TopLeft(info, infoBox, -PADDING, -PADDING);
-
-  return { info, infoBox, buttonsBox };
+  return buttonsBox;
 };
 
 export default class DialogBox extends Phaser.GameObjects.Container {
@@ -76,13 +66,9 @@ export default class DialogBox extends Phaser.GameObjects.Container {
     this.add(nextIcon);
     this.nextIcon = nextIcon;
 
-    const { info, infoBox, buttonsBox } = createButtonBoxes(scene, dialogRect);
+    const buttonsBox = createButtonBoxes(scene, dialogRect);
     this.add(buttonsBox);
     this.buttonsBox = buttonsBox;
-    this.add(infoBox);
-    this.infoBox = infoBox;
-    this.add(info);
-    this.info = info;
 
     this.scene.add.existing(this);
   }
@@ -90,7 +76,7 @@ export default class DialogBox extends Phaser.GameObjects.Container {
   displayDialog(dialogText) {
     this.dialogRect.setVisible(true);
     this.buttonsBox.setVisible(false);
-    this.infoBox.setVisible(false);
+    // this.infoBox.setVisible(false);
 
     const dialogArray = Array.isArray(dialogText) ? dialogText : [dialogText];
 
@@ -119,23 +105,36 @@ export default class DialogBox extends Phaser.GameObjects.Container {
   }
 
   displayButtons(buttonActions = [], buttonsInfo) {
-    this.dialogRect.setVisible(false);
     this.buttonsBox.setVisible(true);
-    this.infoBox.setVisible(true);
 
-    this.info.setText(buttonsInfo);
+    this.dialog.setText(buttonsInfo);
 
     const x = this.buttonsBox.x + this.buttonsBox.width / 2 + PADDING;
 
     const buttons = buttonActions.map(({ name, action }, i) => {
       const buttonTextOptions = { fontSize: '20px', fill: '#ffffff' };
-      const button = this.scene.add.text(x, this.y + 30 + i * 40, name, buttonTextOptions).setOrigin(0.5);
+      const button =
+        name === 'back'
+          ? this.scene.add.triangle(
+              this.buttonsBox.x + 30,
+              this.y + this.buttonsBox.height - 30,
+              0,
+              10,
+              20,
+              0,
+              20,
+              20,
+              0xffffff
+            )
+          : this.scene.add.text(x, this.y + 30 + i * 40, name, buttonTextOptions).setOrigin(0.5);
 
       button.setInteractive();
 
-      button.on('pointerdown', () => {
+      button.once('pointerdown', () => {
         buttons.forEach((button) => button.destroy());
-        this.info.setText('');
+        this.dialog.setText('');
+
+        // this.info.setText('');
 
         action();
       });
