@@ -27,7 +27,6 @@ export default class HealthBar extends Phaser.GameObjects.Container {
     const { fillColor = 0xffffff } = options;
 
     super(scene, x, y);
-    this.scene = scene;
 
     const { stats, currentHealth, level, species } = monData;
 
@@ -40,7 +39,7 @@ export default class HealthBar extends Phaser.GameObjects.Container {
     this.add(background);
 
     const topLine = (HEIGHT >> 1) - BAR_HEIGHT;
-    const emptyBarWidth = WIDTH - (PADDING * 2) - HP_LABEL_WIDTH;
+    const emptyBarWidth = WIDTH - PADDING * 2 - HP_LABEL_WIDTH;
     const fullBarWidth = emptyBarWidth - 6;
 
     const monNameOptions = { fontSize: '24px', fill: '#000000' };
@@ -70,7 +69,12 @@ export default class HealthBar extends Phaser.GameObjects.Container {
     this.bar.width = (fullBarWidth * this.hp) / this.maxHp;
 
     const hpValueOptions = { fontSize: '18px', fill: '#000000' };
-    this.hpValue = scene.add.text(WIDTH - PADDING, (HEIGHT >> 1) + BAR_HEIGHT, `${this.hp}/${this.maxHp}`, hpValueOptions);
+    this.hpValue = scene.add.text(
+      WIDTH - PADDING,
+      (HEIGHT >> 1) + BAR_HEIGHT,
+      `${this.hp}/${this.maxHp}`,
+      hpValueOptions
+    );
     this.hpValue.setOrigin(1, 0);
     this.add(this.hpValue);
 
@@ -78,7 +82,7 @@ export default class HealthBar extends Phaser.GameObjects.Container {
   }
 
   updateHealth(delta) {
-    const emptyBarWidth = WIDTH - (2 * PADDING) - HP_LABEL_WIDTH;
+    const emptyBarWidth = WIDTH - 2 * PADDING - HP_LABEL_WIDTH;
     const fullBarWidth = emptyBarWidth - 6;
     const newHp = getNewHp(this, delta);
 

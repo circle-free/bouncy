@@ -7,7 +7,6 @@ const BLUE = 0x5c3eff;
 export default class DialogBox extends Phaser.GameObjects.Container {
   constructor(scene) {
     super(scene, 0, scene.scale.height - HEIGHT);
-    this.scene = scene;
 
     this.queue = [];
 
@@ -58,7 +57,7 @@ export default class DialogBox extends Phaser.GameObjects.Container {
         this.nextIcon.setVisible(true);
       }
 
-      this.dialogRect.on('pointerdown', () => {
+      this.dialogRect.once('pointerdown', () => {
         const nextText = this.queue.shift();
 
         if (!nextText) {
@@ -87,7 +86,7 @@ export default class DialogBox extends Phaser.GameObjects.Container {
       button.setOrigin(0.5, 0.5);
       button.setInteractive();
 
-      button.on('pointerdown', () => {
+      button.once('pointerdown', () => {
         this.buttons.forEach((button) => button.destroy());
         this.dialog.setText('');
 
