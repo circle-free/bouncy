@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import LineSlider from '../game-objects/line-slider';
 import { getSpeciesImageName } from '../utils';
-import { SPECIES_COLORS } from '../enums';
+import { SPECIES_COLORS, NATURES } from '../enums';
 
 const NAME_Y = 50;
 const MON_Y = 170;
@@ -13,8 +13,8 @@ const RIGHT_COLUMN_X = 550;
 const SLIDER_GAP = 60;
 const CONFIRM_Y = 550;
 
-const moveAnimation = (scene, image, targetX, targetY) =>
-  new Promise((resolve) => {
+const moveAnimation = (scene, image, targetX, targetY) => {
+  return new Promise((resolve) => {
     scene.tweens.add({
       targets: image,
       x: targetX,
@@ -24,6 +24,7 @@ const moveAnimation = (scene, image, targetX, targetY) =>
       onComplete: resolve,
     });
   });
+};
 
 const getNewMonIndex = (scene, direction) => {
   const newMonIndex = direction === 'previous' ? scene.currentMonIndex - 1 : scene.currentMonIndex + 1;
@@ -40,18 +41,17 @@ const getNewMonIndex = (scene, direction) => {
 };
 
 const setColors = (scene, id) => {
-  const { lo, hi } = SPECIES_COLORS[id];
-  const hiColor = Number('0x' + hi.slice(1));
+  const { lo, hiHex } = SPECIES_COLORS[id];
 
-  scene.cameras.main.setBackgroundColor(lo);
-  scene.natureSlider.setCursorColor(hiColor);
-  scene.attackSlider.setCursorColor(hiColor);
-  scene.defenseSlider.setCursorColor(hiColor);
-  scene.speedSlider.setCursorColor(hiColor);
-  scene.specialAttackSlider.setCursorColor(hiColor);
-  scene.specialDefenseSlider.setCursorColor(hiColor);
-  scene.healthSlider.setCursorColor(hiColor);
-  scene.confirmButton.setFillStyle(hiColor);
+  scene.cameras.main.setBackgroundColor(hiHex);
+  scene.natureSlider.setCursorColor(lo);
+  scene.attackSlider.setCursorColor(lo);
+  scene.defenseSlider.setCursorColor(lo);
+  scene.speedSlider.setCursorColor(lo);
+  scene.specialAttackSlider.setCursorColor(lo);
+  scene.specialDefenseSlider.setCursorColor(lo);
+  scene.healthSlider.setCursorColor(lo);
+  scene.confirmButton.setFillStyle(lo);
 };
 
 const switchMonAnimation = (scene, direction) => {
@@ -90,6 +90,8 @@ const switchMonAnimation = (scene, direction) => {
   });
 };
 
+const toNatureText = (i) => NATURES[i];
+
 export default class StarterSelectionScene extends Phaser.Scene {
   constructor() {
     super('StarterSelection');
@@ -120,23 +122,23 @@ export default class StarterSelectionScene extends Phaser.Scene {
 
     const { id, name } = this.starterSpecies[this.currentMonIndex];
 
-    const nameTextOptions = { fontSize: '36px', fill: '#ffffff' };
+    const nameTextOptions = { fontSize: '36px', fill: '#000000' };
     this.nameLabel = this.add.text(screenCenterX, NAME_Y, name.toUpperCase(), nameTextOptions).setOrigin(0.5);
 
     this.currentMonImage = this.add.image(screenCenterX, MON_Y, getSpeciesImageName(id));
     this.currentMonImage.setScale(MON_SCALE);
 
-    const previousMonButton = this.add.triangle(0, 0, 0, 15, 30, 0, 30, 30, 0xffffff);
+    const previousMonButton = this.add.triangle(0, 0, 0, 15, 30, 0, 30, 30, 0x000000);
     previousMonButton.setInteractive();
     previousMonButton.on('pointerdown', () => switchMonAnimation(this, 'previous'));
     Phaser.Display.Align.To.LeftCenter(previousMonButton, this.nameLabel, ARROW_GAP);
 
-    const nextMonButton = this.add.triangle(0, 0, 0, 0, 0, 30, 30, 15, 0xffffff);
+    const nextMonButton = this.add.triangle(0, 0, 0, 0, 0, 30, 30, 15, 0x000000);
     nextMonButton.setInteractive();
     nextMonButton.on('pointerdown', () => switchMonAnimation(this, 'next'));
     Phaser.Display.Align.To.RightCenter(nextMonButton, this.nameLabel, ARROW_GAP);
 
-    const natureOptions = { labelText: 'Nature', maxValue: 24 };
+    const natureOptions = { labelText: 'Nature', maxValue: 24, valueToText: toNatureText };
     this.natureSlider = new LineSlider(this, screenCenterX, NATURE_Y, natureOptions);
 
     const ivOptions = { maxValue: 31, defaultValue: 7 };
@@ -183,12 +185,12 @@ export default class StarterSelectionScene extends Phaser.Scene {
       Object.assign({ labelText: `Health IV` }, ivOptions)
     );
 
-    const confirmTextOptions = { fontSize: '36px', fill: '#000000' };
+    const confirmTextOptions = { fontSize: '30px', fill: '#ffffff' };
     const confirmText = this.add.text(screenCenterX, CONFIRM_Y, 'CONFIRM STARTER', confirmTextOptions).setOrigin(0.5);
     confirmText.depth = 1;
 
     this.confirmButton = this.add.rectangle(screenCenterX, CONFIRM_Y, confirmText.width + 20, confirmText.height + 20);
-    this.confirmButton.setStrokeStyle(4, 0x000000);
+    this.confirmButton.setStrokeStyle(2, 0x000000);
     this.confirmButton.setInteractive();
     this.confirmButton.on('pointerdown', () => this.confirmStarter());
 

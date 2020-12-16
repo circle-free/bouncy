@@ -1,757 +1,1210 @@
 {
  "1": {
-  "average": "#7cae96",
-  "hi": "#bed7cb",
-  "lo": "#3e574b"
+  "averageHex": "#7cae96",
+  "average": 8171158,
+  "hiHex": "#aacabb",
+  "hi": 11193019,
+  "loHex": "#517162",
+  "lo": 5337442
  },
  "2": {
-  "average": "#749493",
-  "hi": "#bacac9",
-  "lo": "#3a4a4a"
+  "averageHex": "#749493",
+  "average": 7640211,
+  "hiHex": "#a5b9b9",
+  "hi": 10860985,
+  "loHex": "#4b6060",
+  "lo": 4939872
  },
  "3": {
-  "average": "#848986",
-  "hi": "#c2c4c3",
-  "lo": "#424543"
+  "averageHex": "#848986",
+  "average": 8685958,
+  "hiHex": "#afb2b0",
+  "hi": 11514544,
+  "loHex": "#565957",
+  "lo": 5658967
  },
  "4": {
-  "average": "#d8ac8e",
-  "hi": "#ecd6c7",
-  "lo": "#6c5647"
+  "averageHex": "#d8ac8e",
+  "average": 14199950,
+  "hiHex": "#e6c9b6",
+  "hi": 15124918,
+  "loHex": "#8c705c",
+  "lo": 9203804
  },
  "5": {
-  "average": "#d79282",
-  "hi": "#ebc9c1",
-  "lo": "#6c4941"
+  "averageHex": "#d79282",
+  "average": 14127746,
+  "hiHex": "#e5b8ae",
+  "hi": 15055022,
+  "loHex": "#8c5f55",
+  "lo": 9199445
  },
  "6": {
-  "average": "#ba9d7e",
-  "hi": "#ddcebf",
-  "lo": "#5d4f3f"
+  "averageHex": "#ba9d7e",
+  "average": 12230014,
+  "hiHex": "#d2bfab",
+  "hi": 13811627,
+  "loHex": "#796652",
+  "lo": 7956050
  },
  "7": {
-  "average": "#8eb0b7",
-  "hi": "#c7d8db",
-  "lo": "#47585c"
+  "averageHex": "#8eb0b7",
+  "average": 9351351,
+  "hiHex": "#b6ccd0",
+  "hi": 11979984,
+  "loHex": "#5c7277",
+  "lo": 6058615
  },
  "8": {
-  "average": "#b6c8d2",
-  "hi": "#dbe4e9",
-  "lo": "#5b6469"
+  "averageHex": "#b6c8d2",
+  "average": 11978962,
+  "hiHex": "#d0dbe2",
+  "hi": 13687778,
+  "loHex": "#768289",
+  "lo": 7766665
  },
  "9": {
-  "average": "#9496a0",
-  "hi": "#cacbd0",
-  "lo": "#4a4b50"
+  "averageHex": "#9496a0",
+  "average": 9737888,
+  "hiHex": "#b9bbc1",
+  "hi": 12172225,
+  "loHex": "#606268",
+  "lo": 6316648
  },
  "10": {
-  "average": "#a5b073",
-  "hi": "#d2d8b9",
-  "lo": "#53583a"
+  "averageHex": "#a5b073",
+  "average": 10858611,
+  "hiHex": "#c5cca4",
+  "hi": 12962980,
+  "loHex": "#6b724b",
+  "lo": 7041611
  },
  "11": {
-  "average": "#87b351",
-  "hi": "#c3d9a8",
-  "lo": "#445a29"
+  "averageHex": "#87b351",
+  "average": 8893265,
+  "hiHex": "#b1ce8e",
+  "hi": 11652750,
+  "loHex": "#587435",
+  "lo": 5796917
  },
  "12": {
-  "average": "#c3c5cd",
-  "hi": "#e1e2e6",
-  "lo": "#626367"
+  "averageHex": "#c3c5cd",
+  "average": 12830157,
+  "hiHex": "#d8d9df",
+  "hi": 14211551,
+  "loHex": "#7f8085",
+  "lo": 8355973
  },
  "13": {
-  "average": "#b39177",
-  "hi": "#d9c8bb",
-  "lo": "#5a493c"
+  "averageHex": "#b39177",
+  "average": 11768183,
+  "hiHex": "#ceb8a7",
+  "hi": 13547687,
+  "loHex": "#745e4d",
+  "lo": 7626317
  },
  "14": {
-  "average": "#c2ac66",
-  "hi": "#e1d6b3",
-  "lo": "#615633"
+  "averageHex": "#c2ac66",
+  "average": 12758118,
+  "hiHex": "#d7c99c",
+  "hi": 14141852,
+  "loHex": "#7e7042",
+  "lo": 8286274
  },
  "15": {
-  "average": "#bebab2",
-  "hi": "#dfddd9",
-  "lo": "#5f5d59"
+  "averageHex": "#bebab2",
+  "average": 12499634,
+  "hiHex": "#d5d2cd",
+  "hi": 14013133,
+  "loHex": "#7c7974",
+  "lo": 8157556
  },
  "16": {
-  "average": "#b8a380",
-  "hi": "#dcd1c0",
-  "lo": "#5c5240"
+  "averageHex": "#b8a380",
+  "average": 12100480,
+  "hiHex": "#d1c3ac",
+  "hi": 13747116,
+  "loHex": "#786a53",
+  "lo": 7891539
  },
  "17": {
-  "average": "#c7af8f",
-  "hi": "#e3d7c7",
-  "lo": "#645848"
+  "averageHex": "#c7af8f",
+  "average": 13086607,
+  "hiHex": "#dbcbb6",
+  "hi": 14404534,
+  "loHex": "#81725d",
+  "lo": 8483421
  },
  "18": {
-  "average": "#cbb18f",
-  "hi": "#e5d8c7",
-  "lo": "#665948"
+  "averageHex": "#cbb18f",
+  "average": 13349263,
+  "hiHex": "#ddccb6",
+  "hi": 14535862,
+  "loHex": "#84735d",
+  "lo": 8680285
  },
  "19": {
-  "average": "#a6909f",
-  "hi": "#d3c8cf",
-  "lo": "#534850"
+  "averageHex": "#a6909f",
+  "average": 10915999,
+  "hiHex": "#c5b7c1",
+  "hi": 12957633,
+  "loHex": "#6c5e67",
+  "lo": 7102055
  },
  "20": {
-  "average": "#b29677",
-  "hi": "#d9cbbb",
-  "lo": "#594b3c"
+  "averageHex": "#b29677",
+  "average": 11703927,
+  "hiHex": "#cdbba7",
+  "hi": 13482919,
+  "loHex": "#74624d",
+  "lo": 7627341
  },
  "21": {
-  "average": "#b2857a",
-  "hi": "#d9c2bd",
-  "lo": "#59433d"
+  "averageHex": "#b2857a",
+  "average": 11699578,
+  "hiHex": "#cdb0a9",
+  "hi": 13480105,
+  "loHex": "#74564f",
+  "lo": 7624271
  },
  "22": {
-  "average": "#aa8469",
-  "hi": "#d5c2b4",
-  "lo": "#554235"
+  "averageHex": "#aa8469",
+  "average": 11175017,
+  "hiHex": "#c8af9e",
+  "hi": 13152158,
+  "loHex": "#6f5644",
+  "lo": 7296580
  },
  "23": {
-  "average": "#9b7a8a",
-  "hi": "#cdbdc5",
-  "lo": "#4e3d45"
+  "averageHex": "#9b7a8a",
+  "average": 10189450,
+  "hiHex": "#bea9b3",
+  "hi": 12495283,
+  "loHex": "#654f5a",
+  "lo": 6639450
  },
  "24": {
-  "average": "#867a87",
-  "hi": "#c3bdc3",
-  "lo": "#433d44"
+  "averageHex": "#867a87",
+  "average": 8813191,
+  "hiHex": "#b0a9b1",
+  "hi": 11577777,
+  "loHex": "#574f58",
+  "lo": 5721944
  },
  "25": {
-  "average": "#deca79",
-  "hi": "#efe5bc",
-  "lo": "#6f653d"
+  "averageHex": "#deca79",
+  "average": 14600825,
+  "hiHex": "#eadda8",
+  "hi": 15392168,
+  "loHex": "#90834f",
+  "lo": 9470799
  },
  "26": {
-  "average": "#d1ba87",
-  "hi": "#e8ddc3",
-  "lo": "#695d44"
+  "averageHex": "#d1ba87",
+  "average": 13744775,
+  "hiHex": "#e1d2b1",
+  "hi": 14799537,
+  "loHex": "#887958",
+  "lo": 8943960
  },
  "27": {
-  "average": "#c1ba7d",
-  "hi": "#e0ddbe",
-  "lo": "#615d3f"
+  "averageHex": "#c1ba7d",
+  "average": 12696189,
+  "hiHex": "#d7d2ab",
+  "hi": 14144171,
+  "loHex": "#7d7951",
+  "lo": 8223057
  },
  "28": {
-  "average": "#aa9969",
-  "hi": "#d5ccb4",
-  "lo": "#554d35"
+  "averageHex": "#aa9969",
+  "average": 11180393,
+  "hiHex": "#c8bd9e",
+  "hi": 13155742,
+  "loHex": "#6f6344",
+  "lo": 7299908
  },
  "29": {
-  "average": "#adb9d0",
-  "hi": "#d6dce8",
-  "lo": "#575d68"
+  "averageHex": "#adb9d0",
+  "average": 11385296,
+  "hiHex": "#cad2e0",
+  "hi": 13292256,
+  "loHex": "#707887",
+  "lo": 7370887
  },
  "30": {
-  "average": "#8fafbc",
-  "hi": "#c7d7de",
-  "lo": "#48585e"
+  "averageHex": "#8fafbc",
+  "average": 9416636,
+  "hiHex": "#b6cbd3",
+  "hi": 11979731,
+  "loHex": "#5d727a",
+  "lo": 6124154
  },
  "31": {
-  "average": "#8898a4",
-  "hi": "#c4ccd2",
-  "lo": "#444c52"
+  "averageHex": "#8898a4",
+  "average": 8951972,
+  "hiHex": "#b2bcc4",
+  "hi": 11713732,
+  "loHex": "#58636b",
+  "lo": 5792619
  },
  "32": {
-  "average": "#8f7796",
-  "hi": "#c7bbcb",
-  "lo": "#483c4b"
+  "averageHex": "#8f7796",
+  "average": 9402262,
+  "hiHex": "#b6a7bb",
+  "hi": 11970491,
+  "loHex": "#5d4d62",
+  "lo": 6114658
  },
  "33": {
-  "average": "#9c82a1",
-  "hi": "#cec1d0",
-  "lo": "#4e4151"
+  "averageHex": "#9c82a1",
+  "average": 10257057,
+  "hiHex": "#bfaec2",
+  "hi": 12562114,
+  "loHex": "#655569",
+  "lo": 6641001
  },
  "34": {
-  "average": "#9f87a0",
-  "hi": "#cfc3d0",
-  "lo": "#504450"
+  "averageHex": "#9f87a0",
+  "average": 10454944,
+  "hiHex": "#c1b1c1",
+  "hi": 12693953,
+  "loHex": "#675868",
+  "lo": 6772840
  },
  "35": {
-  "average": "#e3bfc5",
-  "hi": "#f1dfe2",
-  "lo": "#726063"
+  "averageHex": "#e3bfc5",
+  "average": 14925765,
+  "hiHex": "#edd5d9",
+  "hi": 15586777,
+  "loHex": "#947c80",
+  "lo": 9731200
  },
  "36": {
-  "average": "#dfc7c1",
-  "hi": "#efe3e0",
-  "lo": "#706461"
+  "averageHex": "#dfc7c1",
+  "average": 14665665,
+  "hiHex": "#eadbd7",
+  "hi": 15391703,
+  "loHex": "#91817d",
+  "lo": 9535869
  },
  "37": {
-  "average": "#b9775c",
-  "hi": "#dcbbae",
-  "lo": "#5d3c2e"
+  "averageHex": "#b9775c",
+  "average": 12154716,
+  "hiHex": "#d2a795",
+  "hi": 13805461,
+  "loHex": "#784d3c",
+  "lo": 7884092
  },
  "38": {
-  "average": "#e5e0a9",
-  "hi": "#f2f0d4",
-  "lo": "#737055"
+  "averageHex": "#e5e0a9",
+  "average": 15065257,
+  "hiHex": "#eeebc7",
+  "hi": 15657927,
+  "loHex": "#95926e",
+  "lo": 9802350
  },
  "39": {
-  "average": "#d8bac3",
-  "hi": "#ecdde1",
-  "lo": "#6c5d62"
+  "averageHex": "#d8bac3",
+  "average": 14203587,
+  "hiHex": "#e6d2d8",
+  "hi": 15127256,
+  "loHex": "#8c797f",
+  "lo": 9206143
  },
  "40": {
-  "average": "#dbc9cf",
-  "hi": "#ede4e7",
-  "lo": "#6e6568"
+  "averageHex": "#dbc9cf",
+  "average": 14404047,
+  "hiHex": "#e8dce0",
+  "hi": 15260896,
+  "loHex": "#8e8387",
+  "lo": 9339783
  },
  "41": {
-  "average": "#7d6394",
-  "hi": "#beb1ca",
-  "lo": "#3f324a"
+  "averageHex": "#7d6394",
+  "average": 8217492,
+  "hiHex": "#ab9ab9",
+  "hi": 11246265,
+  "loHex": "#514060",
+  "lo": 5324896
  },
  "42": {
-  "average": "#836e95",
-  "hi": "#c1b7ca",
-  "lo": "#42374b"
+  "averageHex": "#836e95",
+  "average": 8613525,
+  "hiHex": "#aea1ba",
+  "hi": 11444666,
+  "loHex": "#554861",
+  "lo": 5589089
  },
  "43": {
-  "average": "#4c8c6a",
-  "hi": "#a6c6b5",
-  "lo": "#264635"
+  "averageHex": "#4c8c6a",
+  "average": 5016682,
+  "hiHex": "#8bb49e",
+  "hi": 9155742,
+  "loHex": "#315b45",
+  "lo": 3234629
  },
  "44": {
-  "average": "#8f7477",
-  "hi": "#c7babb",
-  "lo": "#483a3c"
+  "averageHex": "#8f7477",
+  "average": 9401463,
+  "hiHex": "#b6a5a7",
+  "hi": 11969959,
+  "loHex": "#5d4b4d",
+  "lo": 6114125
  },
  "45": {
-  "average": "#b37388",
-  "hi": "#d9b9c4",
-  "lo": "#5a3a44"
+  "averageHex": "#b37388",
+  "average": 11760520,
+  "hiHex": "#cea4b2",
+  "hi": 13542578,
+  "loHex": "#744b58",
+  "lo": 7621464
  },
  "46": {
-  "average": "#c69079",
-  "hi": "#e3c8bc",
-  "lo": "#63483d"
+  "averageHex": "#c69079",
+  "average": 13013113,
+  "hiHex": "#dab7a8",
+  "hi": 14333864,
+  "loHex": "#815e4f",
+  "lo": 8478287
  },
  "47": {
-  "average": "#c3877a",
-  "hi": "#e1c3bd",
-  "lo": "#62443d"
+  "averageHex": "#c3877a",
+  "average": 12814202,
+  "hiHex": "#d8b1a9",
+  "hi": 14201257,
+  "loHex": "#7f584f",
+  "lo": 8345679
  },
  "48": {
-  "average": "#8e7a9e",
-  "hi": "#c7bdcf",
-  "lo": "#473d4f"
+  "averageHex": "#8e7a9e",
+  "average": 9337502,
+  "hiHex": "#b6a9c0",
+  "hi": 11971008,
+  "loHex": "#5c4f67",
+  "lo": 6049639
  },
  "49": {
-  "average": "#c9bfd2",
-  "hi": "#e4dfe9",
-  "lo": "#656069"
+  "averageHex": "#c9bfd2",
+  "average": 13221842,
+  "hiHex": "#dcd5e2",
+  "hi": 14472674,
+  "loHex": "#837c89",
+  "lo": 8617097
  },
  "50": {
-  "average": "#a48d85",
-  "hi": "#d2c6c2",
-  "lo": "#524743"
+  "averageHex": "#a48d85",
+  "average": 10784133,
+  "hiHex": "#c4b5b0",
+  "hi": 12891568,
+  "loHex": "#6b5c56",
+  "lo": 7035990
  },
  "51": {
-  "average": "#99857d",
-  "hi": "#ccc2be",
-  "lo": "#4d433f"
+  "averageHex": "#99857d",
+  "average": 10061181,
+  "hiHex": "#bdb0ab",
+  "hi": 12431531,
+  "loHex": "#635651",
+  "lo": 6510161
  },
  "52": {
-  "average": "#c8b9a1",
-  "hi": "#e4dcd0",
-  "lo": "#645d51"
+  "averageHex": "#c8b9a1",
+  "average": 13154721,
+  "hiHex": "#dbd2c2",
+  "hi": 14406338,
+  "loHex": "#827869",
+  "lo": 8550505
  },
  "53": {
-  "average": "#d4c4a4",
-  "hi": "#eae2d2",
-  "lo": "#6a6252"
+  "averageHex": "#d4c4a4",
+  "average": 13943972,
+  "hiHex": "#e3d9c4",
+  "hi": 14932420,
+  "loHex": "#8a7f6b",
+  "lo": 9076587
  },
  "54": {
-  "average": "#e0c69b",
-  "hi": "#f0e3cd",
-  "lo": "#70634e"
+  "averageHex": "#e0c69b",
+  "average": 14730907,
+  "hiHex": "#ebdabe",
+  "hi": 15456958,
+  "loHex": "#928165",
+  "lo": 9601381
  },
  "55": {
-  "average": "#7f9fba",
-  "hi": "#bfcfdd",
-  "lo": "#40505d"
+  "averageHex": "#7f9fba",
+  "average": 8363962,
+  "hiHex": "#acc1d2",
+  "hi": 11321810,
+  "loHex": "#536779",
+  "lo": 5465977
  },
  "56": {
-  "average": "#cdbcb0",
-  "hi": "#e6ded8",
-  "lo": "#675e58"
+  "averageHex": "#cdbcb0",
+  "average": 13483184,
+  "hiHex": "#dfd3cc",
+  "hi": 14668748,
+  "loHex": "#857a72",
+  "lo": 8747634
  },
  "57": {
-  "average": "#b39f95",
-  "hi": "#d9cfca",
-  "lo": "#5a504b"
+  "averageHex": "#b39f95",
+  "average": 11771797,
+  "hiHex": "#cec1ba",
+  "hi": 13550010,
+  "loHex": "#746761",
+  "lo": 7628641
  },
  "58": {
-  "average": "#c8aa8f",
-  "hi": "#e4d5c7",
-  "lo": "#645548"
+  "averageHex": "#c8aa8f",
+  "average": 13150863,
+  "hiHex": "#dbc8b6",
+  "hi": 14403766,
+  "loHex": "#826f5d",
+  "lo": 8548189
  },
  "59": {
-  "average": "#c3a384",
-  "hi": "#e1d1c2",
-  "lo": "#625242"
+  "averageHex": "#c3a384",
+  "average": 12821380,
+  "hiHex": "#d8c3af",
+  "hi": 14205871,
+  "loHex": "#7f6a56",
+  "lo": 8350294
  },
  "60": {
-  "average": "#94a5bb",
-  "hi": "#cad2dd",
-  "lo": "#4a535e"
+  "averageHex": "#94a5bb",
+  "average": 9741755,
+  "hiHex": "#b9c5d3",
+  "hi": 12174803,
+  "loHex": "#606b7a",
+  "lo": 6318970
  },
  "61": {
-  "average": "#97a5bc",
-  "hi": "#cbd2de",
-  "lo": "#4c535e"
+  "averageHex": "#97a5bc",
+  "average": 9938364,
+  "hiHex": "#bbc5d3",
+  "hi": 12305875,
+  "loHex": "#626b7a",
+  "lo": 6450042
  },
  "62": {
-  "average": "#93a4bc",
-  "hi": "#c9d2de",
-  "lo": "#4a525e"
+  "averageHex": "#93a4bc",
+  "average": 9675964,
+  "hiHex": "#b9c4d3",
+  "hi": 12174547,
+  "loHex": "#606b7a",
+  "lo": 6318970
  },
  "63": {
-  "average": "#c8b75e",
-  "hi": "#e4dbaf",
-  "lo": "#645c2f"
+  "averageHex": "#c8b75e",
+  "average": 13154142,
+  "hiHex": "#dbd096",
+  "hi": 14405782,
+  "loHex": "#82773d",
+  "lo": 8550205
  },
  "64": {
-  "average": "#baa762",
-  "hi": "#ddd3b1",
-  "lo": "#5d5431"
+  "averageHex": "#baa762",
+  "average": 12232546,
+  "hiHex": "#d2c699",
+  "hi": 13813401,
+  "loHex": "#796d40",
+  "lo": 7957824
  },
  "65": {
-  "average": "#bfae6f",
-  "hi": "#dfd7b7",
-  "lo": "#605738"
+  "averageHex": "#bfae6f",
+  "average": 12562031,
+  "hiHex": "#d5caa1",
+  "hi": 14011041,
+  "loHex": "#7c7148",
+  "lo": 8155464
  },
  "66": {
-  "average": "#9cb4bb",
-  "hi": "#cedadd",
-  "lo": "#4e5a5e"
+  "averageHex": "#9cb4bb",
+  "average": 10269883,
+  "hiHex": "#bfced3",
+  "hi": 12570323,
+  "loHex": "#65757a",
+  "lo": 6649210
  },
  "67": {
-  "average": "#a1a3b1",
-  "hi": "#d0d1d8",
-  "lo": "#515259"
+  "averageHex": "#a1a3b1",
+  "average": 10593201,
+  "hiHex": "#c2c3cc",
+  "hi": 12764108,
+  "loHex": "#696a73",
+  "lo": 6908531
  },
  "68": {
-  "average": "#95a1a9",
-  "hi": "#cad0d4",
-  "lo": "#4b5155"
+  "averageHex": "#95a1a9",
+  "average": 9806249,
+  "hiHex": "#bac2c7",
+  "hi": 12239559,
+  "loHex": "#61696e",
+  "lo": 6383982
  },
  "69": {
-  "average": "#b1c183",
-  "hi": "#d8e0c1",
-  "lo": "#596142"
+  "averageHex": "#b1c183",
+  "average": 11649411,
+  "hiHex": "#ccd7ae",
+  "hi": 13424558,
+  "loHex": "#737d55",
+  "lo": 7568725
  },
  "70": {
-  "average": "#b3bf89",
-  "hi": "#d9dfc4",
-  "lo": "#5a6045"
+  "averageHex": "#b3bf89",
+  "average": 11779977,
+  "hiHex": "#ced5b2",
+  "hi": 13555122,
+  "loHex": "#747c59",
+  "lo": 7634009
  },
  "71": {
-  "average": "#a7be7e",
-  "hi": "#d3dfbf",
-  "lo": "#545f3f"
+  "averageHex": "#a7be7e",
+  "average": 10993278,
+  "hiHex": "#c6d5ab",
+  "hi": 13030827,
+  "loHex": "#6d7c52",
+  "lo": 7175250
  },
  "72": {
-  "average": "#808fa9",
-  "hi": "#c0c7d4",
-  "lo": "#404855"
+  "averageHex": "#808fa9",
+  "average": 8425385,
+  "hiHex": "#acb6c7",
+  "hi": 11318983,
+  "loHex": "#535d6e",
+  "lo": 5463406
  },
  "73": {
-  "average": "#848ea5",
-  "hi": "#c2c7d2",
-  "lo": "#424753"
+  "averageHex": "#848ea5",
+  "average": 8687269,
+  "hiHex": "#afb6c5",
+  "hi": 11515589,
+  "loHex": "#565c6b",
+  "lo": 5659755
  },
  "74": {
-  "average": "#9d9d98",
-  "hi": "#cececc",
-  "lo": "#4f4f4c"
+  "averageHex": "#9d9d98",
+  "average": 10329496,
+  "hiHex": "#bfbfbc",
+  "hi": 12566460,
+  "loHex": "#666663",
+  "lo": 6710883
  },
  "75": {
-  "average": "#9fa297",
-  "hi": "#cfd1cb",
-  "lo": "#50514c"
+  "averageHex": "#9fa297",
+  "average": 10461847,
+  "hiHex": "#c1c3bb",
+  "hi": 12698555,
+  "loHex": "#676962",
+  "lo": 6777186
  },
  "76": {
-  "average": "#857f7c",
-  "hi": "#c2bfbe",
-  "lo": "#43403e"
+  "averageHex": "#857f7c",
+  "average": 8748924,
+  "hiHex": "#b0acaa",
+  "hi": 11578538,
+  "loHex": "#565351",
+  "lo": 5657425
  },
  "77": {
-  "average": "#e4bf94",
-  "hi": "#f2dfca",
-  "lo": "#72604a"
+  "averageHex": "#e4bf94",
+  "average": 14991252,
+  "hiHex": "#edd5b9",
+  "hi": 15586745,
+  "loHex": "#947c60",
+  "lo": 9731168
  },
  "78": {
-  "average": "#e4b991",
-  "hi": "#f2dcc8",
-  "lo": "#725d49"
+  "averageHex": "#e4b991",
+  "average": 14989713,
+  "hiHex": "#edd2b8",
+  "hi": 15585976,
+  "loHex": "#94785e",
+  "lo": 9730142
  },
  "79": {
-  "average": "#d5a8b2",
-  "hi": "#ead4d9",
-  "lo": "#6b5459"
+  "averageHex": "#d5a8b2",
+  "average": 14002354,
+  "hiHex": "#e4c6cd",
+  "hi": 14993101,
+  "loHex": "#8a6d74",
+  "lo": 9071988
  },
  "80": {
-  "average": "#cba6b0",
-  "hi": "#e5d3d8",
-  "lo": "#665358"
+  "averageHex": "#cba6b0",
+  "average": 13346480,
+  "hiHex": "#ddc5cc",
+  "hi": 14534092,
+  "loHex": "#846c72",
+  "lo": 8678514
  },
  "81": {
-  "average": "#a6b0b5",
-  "hi": "#d3d8da",
-  "lo": "#53585b"
+  "averageHex": "#a6b0b5",
+  "average": 10924213,
+  "hiHex": "#c5cccf",
+  "hi": 12963023,
+  "loHex": "#6c7276",
+  "lo": 7107190
  },
  "82": {
-  "average": "#a0a8b2",
-  "hi": "#d0d4d9",
-  "lo": "#505459"
+  "averageHex": "#a0a8b2",
+  "average": 10528946,
+  "hiHex": "#c1c6cd",
+  "hi": 12699341,
+  "loHex": "#686d74",
+  "lo": 6843764
  },
  "83": {
-  "average": "#ab9d8a",
-  "hi": "#d5cec5",
-  "lo": "#564f45"
+  "averageHex": "#ab9d8a",
+  "average": 11246986,
+  "hiHex": "#c8bfb3",
+  "hi": 13156275,
+  "loHex": "#6f665a",
+  "lo": 7300698
  },
  "84": {
-  "average": "#a88b75",
-  "hi": "#d4c5ba",
-  "lo": "#54463b"
+  "averageHex": "#a88b75",
+  "average": 11045749,
+  "hiHex": "#c6b4a5",
+  "hi": 13022373,
+  "loHex": "#6d5a4c",
+  "lo": 7166540
  },
  "85": {
-  "average": "#a5887c",
-  "hi": "#d2c4be",
-  "lo": "#53443e"
+  "averageHex": "#a5887c",
+  "average": 10848380,
+  "hiHex": "#c5b2aa",
+  "hi": 12956330,
+  "loHex": "#6b5851",
+  "lo": 7034961
  },
  "86": {
-  "average": "#d0d6de",
-  "hi": "#e8ebef",
-  "lo": "#686b6f"
+  "averageHex": "#d0d6de",
+  "average": 13686494,
+  "hiHex": "#e0e4ea",
+  "hi": 14738666,
+  "loHex": "#878b90",
+  "lo": 8883088
  },
  "87": {
-  "average": "#d9dfe7",
-  "hi": "#eceff3",
-  "lo": "#6d7074"
+  "averageHex": "#d9dfe7",
+  "average": 14278631,
+  "hiHex": "#e6eaef",
+  "hi": 15133423,
+  "loHex": "#8d9196",
+  "lo": 9277846
  },
  "88": {
-  "average": "#95839f",
-  "hi": "#cac1cf",
-  "lo": "#4b4250"
+  "averageHex": "#95839f",
+  "average": 9798559,
+  "hiHex": "#baaec1",
+  "hi": 12234433,
+  "loHex": "#615567",
+  "lo": 6378855
  },
  "89": {
-  "average": "#8e8192",
-  "hi": "#c7c0c9",
-  "lo": "#474149"
+  "averageHex": "#8e8192",
+  "average": 9339282,
+  "hiHex": "#b6adb8",
+  "hi": 11972024,
+  "loHex": "#5c545f",
+  "lo": 6050911
  },
  "90": {
-  "average": "#8f86a2",
-  "hi": "#c7c3d1",
-  "lo": "#484351"
+  "averageHex": "#8f86a2",
+  "average": 9406114,
+  "hiHex": "#b6b0c3",
+  "hi": 11972803,
+  "loHex": "#5d5769",
+  "lo": 6117225
  },
  "91": {
-  "average": "#807d92",
-  "hi": "#c0bec9",
-  "lo": "#403f49"
+  "averageHex": "#807d92",
+  "average": 8420754,
+  "hiHex": "#acabb8",
+  "hi": 11316152,
+  "loHex": "#53515f",
+  "lo": 5460319
  },
  "92": {
-  "average": "#8b7d89",
-  "hi": "#c5bec4",
-  "lo": "#463f45"
+  "averageHex": "#8b7d89",
+  "average": 9141641,
+  "hiHex": "#b4abb2",
+  "hi": 11840434,
+  "loHex": "#5a5159",
+  "lo": 5919065
  },
  "93": {
-  "average": "#766c80",
-  "hi": "#bbb6c0",
-  "lo": "#3b3640"
+  "averageHex": "#766c80",
+  "average": 7761024,
+  "hiHex": "#a69fac",
+  "hi": 10919852,
+  "loHex": "#4d4653",
+  "lo": 5064275
  },
  "94": {
-  "average": "#7b7090",
-  "hi": "#bdb8c8",
-  "lo": "#3e3848"
+  "averageHex": "#7b7090",
+  "average": 8089744,
+  "hiHex": "#a9a2b7",
+  "hi": 11117239,
+  "loHex": "#50495e",
+  "lo": 5261662
  },
  "95": {
-  "average": "#85848f",
-  "hi": "#c2c2c7",
-  "lo": "#434248"
+  "averageHex": "#85848f",
+  "average": 8750223,
+  "hiHex": "#b0afb6",
+  "hi": 11579318,
+  "loHex": "#56565d",
+  "lo": 5658205
  },
  "96": {
-  "average": "#baa05e",
-  "hi": "#ddd0af",
-  "lo": "#5d502f"
+  "averageHex": "#baa05e",
+  "average": 12230750,
+  "hiHex": "#d2c196",
+  "hi": 13812118,
+  "loHex": "#79683d",
+  "lo": 7956541
  },
  "97": {
-  "average": "#d6c172",
-  "hi": "#ebe0b9",
-  "lo": "#6b6139"
+  "averageHex": "#d6c172",
+  "average": 14074226,
+  "hiHex": "#e4d7a3",
+  "hi": 14997411,
+  "loHex": "#8b7d4a",
+  "lo": 9141578
  },
  "98": {
-  "average": "#c89e8d",
-  "hi": "#e4cfc6",
-  "lo": "#644f47"
+  "averageHex": "#c89e8d",
+  "average": 13147789,
+  "hiHex": "#dbc0b5",
+  "hi": 14401717,
+  "loHex": "#82675c",
+  "lo": 8546140
  },
  "99": {
-  "average": "#c29685",
-  "hi": "#e1cbc2",
-  "lo": "#614b43"
+  "averageHex": "#c29685",
+  "average": 12752517,
+  "hiHex": "#d7bbb0",
+  "hi": 14138288,
+  "loHex": "#7e6256",
+  "lo": 8282710
  },
  "100": {
-  "average": "#d0a9b3",
-  "hi": "#e8d4d9",
-  "lo": "#68555a"
+  "averageHex": "#d0a9b3",
+  "average": 13674931,
+  "hiHex": "#e0c7ce",
+  "hi": 14731214,
+  "loHex": "#876e74",
+  "lo": 8875636
  },
  "101": {
-  "average": "#cecad2",
-  "hi": "#e7e5e9",
-  "lo": "#676569"
+  "averageHex": "#cecad2",
+  "average": 13552338,
+  "hiHex": "#dfdde2",
+  "hi": 14671330,
+  "loHex": "#868389",
+  "lo": 8815497
  },
  "102": {
-  "average": "#ddc6c8",
-  "hi": "#eee3e4",
-  "lo": "#6f6364"
+  "averageHex": "#ddc6c8",
+  "average": 14534344,
+  "hiHex": "#e9dadb",
+  "hi": 15325915,
+  "loHex": "#908182",
+  "lo": 9470338
  },
  "103": {
-  "average": "#96a787",
-  "hi": "#cbd3c3",
-  "lo": "#4b5444"
+  "averageHex": "#96a787",
+  "average": 9873287,
+  "hiHex": "#bbc6b1",
+  "hi": 12306097,
+  "loHex": "#626d58",
+  "lo": 6450520
  },
  "104": {
-  "average": "#c0b9ad",
-  "hi": "#e0dcd6",
-  "lo": "#605d57"
+  "averageHex": "#c0b9ad",
+  "average": 12630445,
+  "hiHex": "#d6d2ca",
+  "hi": 14078666,
+  "loHex": "#7d7870",
+  "lo": 8222832
  },
  "105": {
-  "average": "#bbb1a8",
-  "hi": "#ddd8d4",
-  "lo": "#5e5954"
+  "averageHex": "#bbb1a8",
+  "average": 12300712,
+  "hiHex": "#d3ccc6",
+  "hi": 13880518,
+  "loHex": "#7a736d",
+  "lo": 8024941
  },
  "106": {
-  "average": "#aea099",
-  "hi": "#d7d0cc",
-  "lo": "#57504d"
+  "averageHex": "#aea099",
+  "average": 11444377,
+  "hiHex": "#cac1bd",
+  "hi": 13287869,
+  "loHex": "#716863",
+  "lo": 7432291
  },
  "107": {
-  "average": "#ac9695",
-  "hi": "#d6cbca",
-  "lo": "#564b4b"
+  "averageHex": "#ac9695",
+  "average": 11310741,
+  "hiHex": "#c9bbba",
+  "hi": 13220794,
+  "loHex": "#706261",
+  "lo": 7365217
  },
  "108": {
-  "average": "#d4aaad",
-  "hi": "#ead5d6",
-  "lo": "#6a5557"
+  "averageHex": "#d4aaad",
+  "average": 13937325,
+  "hiHex": "#e3c8ca",
+  "hi": 14928074,
+  "loHex": "#8a6f70",
+  "lo": 9072496
  },
  "109": {
-  "average": "#a5a1a6",
-  "hi": "#d2d0d3",
-  "lo": "#535153"
+  "averageHex": "#a5a1a6",
+  "average": 10854822,
+  "hiHex": "#c5c2c5",
+  "hi": 12960453,
+  "loHex": "#6b696c",
+  "lo": 7039340
  },
  "110": {
-  "average": "#9a95a1",
-  "hi": "#cdcad0",
-  "lo": "#4d4b51"
+  "averageHex": "#9a95a1",
+  "average": 10130849,
+  "hiHex": "#bdbac2",
+  "hi": 12434114,
+  "loHex": "#646169",
+  "lo": 6578537
  },
  "111": {
-  "average": "#849198",
-  "hi": "#c2c8cc",
-  "lo": "#42494c"
+  "averageHex": "#849198",
+  "average": 8688024,
+  "hiHex": "#afb8bc",
+  "hi": 11516092,
+  "loHex": "#565e63",
+  "lo": 5660259
  },
  "112": {
-  "average": "#979aa3",
-  "hi": "#cbcdd1",
-  "lo": "#4c4d52"
+  "averageHex": "#979aa3",
+  "average": 9935523,
+  "hiHex": "#bbbdc3",
+  "hi": 12303811,
+  "loHex": "#62646a",
+  "lo": 6448234
  },
  "113": {
-  "average": "#debac8",
-  "hi": "#efdde4",
-  "lo": "#6f5d64"
+  "averageHex": "#debac8",
+  "average": 14596808,
+  "hiHex": "#ead2db",
+  "hi": 15389403,
+  "loHex": "#907982",
+  "lo": 9468290
  },
  "114": {
-  "average": "#798396",
-  "hi": "#bcc1cb",
-  "lo": "#3d424b"
+  "averageHex": "#798396",
+  "average": 7963542,
+  "hiHex": "#a8aebb",
+  "hi": 11054779,
+  "loHex": "#4f5562",
+  "lo": 5199202
  },
  "115": {
-  "average": "#af9f90",
-  "hi": "#d7cfc8",
-  "lo": "#585048"
+  "averageHex": "#af9f90",
+  "average": 11509648,
+  "hiHex": "#cbc1b7",
+  "hi": 13353399,
+  "loHex": "#72675e",
+  "lo": 7497566
  },
  "116": {
-  "average": "#a2c7ce",
-  "hi": "#d1e3e7",
-  "lo": "#516467"
+  "averageHex": "#a2c7ce",
+  "average": 10667982,
+  "hiHex": "#c3dbdf",
+  "hi": 12835807,
+  "loHex": "#698186",
+  "lo": 6914438
  },
  "117": {
-  "average": "#8ebec5",
-  "hi": "#c7dfe2",
-  "lo": "#475f63"
+  "averageHex": "#8ebec5",
+  "average": 9354949,
+  "hiHex": "#b6d5d9",
+  "hi": 11982297,
+  "loHex": "#5c7c80",
+  "lo": 6061184
  },
  "118": {
-  "average": "#d6ccd0",
-  "hi": "#ebe6e8",
-  "lo": "#6b6668"
+  "averageHex": "#d6ccd0",
+  "average": 14077136,
+  "hiHex": "#e4dee0",
+  "hi": 14999264,
+  "loHex": "#8b8587",
+  "lo": 9143687
  },
  "119": {
-  "average": "#c9c0c1",
-  "hi": "#e4e0e0",
-  "lo": "#656061"
+  "averageHex": "#c9c0c1",
+  "average": 13222081,
+  "hiHex": "#dcd6d7",
+  "hi": 14472919,
+  "loHex": "#837d7d",
+  "lo": 8617341
  },
  "120": {
-  "average": "#a49069",
-  "hi": "#d2c8b4",
-  "lo": "#524835"
+  "averageHex": "#a49069",
+  "average": 10784873,
+  "hiHex": "#c4b79e",
+  "hi": 12892062,
+  "loHex": "#6b5e44",
+  "lo": 7036484
  },
  "121": {
-  "average": "#a2959c",
-  "hi": "#d1cace",
-  "lo": "#514b4e"
+  "averageHex": "#a2959c",
+  "average": 10655132,
+  "hiHex": "#c3babf",
+  "hi": 12827327,
+  "loHex": "#696165",
+  "lo": 6906213
  },
  "122": {
-  "average": "#baa3ad",
-  "hi": "#ddd1d6",
-  "lo": "#5d5257"
+  "averageHex": "#baa3ad",
+  "average": 12231597,
+  "hiHex": "#d2c3ca",
+  "hi": 13812682,
+  "loHex": "#796a70",
+  "lo": 7957104
  },
  "123": {
-  "average": "#a9bea4",
-  "hi": "#d4dfd2",
-  "lo": "#555f52"
+  "averageHex": "#a9bea4",
+  "average": 11124388,
+  "hiHex": "#c7d5c4",
+  "hi": 13096388,
+  "loHex": "#6e7c6b",
+  "lo": 7240811
  },
  "124": {
-  "average": "#c0968d",
-  "hi": "#e0cbc6",
-  "lo": "#604b47"
+  "averageHex": "#c0968d",
+  "average": 12621453,
+  "hiHex": "#d6bbb5",
+  "hi": 14072757,
+  "loHex": "#7d625c",
+  "lo": 8217180
  },
  "125": {
-  "average": "#b2a16c",
-  "hi": "#d9d0b6",
-  "lo": "#595136"
+  "averageHex": "#b2a16c",
+  "average": 11706732,
+  "hiHex": "#cdc29f",
+  "hi": 13484703,
+  "loHex": "#746946",
+  "lo": 7629126
  },
  "126": {
-  "average": "#c69161",
-  "hi": "#e3c8b0",
-  "lo": "#634931"
+  "averageHex": "#c69161",
+  "average": 13013345,
+  "hiHex": "#dab898",
+  "hi": 14334104,
+  "loHex": "#815e3f",
+  "lo": 8478271
  },
  "127": {
-  "average": "#9c9395",
-  "hi": "#cec9ca",
-  "lo": "#4e4a4b"
+  "averageHex": "#9c9395",
+  "average": 10261397,
+  "hiHex": "#bfb9ba",
+  "hi": 12564922,
+  "loHex": "#656061",
+  "lo": 6643809
  },
  "128": {
-  "average": "#9e826c",
-  "hi": "#cfc1b6",
-  "lo": "#4f4136"
+  "averageHex": "#9e826c",
+  "average": 10388076,
+  "hiHex": "#c0ae9f",
+  "hi": 12627615,
+  "loHex": "#675546",
+  "lo": 6772038
  },
  "129": {
-  "average": "#d29e8a",
-  "hi": "#e9cfc5",
-  "lo": "#694f45"
+  "averageHex": "#d29e8a",
+  "average": 13803146,
+  "hiHex": "#e2c0b3",
+  "hi": 14860467,
+  "loHex": "#89675a",
+  "lo": 9004890
  },
  "130": {
-  "average": "#8693a6",
-  "hi": "#c3c9d3",
-  "lo": "#434a53"
+  "averageHex": "#8693a6",
+  "average": 8819622,
+  "hiHex": "#b0b9c5",
+  "hi": 11581893,
+  "loHex": "#57606c",
+  "lo": 5726316
  },
  "131": {
-  "average": "#84a6bc",
-  "hi": "#c2d3de",
-  "lo": "#42535e"
+  "averageHex": "#84a6bc",
+  "average": 8693436,
+  "hiHex": "#afc5d3",
+  "hi": 11519443,
+  "loHex": "#566c7a",
+  "lo": 5663866
  },
  "132": {
-  "average": "#b7a6c8",
-  "hi": "#dbd3e4",
-  "lo": "#5c5364"
+  "averageHex": "#b7a6c8",
+  "average": 12035784,
+  "hiHex": "#d0c5db",
+  "hi": 13682139,
+  "loHex": "#776c82",
+  "lo": 7826562
  },
  "133": {
-  "average": "#ac8d6b",
-  "hi": "#d6c6b5",
-  "lo": "#564736"
+  "averageHex": "#ac8d6b",
+  "average": 11308395,
+  "hiHex": "#c9b59f",
+  "hi": 13219231,
+  "loHex": "#705c46",
+  "lo": 7363654
  },
  "134": {
-  "average": "#89b2bb",
-  "hi": "#c4d9dd",
-  "lo": "#45595e"
+  "averageHex": "#89b2bb",
+  "average": 9024187,
+  "hiHex": "#b2cdd3",
+  "hi": 11718099,
+  "loHex": "#59747a",
+  "lo": 5862522
  },
  "135": {
-  "average": "#d5bd85",
-  "hi": "#eadec2",
-  "lo": "#6b5f43"
+  "averageHex": "#d5bd85",
+  "average": 14007685,
+  "hiHex": "#e4d4b0",
+  "hi": 14996656,
+  "loHex": "#8a7b56",
+  "lo": 9075542
  },
  "136": {
-  "average": "#c99e70",
-  "hi": "#e4cfb8",
-  "lo": "#654f38"
+  "averageHex": "#c99e70",
+  "average": 13213296,
+  "hiHex": "#dcc0a2",
+  "hi": 14467234,
+  "loHex": "#836749",
+  "lo": 8611657
  },
  "137": {
-  "average": "#a19ca2",
-  "hi": "#d0ced1",
-  "lo": "#514e51"
+  "averageHex": "#a19ca2",
+  "average": 10591394,
+  "hiHex": "#c2bfc3",
+  "hi": 12763075,
+  "loHex": "#696569",
+  "lo": 6907241
  },
  "138": {
-  "average": "#b4bdaf",
-  "hi": "#daded7",
-  "lo": "#5a5f58"
+  "averageHex": "#b4bdaf",
+  "average": 11845039,
+  "hiHex": "#ced4cb",
+  "hi": 13554891,
+  "loHex": "#757b72",
+  "lo": 7699314
  },
  "139": {
-  "average": "#a0aea7",
-  "hi": "#d0d7d3",
-  "lo": "#505754"
+  "averageHex": "#a0aea7",
+  "average": 10530471,
+  "hiHex": "#c1cac6",
+  "hi": 12700358,
+  "loHex": "#68716d",
+  "lo": 6844781
  },
  "140": {
-  "average": "#967358",
-  "hi": "#cbb9ac",
-  "lo": "#4b3a2c"
+  "averageHex": "#967358",
+  "average": 9859928,
+  "hiHex": "#bba492",
+  "hi": 12297362,
+  "loHex": "#624b39",
+  "lo": 6441785
  },
  "141": {
-  "average": "#9c8879",
-  "hi": "#cec4bc",
-  "lo": "#4e443d"
+  "averageHex": "#9c8879",
+  "average": 10258553,
+  "hiHex": "#bfb2a8",
+  "hi": 12563112,
+  "loHex": "#65584f",
+  "lo": 6641743
  },
  "142": {
-  "average": "#9e94a9",
-  "hi": "#cfcad4",
-  "lo": "#4f4a55"
+  "averageHex": "#9e94a9",
+  "average": 10392745,
+  "hiHex": "#c0b9c7",
+  "hi": 12630471,
+  "loHex": "#67606e",
+  "lo": 6774894
  },
  "143": {
-  "average": "#b3b5b3",
-  "hi": "#d9dad9",
-  "lo": "#5a5b5a"
+  "averageHex": "#b3b5b3",
+  "average": 11777459,
+  "hiHex": "#cecfce",
+  "hi": 13553614,
+  "loHex": "#747674",
+  "lo": 7632500
  },
  "144": {
-  "average": "#80a1be",
-  "hi": "#c0d0df",
-  "lo": "#40515f"
+  "averageHex": "#80a1be",
+  "average": 8430014,
+  "hiHex": "#acc2d5",
+  "hi": 11322069,
+  "loHex": "#53697c",
+  "lo": 5466492
  },
  "145": {
-  "average": "#cab470",
-  "hi": "#e5dab8",
-  "lo": "#655a38"
+  "averageHex": "#cab470",
+  "average": 13284464,
+  "hiHex": "#ddcea2",
+  "hi": 14536354,
+  "loHex": "#837549",
+  "lo": 8615241
  },
  "146": {
-  "average": "#e3ae70",
-  "hi": "#f1d7b8",
-  "lo": "#725738"
+  "averageHex": "#e3ae70",
+  "average": 14921328,
+  "hiHex": "#edcaa2",
+  "hi": 15583906,
+  "loHex": "#947149",
+  "lo": 9728329
  },
  "147": {
-  "average": "#b9becc",
-  "hi": "#dcdfe6",
-  "lo": "#5d5f66"
+  "averageHex": "#b9becc",
+  "average": 12173004,
+  "hiHex": "#d2d5de",
+  "hi": 13817310,
+  "loHex": "#787c85",
+  "lo": 7896197
  },
  "148": {
-  "average": "#abbed2",
-  "hi": "#d5dfe9",
-  "lo": "#565f69"
+  "averageHex": "#abbed2",
+  "average": 11255506,
+  "hiHex": "#c8d5e2",
+  "hi": 13161954,
+  "loHex": "#6f7c89",
+  "lo": 7306377
  },
  "149": {
-  "average": "#ceb187",
-  "hi": "#e7d8c3",
-  "lo": "#675944"
+  "averageHex": "#ceb187",
+  "average": 13545863,
+  "hiHex": "#dfccb1",
+  "hi": 14666929,
+  "loHex": "#867358",
+  "lo": 8811352
  },
  "150": {
-  "average": "#b7acb9",
-  "hi": "#dbd6dc",
-  "lo": "#5c565d"
+  "averageHex": "#b7acb9",
+  "average": 12037305,
+  "hiHex": "#d0c9d2",
+  "hi": 13683154,
+  "loHex": "#777078",
+  "lo": 7827576
  },
  "151": {
-  "average": "#d5b1bf",
-  "hi": "#ead8df",
-  "lo": "#6b5960"
+  "averageHex": "#d5b1bf",
+  "average": 14004671,
+  "hiHex": "#e4ccd5",
+  "hi": 14994645,
+  "loHex": "#8a737c",
+  "lo": 9073532
  }
 }

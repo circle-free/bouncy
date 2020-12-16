@@ -12,6 +12,7 @@ export default class MenuScene extends Phaser.Scene {
 
   create() {
     const screenCenterX = this.scale.width / 2;
+    this.cameras.main.setBackgroundColor('#ffffff');
     const textOptions = { fontSize: '36px', fill: '#000000' };
 
     const partyText = this.add.text(screenCenterX, PARTY_Y, 'MY MON', textOptions).setOrigin(0.5).setDepth(1);

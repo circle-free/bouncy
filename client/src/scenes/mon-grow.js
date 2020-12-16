@@ -128,8 +128,8 @@ export default class MonGrowScene extends Phaser.Scene {
       action: () => (this.mode === 'level' ? this.levelUp() : this.evolve()),
     });
 
-    const infoText = 'Select moves to learn.';
-    this.dialogBox.displayButtons(buttonActions, infoText);
+    const promptText = 'Select moves to learn.';
+    this.dialogBox.displayButtons(promptText, buttonActions);
   }
 
   showMoveSlots(selectedNewMoveId) {
@@ -153,8 +153,8 @@ export default class MonGrowScene extends Phaser.Scene {
       action: () => this.showNewMoves(),
     });
 
-    const infoText = 'Select move to be replaced.';
-    this.dialogBox.displayButtons(buttonActions, infoText);
+    const promptText = 'Select move to be replaced.';
+    this.dialogBox.displayButtons(promptText, buttonActions);
   }
 
   addMoveLearn({ index, id }) {

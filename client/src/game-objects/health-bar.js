@@ -1,13 +1,18 @@
 import Phaser from 'phaser';
 
+const WIDTH = 240;
+const HEIGHT = 90;
 const BAR_HEIGHT = 12;
-const BAR_WIDTH = 200;
 const RED_PERCENTAGE = 0.25;
 const YELLOW_PERCENTAGE = 0.5;
+const HP_LABEL_WIDTH = 30;
+const BAR_GREEN = 0x55ff22;
+const BAR_YELLOW = 0xffd221;
+const BAR_RED = 0xff233f;
+const BAR_BLUE = 0x5c3eff;
+const PADDING = 10;
 
-const createBar = (scene) => scene.add.rectangle(250, 100, BAR_WIDTH, BAR_HEIGHT, 0x008000);
-
-const getNewHp = ({ maxHp, hp }, delta) => {
+const getNewHp = ({ hp, maxHp }, delta) => {
   const newHp = hp + delta;
 
   if (newHp > maxHp) return maxHp;
@@ -18,44 +23,63 @@ const getNewHp = ({ maxHp, hp }, delta) => {
 };
 
 export default class HealthBar extends Phaser.GameObjects.Container {
-  constructor(scene, x, y, monData) {
-    super(scene, x, y);
+  constructor(scene, x, y, monData, options = {}) {
+    const { fillColor = 0xffffff } = options;
 
+    super(scene, x, y);
     this.scene = scene;
 
-    const bar = createBar(scene);
-    this.bar = bar;
-    this.add(bar);
+    const { stats, currentHealth, level, species } = monData;
 
-    const barLabelOptions = { fontSize: '20px', fill: '#ffffff' };
-    const barLabel = this.scene.add.text(0, 0, 'HP: ', barLabelOptions);
-    Phaser.Display.Align.To.LeftCenter(barLabel, this.bar);
-    this.add(barLabel);
+    this.maxHp = stats.maxHealth;
+    this.hp = currentHealth;
 
-    const levelLabelOptions = { fontSize: '30px', fill: '#ffffff' };
-    const levelLabel = this.scene.add.text(0, 0, `Lv${monData.level}`, levelLabelOptions);
-    Phaser.Display.Align.To.TopRight(levelLabel, this.bar, 0, 25);
-    this.add(levelLabel);
+    const background = scene.add.rectangle(0, 0, WIDTH, HEIGHT, fillColor);
+    background.setStrokeStyle(2, 0x000000);
+    background.setOrigin(0, 0);
+    this.add(background);
 
-    const monNameOptions = { fontSize: '30px', fill: '#ffffff' };
-    const monName = this.scene.add.text(0, 0, monData.species.name.toUpperCase(), monNameOptions);
-    Phaser.Display.Align.To.TopLeft(monName, this.bar, 125, 25);
+    const topLine = (HEIGHT >> 1) - BAR_HEIGHT;
+    const emptyBarWidth = WIDTH - (PADDING * 2) - HP_LABEL_WIDTH;
+    const fullBarWidth = emptyBarWidth - 6;
+
+    const monNameOptions = { fontSize: '24px', fill: '#000000' };
+    const monName = scene.add.text(PADDING, topLine, species.name.toUpperCase(), monNameOptions);
+    monName.setOrigin(0, 1);
     this.add(monName);
 
-    this.maxHp = monData.maxHealth;
-    this.hp = monData.currentHealth;
-    const hpLabelOptions = { fontSize: '20px', fill: '#ffffff' };
-    const hpLabel = this.scene.add.text(0, 0, `${this.hp}/${this.maxHp}`, hpLabelOptions);
-    Phaser.Display.Align.To.BottomRight(hpLabel, this.bar);
+    const levelLabelOptions = { fontSize: '18px', fill: '#000000' };
+    const levelLabel = scene.add.text(WIDTH - PADDING, topLine, `Lv.${level}`, levelLabelOptions);
+    levelLabel.setOrigin(1, 1);
+    this.add(levelLabel);
+
+    const hpLabelOptions = { fontSize: '18px', fill: '#000000' };
+    const hpLabel = scene.add.text(PADDING, HEIGHT >> 1, 'HP', hpLabelOptions);
+    hpLabel.setOrigin(0, 0.5);
     this.add(hpLabel);
-    this.hpLabel = hpLabel;
 
-    this.bar.width = (BAR_WIDTH * this.hp) / this.maxHp;
+    const emptyBar = scene.add.rectangle(PADDING + HP_LABEL_WIDTH, HEIGHT >> 1, emptyBarWidth, BAR_HEIGHT, 0xffffff);
+    emptyBar.setStrokeStyle(2, 0x000000);
+    emptyBar.setOrigin(0, 0.5);
+    this.add(emptyBar);
 
-    this.scene.add.existing(this);
+    this.bar = scene.add.rectangle(13 + HP_LABEL_WIDTH, HEIGHT >> 1, fullBarWidth, BAR_HEIGHT - 6, BAR_GREEN);
+    this.bar.setOrigin(0, 0.5);
+    this.add(this.bar);
+
+    this.bar.width = (fullBarWidth * this.hp) / this.maxHp;
+
+    const hpValueOptions = { fontSize: '18px', fill: '#000000' };
+    this.hpValue = scene.add.text(WIDTH - PADDING, (HEIGHT >> 1) + BAR_HEIGHT, `${this.hp}/${this.maxHp}`, hpValueOptions);
+    this.hpValue.setOrigin(1, 0);
+    this.add(this.hpValue);
+
+    scene.add.existing(this);
   }
 
   updateHealth(delta) {
+    const emptyBarWidth = WIDTH - (2 * PADDING) - HP_LABEL_WIDTH;
+    const fullBarWidth = emptyBarWidth - 6;
     const newHp = getNewHp(this, delta);
 
     return new Promise((resolve) => {
@@ -65,7 +89,7 @@ export default class HealthBar extends Phaser.GameObjects.Container {
         ease: 'linear',
         props: {
           width: {
-            value: () => BAR_WIDTH * (newHp / this.maxHp),
+            value: () => (fullBarWidth * newHp) / this.maxHp,
           },
         },
         onComplete: () => {
@@ -75,19 +99,19 @@ export default class HealthBar extends Phaser.GameObjects.Container {
         onUpdate: (tween) => {
           const currentHp = getNewHp(this, Math.floor(delta * tween.progress));
 
-          this.hpLabel.setText(`${currentHp}/${this.maxHp}`);
+          this.hpValue.setText(`${currentHp}/${this.maxHp}`);
 
           if (currentHp / this.maxHp < RED_PERCENTAGE) {
-            this.bar.fillColor = 0xff0000;
+            this.bar.fillColor = BAR_RED;
             return;
           }
 
           if (currentHp / this.maxHp < YELLOW_PERCENTAGE) {
-            this.bar.fillColor = 0xffff00;
+            this.bar.fillColor = BAR_YELLOW;
             return;
           }
 
-          this.bar.fillColor = 0x008000;
+          this.bar.fillColor = BAR_GREEN;
         },
       });
     });
