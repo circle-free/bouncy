@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import Web3 from 'web3';
 import OptimisticMonMon from 'mon-mon';
+import { getStoredData } from '../utils';
 
 const getAccount = () =>
   new Promise((resolve, reject) => {
@@ -17,21 +18,17 @@ const setUpOptimisticMonMon = async () => {
   const user = await getAccount();
 
   const gameOptions = {
-    address: '0x060659Fd86AE0684ED2daeDC9094EC339243d633',
+    address: '0x7c11e0F269255575F50DAd1929092F96e15ea64a',
   };
 
   const oriOptions = {
-    address: '0x2C45089b97cC386615053Fb2A7F088E37e16997A',
+    address: '0x7D1630CBA6723577372861a767A94140F61b03e4',
     web3: window.web3,
     requiredBond: '1000000000000000000',
     lockTime: '600',
   };
 
-  const exportedStateString = localStorage.getItem('exported-optimistic-mon-mon-state');
-
-  const exportedState = exportedStateString ? JSON.parse(exportedStateString) : {};
-
-  const optimisticMonMon = new OptimisticMonMon(user, gameOptions, oriOptions, exportedState);
+  const optimisticMonMon = new OptimisticMonMon(user, gameOptions, oriOptions, getStoredData());
 
   if (await optimisticMonMon.isInitialized()) {
     console.log('ORI account already initialized.');
