@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-import Slider from 'phaser3-rex-plugins/plugins/slider.js';
 
 export default class LineSlider extends Phaser.GameObjects.Container {
   constructor(scene, x, y, options = {}) {
@@ -10,19 +9,21 @@ export default class LineSlider extends Phaser.GameObjects.Container {
       labelText = '',
       cursorColor = 0xffffff,
       valueToText = (i) => i,
-      width = 260,
+      width = 500,
+      fontSize = '4em',
+      cursorSize = 50,
     } = options;
 
     super(scene, x, y);
 
-    this.cursor = scene.add.rectangle(0, 25, 12, 12, cursorColor);
+    this.cursor = scene.add.rectangle(0, 25, cursorSize / 2, cursorSize / 2, cursorColor);
 
-    const labelTextOptions = { fontSize: '16px', fill: '#000000' };
-    const label = scene.add.text(-(width / 2), 35, labelText, labelTextOptions);
+    const labelTextOptions = { fontSize, fill: '#000000' };
+    const label = scene.add.text(-(width / 2), 0.75 * cursorSize, labelText, labelTextOptions);
     label.setOrigin(0, 0);
 
-    const valueTextOptions = { fontSize: '16px', fill: '#000000' };
-    const valueText = scene.add.text(width / 2, 35, valueToText(defaultValue), valueTextOptions);
+    const valueTextOptions = { fontSize, fill: '#000000' };
+    const valueText = scene.add.text(width / 2, 0.75 * cursorSize, valueToText(defaultValue), valueTextOptions);
     valueText.setOrigin(1, 0);
 
     this._value = defaultValue;

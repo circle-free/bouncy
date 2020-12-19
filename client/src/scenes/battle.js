@@ -17,11 +17,13 @@ import {
 
 const PHYSICAL_HIT_FRAMERATE = 128;
 const SMOKE_FRAMERATE = 30;
-const MON_SCALE = 0.66;
+const FONT_FAMILY = 'Helvetica, sans-serif';
+const PADDING = 30;
+const BLUE = 0x5c3eff;
 
 const HEALTH_BARS = [
   { x: 300, y: 280 },
-  { x: 250, y: 25 },
+  { x: 0, y: 0 },
 ];
 
 // Click Event Handlers
@@ -111,13 +113,14 @@ const handleMonUsed = async (scene, event) => {
 
   const { hi } = SPECIES_COLORS[monBattleState.species.id];
 
-  const monImageX = isMySide ? scene.scale.width : 0;
-  const monImageY = isMySide ? scene.scale.height * 0.33 : 10;
-  const monImage = scene.add.image(monImageX, monImageY, getSpeciesImageName(monBattleState.species.id));
+  const monImageX = isMySide ? scene.playerMonX : scene.enemyMonX;
+  const monImageY = isMySide ? scene.playerMonY : scene.enemyMonY;
 
-  monImage.setOrigin(0, 0);
-  monImage.setScale(MON_SCALE);
-  monImage.setFlipX(isMySide);
+  const monImage = scene.add
+    .image(monImageX, monImageY, getSpeciesImageName(monBattleState.species.id))
+    .setOrigin(0.5, 0.5)
+    .setScale(scene.monScale)
+    .setFlipX(isMySide);
 
   const monObject = { image: monImage, battleState: monBattleState };
   const imageAnimation = isMySide ? animateSendMonOut(scene, monObject) : animateEnemySlideIn(scene, monObject);
@@ -128,9 +131,9 @@ const handleMonUsed = async (scene, event) => {
 
   await Promise.all([dialogBox.displayDialog(monOutDialog), imageAnimation]);
 
-  const { x: healthBarX, y: healthBarY } = HEALTH_BARS[isMySide ? 0 : 1];
-  const healthBarOptions = { fillColor: hi };
-  const healthBar = new HealthBar(scene, healthBarX, healthBarY, monBattleState, healthBarOptions);
+  const healthBarOptions = { fillColor: hi, height: scene.healthBarHeight, width: scene.healthBarWidth };
+  const healthBarX = isMySide ? scene.playerHealthBarX : scene.enemyHealthBarX;
+  const healthBar = new HealthBar(scene, healthBarX, monImageY, monBattleState, healthBarOptions);
 
   if (isMySide) {
     scene.myHealthBar = healthBar;
@@ -214,7 +217,6 @@ export default class BattleScene extends Phaser.Scene {
     this.battle = battle;
     this.eventQueue = [];
     this.busy = false;
-    // this.ended = false;
 
     // TODO: replace default
     this.partyIndex = 0;
@@ -243,7 +245,6 @@ export default class BattleScene extends Phaser.Scene {
   create() {
     Object.keys(eventHandlers).forEach((eventName) => {
       this.battle.on(eventName, (event) => {
-        // this.ended = eventName === 'ended';
         this.eventQueue.push({ name: eventName, event });
       });
     });
@@ -253,10 +254,34 @@ export default class BattleScene extends Phaser.Scene {
     this.anims.create({ key: 'smoke', frames: 'smoke', frameRate: SMOKE_FRAMERATE });
 
     this.battle.use(this.partyIndex, 0);
-
     this.cameras.main.setBackgroundColor('#ffffff');
+    this.dialogBox = new DialogBox(this, { fontFamily: FONT_FAMILY });
 
-    this.dialogBox = new DialogBox(this);
+    this.monScale = Math.min(this.scale.height / 1024, this.scale.width / 768);
+
+    const monWidth = this.monScale * 256;
+    const monHeight = this.monScale * 256;
+
+    this.playerMonX = Math.max(PADDING + monWidth / 2, 0.25 * this.scale.width);
+    this.enemyMonX = Math.min(this.scale.width - (PADDING + monWidth / 2), 0.75 * this.scale.width);
+    this.playerMonY = this.scale.height * 0.65 - (PADDING + monHeight / 2);
+    this.enemyMonY = PADDING + monHeight / 2;
+
+    this.healthBarHeight = monHeight >> 1;
+    this.healthBarWidth = this.healthBarHeight * 3;
+
+    this.playerHealthBarX = Math.min(this.scale.width - PADDING - this.healthBarWidth / 2, 0.75 * this.scale.width);
+    this.enemyHealthBarX = Math.max(PADDING + this.healthBarWidth / 2, 0.25 * this.scale.width);
+
+    this.add
+      .ellipse(this.playerMonX, this.playerMonY + monHeight / 2, monWidth * 1.4, monWidth * 0.2, BLUE, 0.5)
+      .setOrigin(0.5, 0.5)
+      .setStrokeStyle(2, BLUE);
+
+    this.add
+      .ellipse(this.enemyMonX, this.enemyMonY + monHeight / 2, monWidth * 1.4, monWidth * 0.2, BLUE, 0.5)
+      .setOrigin(0.5, 0.5)
+      .setStrokeStyle(2, BLUE);
   }
 
   async update() {
