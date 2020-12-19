@@ -22,7 +22,7 @@ export default class PartyScene extends Phaser.Scene {
     });
   }
 
-  async create() {
+  create() {
     const screenCenterX = this.scale.width >> 1;
     const screenCenterY = this.scale.height >> 1;
     const landscapeMode = this.scale.width > this.scale.height;
@@ -58,9 +58,10 @@ export default class PartyScene extends Phaser.Scene {
     const statX = landscapeMode ? monX + screenCenterX : screenCenterX;
     const statY = landscapeMode ? monY : monY + screenCenterY;
     const radarOptions = {
-      size: landscapeMode ? this.scale.height * 0.6 : this.scale.width * 0.7,
+      size: landscapeMode ? this.scale.width * 0.3 : this.scale.width * 0.7,
       fontFamily: FONT_FAMILY,
     };
+
     const statRadar = new StatRadar(this, statX, statY, this.mon, radarOptions);
 
     const backTextOptions = { fontSize: '4em', fill: '#000000', fontFamily: FONT_FAMILY };

@@ -46,42 +46,34 @@ const createRadarLabels = (container, radarPoints, labelOptions) => {
 };
 
 const createLegendLabels = (container, radarPoints, labelOptions = {}) => {
+  const x = radarPoints[8] - 5;
+  const { legendGap } = container;
+
   const baseOptions = Object.assign({ fill: RED_HEX }, labelOptions);
-  const baseLabel = createLabel(
-    container,
-    radarPoints[8] - 5,
-    radarPoints[5] + container.legendGap * 1,
-    'BASE',
-    baseOptions
-  );
+  const baseLabel = createLabel(container, x, radarPoints[5] + legendGap * 1, 'BASE', baseOptions);
 
   const ivOptions = Object.assign({ fill: YELLOW_HEX }, labelOptions);
-  const ivLabel = createLabel(container, radarPoints[8] - 5, radarPoints[5] + container.legendGap * 2, 'IV', ivOptions);
+  const ivLabel = createLabel(container, x, radarPoints[5] + legendGap * 2, 'IV', ivOptions);
 
   const evOptions = Object.assign({ fill: GREEN_HEX }, labelOptions);
-  const evLabel = createLabel(container, radarPoints[8] - 5, radarPoints[5] + container.legendGap * 3, 'EV', evOptions);
+  const evLabel = createLabel(container, x, radarPoints[5] + legendGap * 3, 'EV', evOptions);
 
   const statOptions = Object.assign({ fill: BLUE_HEX }, labelOptions);
-  const statLabel = createLabel(
-    container,
-    radarPoints[8] - 5,
-    radarPoints[5] + container.legendGap * 4,
-    'STAT',
-    statOptions
-  );
+  const statLabel = createLabel(container, x, radarPoints[5] + legendGap * 4, 'STAT', statOptions);
 
   return [baseLabel, ivLabel, evLabel, statLabel];
 };
 
 const fillTable = (container, radarPoints, mon, tableWidth, textOptions = {}) => {
+  const { legendGap } = container;
   const { IVs, EVs, stats, species } = mon;
 
   const { baseAttack, baseDefense, baseSpeed, baseSpecialAttack, baseSpecialDefense, baseHealth } = species;
 
   const tableElements = [];
 
-  const rowSpacer = tableWidth / 12;
-  const headerY = radarPoints[5] + container.legendGap * 1 - container.legendGap / 2;
+  const rowSpacer = Math.floor(tableWidth / 12);
+  const headerY = radarPoints[5] + legendGap * 1 - (legendGap >> 1);
   const attackHeader = createLabel(container, radarPoints[8] + rowSpacer * 1, headerY, 'ATT', textOptions);
   const defenseHeader = createLabel(container, radarPoints[8] + rowSpacer * 3, headerY, 'DEF', textOptions);
   const speedHeader = createLabel(container, radarPoints[8] + rowSpacer * 5, headerY, 'SPD', textOptions);
@@ -90,7 +82,7 @@ const fillTable = (container, radarPoints, mon, tableWidth, textOptions = {}) =>
   const healthHeader = createLabel(container, radarPoints[8] + rowSpacer * 11, headerY, 'HP', textOptions);
   tableElements.push(attackHeader, defenseHeader, speedHeader, specialAttackHeader, specialDefenseHeader, healthHeader);
 
-  const baseY = headerY + container.legendGap;
+  const baseY = headerY + legendGap;
   const attackBase = createLabel(container, radarPoints[8] + rowSpacer * 1, baseY, baseAttack, textOptions);
   const defenseBase = createLabel(container, radarPoints[8] + rowSpacer * 3, baseY, baseDefense, textOptions);
   const speedBase = createLabel(container, radarPoints[8] + rowSpacer * 5, baseY, baseSpeed, textOptions);
@@ -111,7 +103,7 @@ const fillTable = (container, radarPoints, mon, tableWidth, textOptions = {}) =>
   const healthBase = createLabel(container, radarPoints[8] + rowSpacer * 11, baseY, baseHealth, textOptions);
   tableElements.push(attackBase, defenseBase, speedBase, specialAttackBase, specialDefenseBase, healthBase);
 
-  const ivY = baseY + container.legendGap;
+  const ivY = baseY + legendGap;
   const attackIV = createLabel(container, radarPoints[8] + rowSpacer * 1, ivY, IVs.attack, textOptions);
   const defenseIV = createLabel(container, radarPoints[8] + rowSpacer * 3, ivY, IVs.defense, textOptions);
   const speedIV = createLabel(container, radarPoints[8] + rowSpacer * 5, ivY, IVs.speed, textOptions);
@@ -120,7 +112,7 @@ const fillTable = (container, radarPoints, mon, tableWidth, textOptions = {}) =>
   const healthIV = createLabel(container, radarPoints[8] + rowSpacer * 11, ivY, IVs.health, textOptions);
   tableElements.push(attackIV, defenseIV, speedIV, specialAttackIV, specialDefenseIV, healthIV);
 
-  const evY = ivY + container.legendGap;
+  const evY = ivY + legendGap;
   const attackEV = createLabel(container, radarPoints[8] + rowSpacer * 1, evY, EVs.attack, textOptions);
   const defenseEV = createLabel(container, radarPoints[8] + rowSpacer * 3, evY, EVs.defense, textOptions);
   const speedEV = createLabel(container, radarPoints[8] + rowSpacer * 5, evY, EVs.speed, textOptions);
@@ -129,7 +121,7 @@ const fillTable = (container, radarPoints, mon, tableWidth, textOptions = {}) =>
   const healthEV = createLabel(container, radarPoints[8] + rowSpacer * 11, evY, EVs.health, textOptions);
   tableElements.push(attackEV, defenseEV, speedEV, specialAttackEV, specialDefenseEV, healthEV);
 
-  const statY = evY + container.legendGap;
+  const statY = evY + legendGap;
   const attackStat = createLabel(container, radarPoints[8] + rowSpacer * 1, statY, stats.attack, textOptions);
   const defenseStat = createLabel(container, radarPoints[8] + rowSpacer * 3, statY, stats.defense, textOptions);
   const speedStat = createLabel(container, radarPoints[8] + rowSpacer * 5, statY, stats.speed, textOptions);
@@ -159,21 +151,21 @@ const createMoves = (container, radarPoints, moves, textOptions = {}) => {
 
     const x =
       i == 0
-        ? (radarPoints[8] + radarPoints[6]) / 2
+        ? (radarPoints[8] + radarPoints[6]) >> 1
         : i === 1
-        ? (radarPoints[6] + radarPoints[4]) / 2
+        ? (radarPoints[6] + radarPoints[4]) >> 1
         : i === 2
-        ? (radarPoints[10] + radarPoints[0]) / 2
-        : (radarPoints[0] + radarPoints[2]) / 2;
+        ? (radarPoints[10] + radarPoints[0]) >> 1
+        : (radarPoints[0] + radarPoints[2]) >> 1;
 
     const y =
       i == 0
-        ? (radarPoints[9] + radarPoints[7]) / 2
+        ? (radarPoints[9] + radarPoints[7]) >> 1
         : i === 1
-        ? (radarPoints[7] + radarPoints[5]) / 2
+        ? (radarPoints[7] + radarPoints[5]) >> 1
         : i === 2
-        ? (radarPoints[11] + radarPoints[1]) / 2
-        : (radarPoints[1] + radarPoints[3]) / 2;
+        ? (radarPoints[11] + radarPoints[1]) >> 1
+        : (radarPoints[1] + radarPoints[3]) >> 1;
 
     const angle = i == 0 || i === 3 ? -30 : 30;
 
@@ -196,10 +188,10 @@ const createMoves = (container, radarPoints, moves, textOptions = {}) => {
   });
 };
 
-const createHealthBar = (container, radarPoints, currentHealth, maxHealth, textOptions = {}) => {
+const createHealthBar = (container, radarPoints, currentHealth, maxHealth, width, textOptions = {}) => {
   const height = radarPoints[3] - radarPoints[5];
   const emptyHealthBar = container.scene.add
-    .rectangle(radarPoints[4], radarPoints[5], 100, height, 0xcccccc)
+    .rectangle(radarPoints[4], radarPoints[5], width, height, 0xcccccc)
     .setOrigin(0, 0)
     .setStrokeStyle(4, 0xffffff)
     .setDepth(1);
@@ -207,13 +199,13 @@ const createHealthBar = (container, radarPoints, currentHealth, maxHealth, textO
 
   const healthHeight = (currentHealth / maxHealth) * (height - 12);
   const healthBar = container.scene.add
-    .rectangle(radarPoints[4] + 6, radarPoints[3] - 6, 100 - 12, healthHeight, GREEN)
+    .rectangle(radarPoints[4] + 6, radarPoints[3] - 6, width - 12, healthHeight, GREEN)
     .setOrigin(0, 1)
     .setDepth(1);
   container.add(healthBar);
 
-  const dividerX = radarPoints[4] + 50;
-  const divider = container.scene.add.line(dividerX, 0, 0, 0, 50, 0, 0xffffff);
+  const dividerX = radarPoints[4] + width / 2;
+  const divider = container.scene.add.line(dividerX, 0, 0, 0, width / 2, 0, 0xffffff);
   container.add(divider);
 
   const healthText = createLabel(container, dividerX, -30, currentHealth, textOptions);
@@ -226,7 +218,7 @@ export default class StatRadar extends Phaser.GameObjects.Container {
   constructor(scene, x, y, mon = {}, options = {}) {
     super(scene, x, y);
 
-    const { size = 400, fontSize = '3em', fontFamily = FONT_FAMILY } = options;
+    const { size = 400, fontFamily = FONT_FAMILY } = options;
 
     this.verbose = false;
 
@@ -243,7 +235,10 @@ export default class StatRadar extends Phaser.GameObjects.Container {
       baseHealth,
     } = species;
 
+    const largeFontSize = size >> 3;
+    const fontSize = size >> 4;
     const radius = size >> 1;
+    const tabSize = Math.floor(size / 5);
     const radarPoints = [];
 
     for (let i = 0; i < 6; i++) {
@@ -308,7 +303,7 @@ export default class StatRadar extends Phaser.GameObjects.Container {
 
     const baseRadar = createRadar(this, basePoints, RED, RED, INTERNAL_OPACITY);
 
-    const maxStat = (MAX_STAT * level) / 50;
+    const maxStat = Math.floor((MAX_STAT * level) / 50);
 
     const statPoints = [
       Math.floor((radarPoints[0] * stats.speed) / maxStat),
@@ -331,21 +326,20 @@ export default class StatRadar extends Phaser.GameObjects.Container {
     const radarLabels = createRadarLabels(this, radarPoints, labelOptions);
     this.radarLabelGroup = scene.add.group(radarLabels);
 
-    const largeLabelOptions = { fontSize: '8em', fill: '#ffffff', fontFamily, opacity: 0.6 };
+    const largeLabelOptions = { fontSize: largeFontSize, fill: '#ffffff', fontFamily, opacity: 0.6 };
     const type1Label = createLabel(this, 0, -size / 4, TYPES[type1], largeLabelOptions);
     const type2Label = createLabel(this, 0, -size / 8, TYPES[type2], largeLabelOptions);
     const levelLabel = createLabel(this, 0, +size / 8, `Lv. ${level}`, largeLabelOptions);
     const natureLabel = createLabel(this, 0, +size / 4, NATURES[nature], largeLabelOptions);
 
     const moveElements = createMoves(this, radarPoints, moves, labelOptions);
-
-    const healthElements = createHealthBar(this, radarPoints, currentHealth, maxHealth, labelOptions);
+    const healthElements = createHealthBar(this, radarPoints, currentHealth, maxHealth, tabSize, labelOptions);
 
     const legendHeight = radarPoints[3] - radarPoints[5];
-    this.legendGap = legendHeight / 5;
+    this.legendGap = Math.floor(legendHeight / 5);
 
     const legend = scene.add
-      .rectangle(radarPoints[8], radarPoints[5], 100, legendHeight, 0xcccccc)
+      .rectangle(radarPoints[8], radarPoints[5], tabSize, legendHeight, 0xcccccc)
       .setOrigin(1, 0)
       .setStrokeStyle(4, 0xffffff)
       .setDepth(1);

@@ -1,22 +1,19 @@
 import { addSpriteAnimation } from '../utils';
 import { cropOut, shake, move, shrink } from '../common';
 
-const PLAYER_MON_X = 50;
-const ENEMY_MON_X = 600;
 const ENEMY_SLIDE_IN_DURATION = 750;
 
 export function animateEnemySlideIn(scene, { image }) {
-  return move(scene, image, { x: ENEMY_MON_X }, { duration: ENEMY_SLIDE_IN_DURATION });
+  const x = image.x;
+  image.setX(0);
+  return move(scene, image, { x }, { duration: ENEMY_SLIDE_IN_DURATION });
 }
 
 export function animateSendMonOut(scene, { image }) {
   return new Promise((resolve) => {
-    const smokeAnimation = scene.add
-      .sprite(PLAYER_MON_X + image.displayWidth * 0.5, image.y + image.displayHeight * 0.25, 'smoke')
-      .setScale(0.25)
-      .play('smoke');
+    const smokeAnimation = scene.add.sprite(image.x, image.y, 'smoke').setOrigin(0.5, 0.5).setScale(0.25).play('smoke');
 
-    image.setX(PLAYER_MON_X);
+    image.setX(image.x);
 
     smokeAnimation.once('animationcomplete', () => {
       smokeAnimation.destroy();
@@ -58,9 +55,7 @@ export function animatePhysicalAttack(scene, { image }, options = {}) {
 }
 
 export function animatePhysicalHit(scene, { image }) {
-  const hitSprite = scene.add
-    .sprite(image.x + image.displayWidth * 0.5, image.y + image.displayHeight * 0.75, 'physicalHit')
-    .setScale(0.25);
+  const hitSprite = scene.add.sprite(image.x, image.y, 'physicalHit').setScale(0.25);
 
   return addSpriteAnimation(hitSprite, 'physicalHit');
 }

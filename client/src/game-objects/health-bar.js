@@ -1,16 +1,13 @@
 import Phaser from 'phaser';
 
-const WIDTH = 240;
-const HEIGHT = 90;
-const BAR_HEIGHT = 12;
 const RED_PERCENTAGE = 0.25;
 const YELLOW_PERCENTAGE = 0.5;
-const HP_LABEL_WIDTH = 30;
 const BAR_GREEN = 0x55ff22;
 const BAR_YELLOW = 0xffd221;
 const BAR_RED = 0xff233f;
 const BAR_BLUE = 0x5c3eff;
 const PADDING = 10;
+const FONT_FAMILY = 'Helvetica, sans-serif';
 
 const getNewHp = ({ hp, maxHp }, delta) => {
   const newHp = hp + delta;
@@ -24,65 +21,71 @@ const getNewHp = ({ hp, maxHp }, delta) => {
 
 export default class HealthBar extends Phaser.GameObjects.Container {
   constructor(scene, x, y, monData, options = {}) {
-    const { fillColor = 0xffffff } = options;
+    const { fillColor = 0xffffff, fontFamily = FONT_FAMILY, height = 90, width = 3 * height } = options;
 
     super(scene, x, y);
+
+    const largeFontSize = Math.floor(height / 4);
+    const fontSize = Math.floor(height / 5);
+    const barHeight = Math.floor(height / 5);
 
     const { stats, currentHealth, level, species } = monData;
 
     this.maxHp = stats.maxHealth;
     this.hp = currentHealth;
 
-    const background = scene.add.rectangle(0, 0, WIDTH, HEIGHT, fillColor);
-    background.setStrokeStyle(2, 0x000000);
-    background.setOrigin(0, 0);
+    const background = scene.add
+      .rectangle(0, 0, width, height, fillColor)
+      .setStrokeStyle(2, 0x000000)
+      .setOrigin(0.5, 0.5);
     this.add(background);
 
-    const topLine = (HEIGHT >> 1) - BAR_HEIGHT;
-    const emptyBarWidth = WIDTH - PADDING * 2 - HP_LABEL_WIDTH;
-    const fullBarWidth = emptyBarWidth - 6;
+    const hpLabelOptions = { fontSize, fill: '#000000', fontFamily };
+    const hpLabel = scene.add.text(PADDING - width / 2, 0, 'HP', hpLabelOptions).setOrigin(0, 0.5);
+    this.add(hpLabel);
+    const hpLabelWidth = hpLabel.width * 1.5;
 
-    const monNameOptions = { fontSize: '24px', fill: '#000000' };
-    const monName = scene.add.text(PADDING, topLine, species.name.toUpperCase(), monNameOptions);
-    monName.setOrigin(0, 1);
+    const topBaseLine = -barHeight;
+    const bottomTopLine = barHeight;
+    const emptyBarWidth = width - PADDING * 2 - hpLabelWidth;
+    const fullBarWidth = emptyBarWidth - 8;
+
+    const monNameOptions = { fontSize: largeFontSize, fill: '#000000', fontFamily };
+    const monName = scene.add
+      .text(PADDING - width / 2, topBaseLine, species.name.toUpperCase(), monNameOptions)
+      .setOrigin(0, 1);
     this.add(monName);
 
-    const levelLabelOptions = { fontSize: '18px', fill: '#000000' };
-    const levelLabel = scene.add.text(WIDTH - PADDING, topLine, `Lv.${level}`, levelLabelOptions);
-    levelLabel.setOrigin(1, 1);
+    const levelLabelOptions = { fontSize, fill: '#000000', fontFamily };
+    const levelLabel = scene.add
+      .text(width / 2 - PADDING, topBaseLine, `Lv.${level}`, levelLabelOptions)
+      .setOrigin(1, 1);
     this.add(levelLabel);
 
-    const hpLabelOptions = { fontSize: '18px', fill: '#000000' };
-    const hpLabel = scene.add.text(PADDING, HEIGHT >> 1, 'HP', hpLabelOptions);
-    hpLabel.setOrigin(0, 0.5);
-    this.add(hpLabel);
+    this.emptyBar = scene.add
+      .rectangle(PADDING - width / 2 + hpLabelWidth, 0, emptyBarWidth, barHeight, 0xffffff)
+      .setStrokeStyle(2, 0x000000)
+      .setOrigin(0, 0.5);
+    this.add(this.emptyBar);
 
-    const emptyBar = scene.add.rectangle(PADDING + HP_LABEL_WIDTH, HEIGHT >> 1, emptyBarWidth, BAR_HEIGHT, 0xffffff);
-    emptyBar.setStrokeStyle(2, 0x000000);
-    emptyBar.setOrigin(0, 0.5);
-    this.add(emptyBar);
-
-    this.bar = scene.add.rectangle(13 + HP_LABEL_WIDTH, HEIGHT >> 1, fullBarWidth, BAR_HEIGHT - 6, BAR_GREEN);
-    this.bar.setOrigin(0, 0.5);
+    this.bar = scene.add
+      .rectangle(PADDING - width / 2 + hpLabelWidth + 4, 0, fullBarWidth, barHeight - 8, BAR_GREEN)
+      .setOrigin(0, 0.5);
     this.add(this.bar);
 
     this.bar.width = (fullBarWidth * this.hp) / this.maxHp;
 
-    const hpValueOptions = { fontSize: '18px', fill: '#000000' };
-    this.hpValue = scene.add.text(
-      WIDTH - PADDING,
-      (HEIGHT >> 1) + BAR_HEIGHT,
-      `${this.hp}/${this.maxHp}`,
-      hpValueOptions
-    );
-    this.hpValue.setOrigin(1, 0);
+    const hpValueOptions = { fontSize, fill: '#000000', fontFamily };
+    this.hpValue = scene.add
+      .text(width / 2 - PADDING, bottomTopLine, `${this.hp}/${this.maxHp}`, hpValueOptions)
+      .setOrigin(1, 0);
     this.add(this.hpValue);
 
     scene.add.existing(this);
   }
 
   updateHealth(delta) {
-    const emptyBarWidth = WIDTH - 2 * PADDING - HP_LABEL_WIDTH;
+    const emptyBarWidth = this.emptyBar.width;
     const fullBarWidth = emptyBarWidth - 6;
     const newHp = getNewHp(this, delta);
 
