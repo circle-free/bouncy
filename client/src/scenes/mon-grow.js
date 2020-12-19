@@ -1,12 +1,12 @@
 import Phaser from 'phaser';
 import DialogBox from '../game-objects/dialog-box';
+import Button from '../game-objects/button';
 
 import { getSpeciesImageName } from '../utils';
 import { SPECIES_COLORS } from '../enums';
 
-const NAME_Y = 50;
-const MON_Y = 170;
-const MON_SCALE = 0.5;
+const MON_SCALE = 1;
+const FONT_FAMILY = 'Helvetica, sans-serif';
 
 export default class MonGrowScene extends Phaser.Scene {
   constructor() {
@@ -34,35 +34,25 @@ export default class MonGrowScene extends Phaser.Scene {
 
   create() {
     const screenCenterX = this.scale.width >> 1;
+    const landscapeMode = this.scale.width > this.scale.height;
 
-    const {
-      species,
-      level,
-      moves,
-      eligibleLevel,
-      canLearnWithLevel,
-      eligibleEvolutions,
-      canLearnWithEvolve,
-    } = this.mon;
+    const { species, eligibleLevel, canLearnWithLevel, eligibleEvolutions, canLearnWithEvolve } = this.mon;
 
     const { id: speciesId, name: speciesName } = species;
 
-    const { low, hi } = SPECIES_COLORS[speciesId];
+    const { hiHex } = SPECIES_COLORS[speciesId];
 
-    this.cameras.main.setBackgroundColor(low);
+    this.cameras.main.setBackgroundColor(hiHex);
 
-    const nameTextOptions = { fontSize: '36px', fill: '#ffffff' };
-    this.nameLabel = this.add.text(screenCenterX, NAME_Y, speciesName.toUpperCase(), nameTextOptions).setOrigin(0.5);
+    const monY = landscapeMode ? this.scale.height / 3 : this.scale.height / 4;
+    const monImage = this.add.image(screenCenterX, monY, getSpeciesImageName(speciesId)).setScale(MON_SCALE);
 
-    const monImage = this.add.image(screenCenterX, MON_Y, getSpeciesImageName(speciesId));
-    monImage.setScale(MON_SCALE);
+    const nameTextOptions = { fontSize: '6em', fill: '#000000', fontFamily: FONT_FAMILY };
+    this.nameLabel = this.add
+      .text(screenCenterX, monY - 200, speciesName.toUpperCase(), nameTextOptions)
+      .setOrigin(0.5);
 
-    this.backButton = this.add.rectangle(10, 10, 100, 25, 0xffffff).setOrigin(0);
-    this.backButton.setInteractive();
-    this.backButton.once('pointerdown', () => this.exit());
-    const backTextOptions = { fontSize: '15px', fill: '#000000' };
-    const backText = this.add.text(0, 0, 'BACK', backTextOptions).setOrigin(0.5);
-    Phaser.Display.Align.In.Center(backText, this.backButton);
+    const backButton = new Button(this, 60, 60, 'Back', () => this.exit());
 
     this.dialogBox = new DialogBox(this);
 

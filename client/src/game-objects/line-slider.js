@@ -1,7 +1,4 @@
 import Phaser from 'phaser';
-import Slider from 'phaser3-rex-plugins/plugins/slider.js';
-
-// TODO: fix vertical centering
 
 export default class LineSlider extends Phaser.GameObjects.Container {
   constructor(scene, x, y, options = {}) {

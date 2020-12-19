@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+
+import Button from '../game-objects/button';
 import { canSave, canSync } from '../utils';
 
 export default class MenuScene extends Phaser.Scene {
@@ -13,7 +15,7 @@ export default class MenuScene extends Phaser.Scene {
     const screenCenterY = this.scale.height >> 1;
 
     this.cameras.main.setBackgroundColor('#ffffff');
-    const textOptions = { fontSize: '5em', fill: '#000000' };
+    const textOptions = { fontSize: 48 };
 
     const showSave = canSave();
     const showSync = canSync();
@@ -21,44 +23,27 @@ export default class MenuScene extends Phaser.Scene {
 
     const buttonGap = screenCenterY / (1 + buttonCount);
 
-    const partyY = screenCenterY - ((buttonCount * buttonGap) >> 1);
-    const partyText = this.add.text(screenCenterX, partyY, 'MY MON', textOptions).setOrigin(0.5).setDepth(1);
-    const partyButton = this.add
-      .rectangle(screenCenterX, partyY, partyText.width + 20, partyText.height + 20, 0xffffff)
-      .setOrigin(0.5)
-      .setStrokeStyle(4, 0x000000)
-      .setInteractive()
-      .once('pointerdown', () => this.party());
+    const partyY = screenCenterY - (buttonCount >> 1) * buttonGap;
+    const partyButton = new Button(this, screenCenterX, partyY, 'MY MON', () => this.party(), textOptions);
 
     const battleY = partyY + buttonGap;
-    const battleText = this.add.text(screenCenterX, battleY, 'BATTLE WILD MON', textOptions).setOrigin(0.5).setDepth(1);
-    const battleButton = this.add
-      .rectangle(screenCenterX, battleY, battleText.width + 20, battleText.height + 20, 0xffffff)
-      .setOrigin(0.5)
-      .setStrokeStyle(4, 0x000000)
-      .setInteractive()
-      .once('pointerdown', () => this.battleWild());
+    const battleButton = new Button(
+      this,
+      screenCenterX,
+      battleY,
+      'BATTLE WILD MON',
+      () => this.battleWild(),
+      textOptions
+    );
 
     if (showSave) {
       const saveY = battleY + buttonGap;
-      const saveText = this.add.text(screenCenterX, saveY, 'SAVE LOCALLY', textOptions).setOrigin(0.5).setDepth(1);
-      const saveButton = this.add
-        .rectangle(screenCenterX, saveY, saveText.width + 20, saveText.height + 20, 0xffffff)
-        .setOrigin(0.5)
-        .setStrokeStyle(4, 0x000000)
-        .setInteractive()
-        .once('pointerdown', () => this.save());
+      const saveButton = new Button(this, screenCenterX, saveY, 'SAVE LOCALLY', () => this.save(), textOptions);
     }
 
     if (showSync) {
       const syncY = battleY + buttonGap + showSave * buttonGap;
-      const syncText = this.add.text(screenCenterX, syncY, 'SYNC TO CHAIN', textOptions).setOrigin(0.5).setDepth(1);
-      const syncButton = this.add
-        .rectangle(screenCenterX, syncY, syncText.width + 20, syncText.height + 20, 0xffffff)
-        .setOrigin(0.5)
-        .setStrokeStyle(4, 0x000000)
-        .setInteractive()
-        .once('pointerdown', () => this.sync());
+      const syncButton = new Button(this, screenCenterX, syncY, 'SYNC TO CHAIN', () => this.sync(), textOptions);
     }
   }
 

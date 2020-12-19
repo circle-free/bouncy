@@ -9,7 +9,7 @@ export default class DialogBox extends Phaser.GameObjects.Container {
   constructor(scene, options = {}) {
     super(scene, 0, scene.scale.height * (1 - HEIGHT_RATIO));
 
-    const { fontSize = '4em', fontFamily = FONT_FAMILY, opacity = 1 } = options;
+    const { fontFamily = FONT_FAMILY, opacity = 1 } = options;
 
     this.fontFamily = fontFamily;
 
@@ -86,14 +86,13 @@ export default class DialogBox extends Phaser.GameObjects.Container {
     this.dialog.setText(promptText);
 
     const centerX = this.scene.scale.width >> 1;
-    const buttonStart = 3 * PADDING;
-    const verticalSpace = this.scene.scale.height * HEIGHT_RATIO - 2 * PADDING - buttonStart;
-    const buttonGap = Math.floor(verticalSpace / (actions.length + 1));
+    const verticalSpace = this.scene.scale.height * HEIGHT_RATIO - 2 * PADDING;
+    const buttonGap = Math.floor(verticalSpace / (actions.length + 2));
 
     this.buttons = actions.map(({ name, action }, i) => {
       const buttonTextOptions = { fontSize: this.fontSize, fill: '#000000', fontFamily: this.fontFamily };
       const button = this.scene.add
-        .text(centerX, buttonStart + (i + 1) * buttonGap, name, buttonTextOptions)
+        .text(centerX, (i + 2) * buttonGap, name, buttonTextOptions)
         .setOrigin(0.5, 0.5)
         .setInteractive()
         .once('pointerdown', () => {

@@ -1,13 +1,12 @@
 import Phaser from 'phaser';
 import StatRadar from '../game-objects/stat-radar';
+import Button from '../game-objects/button';
 
 import { getSpeciesImageName } from '../utils';
-import { SPECIES_COLORS, NATURES, TYPES, LEVELING_RATES, MOVE_CATEGORIES } from '../enums';
+import { SPECIES_COLORS } from '../enums';
 
 const MON_SCALE = 1;
-const PADDING = 0;
 const FONT_FAMILY = 'Helvetica, sans-serif';
-const NAME_Y = 100;
 
 export default class PartyScene extends Phaser.Scene {
   constructor() {
@@ -64,46 +63,19 @@ export default class PartyScene extends Phaser.Scene {
 
     const statRadar = new StatRadar(this, statX, statY, this.mon, radarOptions);
 
-    const backTextOptions = { fontSize: '4em', fill: '#000000', fontFamily: FONT_FAMILY };
-    const backText = this.add
-      .text(20, 20, 'BACK', backTextOptions)
-      .setOrigin(0)
-      .setInteractive()
-      .once('pointerdown', () => this.exit());
+    const backButton = new Button(this, 60, 60, 'Back', () => this.exit());
 
-    const replenishOptions = { fontSize: '4em', fill: '#000000', fontFamily: FONT_FAMILY };
-    const replenishText = this.add
-      .text(monX, monY + 200, 'REPLENISH', replenishOptions)
-      .setOrigin(0.5)
-      .setInteractive()
-      .once('pointerdown', () => this.replenish());
+    const replenishButton = new Button(this, monX, monY + 200, 'Replenish', () => this.replenish());
 
     if (eligibleLevel > level) {
-      const levelTextOptions = { fontSize: '4em', fill: '#000000', fontFamily: FONT_FAMILY };
-      const levelText = this.add
-        .text(
-          monX,
-          monY + 250,
-          `Level up to ${eligibleLevel}${canLearnWithLevel ? ' (new moves)' : ''}`,
-          levelTextOptions
-        )
-        .setOrigin(0.5)
-        .setInteractive()
-        .once('pointerdown', () => this.levelUp());
+      const levelText = `Level up to ${eligibleLevel}${canLearnWithLevel ? ' (new moves)' : ''}`;
+      const levelButton = new Button(this, monX, monY + 270, levelText, () => this.levelUp());
     }
 
     if (eligibleEvolutions.length) {
-      const evolveTextOptions = { fontSize: '4em', fill: '#000000' };
-      const evolveText = this.add
-        .text(
-          monX,
-          monY + 300,
-          `Evolve to ${eligibleEvolutions[0].name}${canLearnWithEvolve ? ' (new moves)' : ''}`,
-          evolveTextOptions
-        )
-        .setOrigin(0.5)
-        .setInteractive()
-        .once('pointerdown', () => this.evolve());
+      const evolveText = `Evolve to ${eligibleEvolutions[0].name}${canLearnWithEvolve ? ' (new moves)' : ''}`;
+      const evolveY = eligibleLevel > level ? monY + 340 : monY + 270;
+      const evolveButton = new Button(this, monX, evolveY, evolveText, () => this.evolve());
     }
   }
 
