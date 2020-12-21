@@ -102,6 +102,9 @@ export default class StarterSelectionScene extends Phaser.Scene {
   }
 
   create() {
+    // TODO: remove hardcoded values
+    this.scale.setGameSize(800, 600);
+
     const screenCenterX = this.scale.width >> 1;
     const screenCenterY = this.scale.height >> 1;
     const landscapeMode = this.scale.width > this.scale.height;

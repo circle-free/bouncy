@@ -76,6 +76,6 @@ export default class PreloadScene extends Phaser.Scene {
       return;
     }
 
-    this.scene.start('StarterSelection');
+    this.scene.start('ChooseMon');
   }
 }
